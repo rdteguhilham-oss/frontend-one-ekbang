@@ -1,0 +1,433 @@
+/* Container Utama Pengajuan Layanan */
+.layanan-container {
+    padding: 20px;
+    color: var(--text-utama);
+}
+
+.layanan-container h2 {
+    color: var(--text-utama);
+    margin-bottom: 5px;
+    margin-top: 0;
+}
+
+/* Tombol Link Tambah Data */
+.link-tambah-layanan {
+    display: inline-block;
+    background-color: var(--primary-btn);
+    color: white;
+    padding: 12px 20px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.link-tambah-layanan:hover {
+    background-color: #2563eb;
+}
+
+/* Area Filter Dropdown & Pencarian */
+.filter-layanan-area {
+    background-color: var(--bg-card);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+    display: flex;
+    align-items: flex-start; 
+    gap: 20px; 
+    flex-wrap: wrap; 
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.select-layanan-filter {
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Kartu Pembungkus Tabel */
+.layanan-table-card {
+    background-color: var(--bg-card);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Tombol Aksi Verifikasi */
+.btn-proses {
+    background-color: #f59e0b; 
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 8px;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.btn-proses:hover { background-color: #d97706; }
+
+.btn-selesai {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.btn-selesai:hover { background-color: #059669; }
+
+/* DESAIN TOMBOL POP-UP */
+.btn-buka-berkas {
+    background-color: var(--primary-btn); 
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.btn-buka-berkas:hover { background-color: #2563eb; }
+
+/* Tombol Cetak Surat Spesifik */
+.btn-cetak-surat {
+    background-color: #8b5cf6; /* Ungu Elegan */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    transition: background-color 0.3s;
+}
+
+.btn-cetak-surat:hover { background-color: #7c3aed; }
+
+/* Kotak Penampung Kumpulan Tombol File */
+.grid-dokumen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    background-color: var(--bg-body); 
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px dashed var(--border-halus);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Desain Anak Tombol Link Dokumen */
+.btn-link-dokumen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-card); 
+    color: var(--text-utama);
+    border: 1px solid var(--border-halus);
+    padding: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.btn-link-dokumen:hover {
+    border-color: var(--primary-btn);
+    color: var(--primary-btn);
+    transform: translateY(-2px);
+    background-color: var(--bg-hover);
+}
+
+/* MODAL STANDAR TAILADMIN */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--bg-card) !important;
+    color: var(--text-utama) !important;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    position: relative;
+    animation: turunDariAtas 0.3s ease-out;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+@keyframes turunDariAtas {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.btn-tutup-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #ef4444; 
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.btn-tutup-modal:hover { background-color: #dc2626; }
+
+/* KELOMPOK TOMBOL AKSI (TAMBAH DATA & EXCEL) */
+.aksi-atas-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center; 
+}
+
+.aksi-atas-group .link-tambah-layanan {
+    margin-bottom: 0;
+}
+
+/* Tombol Cetak Excel */
+.btn-excel {
+    background-color: #10b981; 
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-excel:hover { background-color: #059669; }
+
+/* KELOMPOK TOMBOL AKSI SEJAJAR DI TABEL */
+.grup-aksi-sejajar {
+    display: flex;
+    flex-direction: row; /* Memastikan arahnya ke samping */
+    flex-wrap: nowrap; /* Melarang keras tombol jatuh ke bawah */
+    gap: 8px;
+    min-width: max-content; /* KUNCI UTAMA: Memaksa wadah membentang sepanjang ukuran tombol */
+}
+
+/* ======================================================== */
+/* 🖨️ DESAIN KHUSUS MODAL CETAK SURAT (OUTPUT FISIK)        */
+/* ======================================================== */
+.print-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85); /* Latar belakang lebih gelap */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    z-index: 2000;
+    padding: 30px 20px;
+}
+
+.cetak-surat-container {
+    background: white;
+    color: black;
+    width: 100%;
+    max-width: 800px; /* Lebar optimal menyerupai kertas A4 */
+    min-height: 1000px;
+    padding: 50px 60px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    position: relative;
+    font-family: 'Times New Roman', Times, serif; /* Mengunci font khusus surat resmi */
+}
+
+.aksi-print-non-cetak {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #ccc;
+}
+
+.btn-tutup-modal-print {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* DESAIN KOP & KERTAS SURAT */
+.kertas-surat {
+    background: white; /* Selalu putih meski dark mode */
+}
+
+.kop-surat {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.kop-surat h4, .kop-surat h3, .kop-surat h2, .kop-surat p {
+    margin: 0;
+    line-height: 1.3;
+    color: black; /* Memaksa tinta hitam */
+}
+
+.kop-surat h4 { font-size: 18px; font-weight: normal; }
+.kop-surat h3 { font-size: 22px; }
+.kop-surat h2 { font-size: 26px; font-weight: bold; }
+.kop-surat p { margin-top: 5px; font-size: 14px; }
+
+/* Garis ganda khas Kop Surat Birokrasi */
+.garis-kop-1 { border: 0; border-top: 3px solid black; margin-top: 15px; margin-bottom: 2px; }
+.garis-kop-2 { border: 0; border-top: 1px solid black; margin-top: 0; }
+
+.judul-surat { 
+    text-align: center; 
+    text-decoration: underline; 
+    font-size: 18px; 
+    margin-bottom: 5px; 
+    font-weight: bold;
+    color: black;
+}
+
+.nomor-surat { 
+    text-align: center; 
+    margin-top: 0; 
+    margin-bottom: 40px; 
+    font-size: 16px;
+    color: black;
+}
+
+.isi-surat p { 
+    font-size: 16px; 
+    line-height: 1.6; 
+    text-align: justify; 
+    color: black;
+}
+
+.tabel-identitas { 
+    width: 85%; 
+    margin: 20px auto; 
+    font-size: 16px; 
+    color: black;
+    border-collapse: collapse;
+}
+
+.tabel-identitas td { padding: 6px 4px; vertical-align: top;}
+
+.ttd-surat { 
+    width: 300px; 
+    float: right; 
+    text-align: center; 
+    margin-top: 60px; 
+    font-size: 16px;
+    color: black;
+}
+
+@media print {
+    /* 1. Menghilangkan Header & Footer Bawaan Browser (Tanggal & Localhost) */
+    @page {
+        margin: 0; 
+    }
+
+    /* 2. Sembunyikan SEMUA elemen di body */
+    body * {
+        visibility: hidden;
+    }
+    
+    /* 3. Tampilkan HANYA kotak surat dan isinya */
+    .cetak-surat-container, .cetak-surat-container * {
+        visibility: visible;
+    }
+    
+    /* 4. Atur posisi surat agar pas di pojok kertas A4 */
+    .cetak-surat-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: none !important; /* Hapus batasan maksimal lebar */
+        box-sizing: border-box !important; /* KUNCI UTAMA: Agar padding tidak membengkakkan kertas */
+        margin: 0;
+        padding: 2cm !important; /* Jarak aman tepi kertas */
+        box-shadow: none;
+        border-radius: 0;
+    }
+    
+    /* 5. Sembunyikan tombol 'Cetak' dan 'Tutup' agar tidak ikut di-print */
+    .aksi-print-non-cetak {
+        display: none !important;
+    }
+}
+
+/* RESPONSIVE UNTUK HP */
+@media screen and (max-width: 768px) {
+    .filter-layanan-area {
+        flex-direction: column; 
+        align-items: flex-start;
+    }
+    .filter-group, .filter-group input, .filter-group select {
+        width: 100%; 
+        box-sizing: border-box;
+    }
+    .select-layanan-filter { max-width: 100%; }
+    .grid-dokumen { grid-template-columns: 1fr; }
+    
+    /* Pengecilan modal surat di HP agar bisa digeser */
+    .cetak-surat-container { padding: 20px; }
+    .tabel-identitas { width: 100%; font-size: 14px; }
+}

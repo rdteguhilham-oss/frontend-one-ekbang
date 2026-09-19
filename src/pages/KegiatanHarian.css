@@ -1,0 +1,220 @@
+/* Container Utama */
+.kegiatan-container {
+    padding: 20px;
+    color: var(--text-utama);
+}
+
+.kegiatan-container h2 {
+    margin-top: 0;
+    color: var(--text-utama);
+}
+
+/* Navigasi Tab Pilihan ALA TAILADMIN */
+.tab-menu {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap; /* Agar tombol tab aman jika di HP */
+}
+
+.btn-tab {
+    padding: 10px 20px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-halus);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-redup);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-tab:hover {
+    background-color: var(--bg-hover);
+    color: var(--primary-btn);
+}
+
+.btn-tab.aktif {
+    background-color: var(--primary-btn);
+    color: white;
+    border-color: var(--primary-btn);
+}
+
+/* Card untuk Tabel & Konten */
+.kegiatan-card {
+    background-color: var(--bg-card);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.kegiatan-card h3 {
+    margin-top: 0;
+    color: var(--text-utama);
+}
+
+/* Styling Form di dalam Modal */
+.kegiatan-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.btn-simpan-kegiatan {
+    grid-column: span 2;
+    padding: 12px;
+    background-color: var(--primary-btn);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-simpan-kegiatan:hover {
+    background-color: #2563eb;
+}
+
+/* POP-UP / MODAL KEGIATAN HARIAN */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--bg-card) !important;
+    color: var(--text-utama) !important;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    position: relative;
+    animation: turunDariAtas 0.3s ease-out;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.kegiatan-form .form-group label {
+    color: var(--text-utama) !important;
+}
+
+@keyframes turunDariAtas {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.btn-tutup-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.btn-tutup-modal:hover {
+    background-color: #dc2626;
+}
+
+/* ========================================================= */
+/* PENCARIAN KEGIATAN HARIAN                                 */
+/* ========================================================= */
+.header-tabel-kegiatan {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-tabel-kegiatan h3 {
+    margin: 0;
+    color: var(--text-utama);
+}
+
+.search-kegiatan-group {
+    display: flex;
+    flex-direction: column; /* Label ada di atas kotak */
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.search-kegiatan-group label {
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--text-utama);
+}
+
+.search-kegiatan-group input {
+    padding: 8px 12px;
+    min-width: 240px;
+}
+
+/* KELOMPOK TOMBOL AKSI (TAMBAH DATA & EXCEL)                */
+.aksi-atas-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center; 
+}
+
+/* Tombol Cetak Excel */
+.btn-excel {
+    background-color: #10b981; /* Hijau Excel */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease; /* Tanpa efek terangkat */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-excel:hover {
+    background-color: #059669; 
+}
+
+/* RESPONSIVE PENCARIAN HP */
+@media screen and (max-width: 768px) {
+    .header-tabel-kegiatan {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .search-kegiatan-group {
+        width: 100%;
+    }
+    .search-kegiatan-group input {
+        width: 100%; 
+        box-sizing: border-box;
+    }
+}

@@ -1,0 +1,280 @@
+.form-publik-wrapper {
+    min-height: 100vh;
+    width: 100%; 
+    background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); 
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 20px;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+}
+
+body.dark-mode .form-publik-wrapper {
+    background: linear-gradient(135deg, #1E1B4B 0%, #2E3856 100%);
+}
+
+/* KARTU UTAMA */
+.form-container-publik {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 650px;
+    /* Sudut sangat membulat meniru referensi */
+    border-radius: 20px; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    /* Penting agar warna footer di bawah tidak meluber keluar dari lengkungan */
+    overflow: hidden; 
+}
+
+body.dark-mode .form-container-publik {
+    background-color: var(--bg-card);
+}
+
+/* HEADER & TOGGLE PALSU */
+.form-publik-header {
+    padding: 40px 40px 10px 40px;
+}
+
+.toggles-palsu {
+    display: inline-flex;
+    background-color: #f1f5f9;
+    border-radius: 30px;
+    padding: 4px;
+    margin-bottom: 20px;
+}
+
+body.dark-mode .toggles-palsu { background-color: var(--bg-body); }
+
+.toggle-aktif {
+    background-color: #ffffff;
+    color: #1e293b;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+body.dark-mode .toggle-aktif { background-color: var(--primary-btn); color: white;}
+
+.toggle-mati {
+    color: #94a3b8;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.form-publik-header h2 {
+    color: #1e293b;
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+body.dark-mode .form-publik-header h2 { color: var(--text-utama); }
+
+/* AREA BODY & GRID INPUT */
+.form-publik-body {
+    padding: 10px 40px 30px 40px;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Membagi jadi 2 kolom Kiri-Kanan */
+    gap: 20px;
+}
+
+.input-group-pill {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-width {
+    grid-column: span 2; /* Kolom ini akan membentang penuh 100% */
+}
+
+/* DESAIN LABEL & INPUT BENTUK KAPSUL (PILL) */
+.input-group-pill label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 8px;
+    margin-left: 15px; /* Sedikit didorong agar sejajar lengkungan */
+}
+
+.input-group-pill input, 
+.input-group-pill select {
+    background-color: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    color: #1e293b;
+    /* Ini rahasianya: border-radius 30px membuat ujungnya melengkung penuh */
+    border-radius: 30px !important; 
+    padding: 14px 20px !important;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body.dark-mode .input-group-pill input, 
+body.dark-mode .input-group-pill select {
+    background-color: var(--bg-body);
+    border-color: var(--border-halus);
+    color: var(--text-utama);
+}
+
+.input-group-pill input:focus, 
+.input-group-pill select:focus {
+    background-color: #ffffff;
+    border-color: var(--primary-btn);
+    box-shadow: 0 0 0 3px rgba(60, 80, 224, 0.1);
+}
+
+/* AREA UPLOAD DOKUMEN */
+.dokumen-section {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px dashed #e2e8f0;
+}
+
+body.dark-mode .dokumen-section { border-top-color: var(--border-halus); }
+
+.dokumen-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dokumen-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #1e293b;
+}
+
+body.dark-mode .dokumen-header h3 { color: var(--text-utama); }
+
+.dokumen-header small { color: #ef4444; font-weight: bold; }
+
+.file-input-asli { display: none; }
+
+/* KOTAK UPLOAD BENTUK KAPSUL */
+.kotak-upload-pill {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 20px;
+    background-color: transparent;
+    border: 1.5px dashed #cbd5e1; 
+    border-radius: 30px; /* Bentuk kapsul */
+    color: #64748b;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+body.dark-mode .kotak-upload-pill {
+    border-color: var(--border-halus);
+    color: var(--text-redup);
+}
+
+.kotak-upload-pill:hover {
+    background-color: #f1f5f9;
+    border-color: var(--primary-btn);
+    color: var(--primary-btn);
+}
+
+body.dark-mode .kotak-upload-pill:hover {
+    background-color: rgba(60, 80, 224, 0.1);
+}
+
+/* Animasi Muncul Halus */
+.animasi-muncul {
+    animation: muncul 0.4s ease forwards;
+}
+
+@keyframes muncul {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* FOOTER KHUSUS (MIRIP REFERENSI GAMBAR)                    */
+.form-publik-footer {
+    background-color: #e8eff9; /* Warna biru pucat bagian bawah */
+    padding: 25px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #dbeafe;
+}
+
+body.dark-mode .form-publik-footer {
+    background-color: #1e293b;
+    border-top: 1px solid var(--border-halus);
+}
+
+.footer-info {
+    max-width: 60%;
+}
+
+.footer-info strong {
+    color: #1e293b;
+    font-size: 16px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+body.dark-mode .footer-info strong { color: white; }
+
+.footer-info p {
+    color: #64748b;
+    font-size: 12px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.btn-submit-pill {
+    background-color: var(--primary-btn); /* Menggunakan Biru Utama ONE EKBANG */
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 30px; 
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(60, 80, 224, 0.25); /* Bayangan disesuaikan dengan biru utama */
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.btn-submit-pill:hover {
+    background-color: #2563eb; /* Warna hover standar ONE EKBANG */
+    transform: translateY(-2px);
+}
+
+/* RESPONSIVE LAYAR HP */
+@media screen and (max-width: 768px) {
+    .form-publik-wrapper { 
+        min-height: 100vh;
+        padding: 40px 15px; 
+    }
+    .form-publik-header { padding: 30px 20px 10px 20px; }
+    .form-publik-body { padding: 10px 20px 20px 20px; }
+    
+    /* Mengubah grid 2 kolom jadi 1 kolom menyusun ke bawah di HP */
+    .input-grid { grid-template-columns: 1fr; gap: 15px; }
+    .full-width { grid-column: span 1; }
+    
+    .form-publik-footer {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+        padding: 25px 20px;
+    }
+    .footer-info { max-width: 100%; }
+    .btn-submit-pill { width: 100%; }
+}

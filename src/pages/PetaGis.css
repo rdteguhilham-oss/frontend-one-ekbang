@@ -1,0 +1,145 @@
+/* Container Utama */
+.peta-container {
+    padding: 20px;
+    color: var(--text-utama);
+}
+
+.header-peta h2 {
+    color: var(--text-utama);
+    margin-bottom: 5px;
+    margin-top: 0;
+}
+
+.header-peta p {
+    color: var(--text-redup);
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+/* Tata Letak Terbagi Dua */
+.peta-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr; 
+    gap: 20px;
+}
+
+/* Kartu Formulir & Peta */
+.form-peta-card, .kartu-peta {
+    background-color: var(--bg-card);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.form-peta-card h3 {
+    margin-top: 0;
+    color: var(--text-utama);
+}
+
+.form-group-peta {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.form-group-peta label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-utama);
+}
+
+.btn-simpan-titik {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-btn);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn-simpan-titik:hover {
+    background-color: #2563eb;
+}
+
+.wadah-peta {
+    height: 600px; 
+    width: 100%;
+    border-radius: 8px;
+    z-index: 1; 
+}
+
+/* Tombol Hapus Titik Peta (Anti-Bocor) */
+.btn-hapus-peta {
+    background-color: #ef4444 !important;
+    color: white !important; 
+    border: none !important;
+    padding: 8px 12px !important;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100%; 
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-hapus-peta:hover {
+    background-color: #dc2626 !important;
+}
+
+/* Penanda Kategori di Popup */
+.badge-popup {
+    background-color: #ef4444; /* Merah Tailwind */
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+/* SIHIR PETA DARK MODE (Membalikkan Warna Gambar Peta)      */
+body.dark-mode .leaflet-tile-pane {
+    filter: invert(1) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* Latar belakang pop-up dan panah bawahnya */
+body.dark-mode .leaflet-popup-content-wrapper,
+body.dark-mode .leaflet-popup-tip {
+    background-color: var(--bg-card) !important;
+    color: var(--text-utama) !important;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5) !important;
+}
+
+/* Memperbaiki warna tombol 'X' (Close) bawaan Leaflet agar elegan */
+.leaflet-popup-close-button {
+    color: var(--text-redup) !important;
+    padding: 5px !important;
+    font-weight: bold;
+}
+
+.leaflet-popup-close-button:hover {
+    color: #ef4444 !important;
+    background-color: transparent !important;
+}
+
+/* RESPONSIVE HP */
+@media screen and (max-width: 768px) {
+    .peta-layout {
+        grid-template-columns: 1fr; /* Form dan Peta bertumpuk ke bawah */
+    }
+    .wadah-peta {
+        height: 400px; /* Peta sedikit dipendekkan di HP */
+    }
+}

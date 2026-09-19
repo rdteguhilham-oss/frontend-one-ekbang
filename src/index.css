@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* 1. BUKU CATATAN: LIGHT MODE (DEFAULT TAILADMIN)           */
+:root {
+  --bg-body: #F1F5F9;         /* Latar luar aplikasi */
+  --bg-card: #FFFFFF;         /* Latar dalam kotak/kartu */
+  --text-utama: #1C2434;      /* Warna teks judul (Hitam lembut) */
+  --text-redup: #64748B;      /* Warna teks keterangan (Abu-abu) */
+  --border-halus: #E2E8F0;    /* Garis kotak/tabel */
+  --primary-btn: #3C50E0;     /* Biru khas TailAdmin */
+  --bg-hover: #F8FAFC;        /* Efek saat dilewati mouse */
+}
+
+/* 2. BUKU CATATAN: DARK MODE                                */
+body.dark-mode {
+  --bg-body: #1A222C;         /* Latar luar gelap */
+  --bg-card: #24303F;         /* Latar dalam kotak gelap */
+  --text-utama: #FFFFFF;      /* Teks jadi putih */
+  --text-redup: #8A99AF;      /* Teks keterangan kebiruan */
+  --border-halus: #313D4A;    /* Garis jadi gelap */
+  --primary-btn: #3C50E0;     /* Biru tetap sama */
+  --bg-hover: #313D4A;        /* Efek hover gelap */
+}
+
+/* 3. ATURAN DASAR SELURUH HALAMAN                           */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-utama);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 4. KONSISTENSI FORMULIR (INPUT, SELECT, TOMBOL) GLOBAL    */
+input, select, textarea {
+  background-color: transparent;
+  border: 1.5px solid var(--border-halus);
+  color: var(--text-utama);
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary-btn);
+}
+
+option {
+  background-color: var(--bg-card);
+  color: var(--text-utama);
+}
+
+input[type="file"] {
+  color: var(--text-redup);
+}
+
+/* Mengubah warna font di dalam input saat file di-upload */
+input[type="file"] {
+  color: var(--text-redup);
+}
+
+/* 5. KONSISTENSI KARTU & TABEL (GAYA TAILADMIN)             */
+.kartu-global {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-halus);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.tabel-utama {
+  width: 100%; 
+  border-collapse: collapse; 
+  margin-top: 20px; 
+}
+
+.tabel-utama th {
+  background-color: var(--bg-hover); 
+  color: var(--text-redup); 
+  text-align: left; 
+  padding: 15px; 
+  font-weight: 600; 
+  font-size: 13px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-halus);
+}
+
+.tabel-utama td {
+  padding: 15px; 
+  border-bottom: 1px solid var(--border-halus); 
+  color: var(--text-utama); 
+  font-size: 14px;
+}
+
+.tabel-utama tbody tr {
+    transition: background-color 0.2s;
+}
+
+.tabel-utama tbody tr:hover {
+  background-color: var(--bg-hover); 
+}
+
+/* WADAH AGAR TABEL BISA DI-SWIPE (DIGESER KANAN-KIRI) DI LAYAR HP */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Membuat usapan di HP Apple/Android sangat mulus */
+}
+
+/* 2. TAMBAHKAN INI DI BARIS PALING BAWAH (ATURAN MUTLAK TOMBOL TAMBAH) */
+.btn-tambah-utama {
+    background-color: var(--primary-btn) !important; /* !important menghentikan kebocoran CSS lama */
+    color: white !important;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    display: inline-block;
+}
+
+.btn-tambah-utama:hover {
+    background-color: #2563eb !important;
+}

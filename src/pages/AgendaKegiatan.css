@@ -1,0 +1,336 @@
+/* Container Utama */
+.agenda-container {
+    padding: 20px;
+    color: var(--text-utama);
+}
+
+.agenda-container h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+/* GRID LAYOUT: KALENDER KIRI, TABEL KANAN                   */
+.kalender-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Proporsi: Kalender 1 bagian, Tabel 2 bagian */
+    gap: 20px;
+}
+
+/* Kartu Pembungkus Tabel & Kalender */
+.kalender-card, .agenda-card {
+    background-color: var(--bg-card);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.kalender-card h3, .agenda-card h3 {
+    margin-top: 0;
+    color: var(--text-utama);
+}
+
+/* Header Tabel Agenda */
+.header-tabel-agenda {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.btn-lihat-semua {
+    background-color: transparent;
+    color: var(--primary-btn);
+    border: 1px solid var(--primary-btn);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-lihat-semua:hover {
+    background-color: var(--primary-btn);
+    color: white;
+}
+
+/* KUSTOMISASI REACT-CALENDAR AGAR MENYATU DENGAN TAILADMIN  */
+.kalender-kustom.react-calendar {
+    width: 100%;
+    background-color: transparent; /* Ikut background kotak */
+    border: none; /* Buang garis pinggir bawaan kalender */
+    font-family: inherit;
+    color: var(--text-utama);
+}
+
+/* Tombol Navigasi Bulan (Maju Mundur) */
+.react-calendar__navigation button {
+    color: var(--text-utama);
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 8px;
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+    background-color: var(--bg-hover);
+}
+
+/* Teks Hari (Sen, Sel, Rab, dll) */
+.react-calendar__month-view__weekdays {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12px;
+    color: var(--text-redup);
+    text-decoration: none;
+}
+.react-calendar__month-view__weekdays__weekday abbr {
+    text-decoration: none; /* Membuang garis bawah bawaan HTML abbr */
+}
+
+/* Kotak Tanggal */
+.react-calendar__tile {
+    color: var(--text-utama);
+    padding: 15px 0;
+    position: relative; /* Penting untuk posisi titik */
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+    background-color: var(--bg-hover);
+}
+
+/* Tanggal yang Sedang Dipilih */
+.react-calendar__tile--active {
+    background: var(--primary-btn) !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+/* Tanggal Weekend / Tanggal Luar Bulan Ini */
+.react-calendar__month-view__days__day--neighboringMonth {
+    color: var(--text-redup);
+}
+
+/* Titik Indikator Agenda Merah */
+.titik-agenda {
+    height: 6px;
+    width: 6px;
+    background-color: #ef4444; /* Merah menyala */
+    border-radius: 50%;
+    margin: 0 auto;
+    margin-top: 4px;
+}
+
+/* Keterangan Bawah Kalender */
+.info-kalender {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    color: var(--text-redup);
+}
+
+.titik-contoh {
+    height: 8px;
+    width: 8px;
+    background-color: #ef4444;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* SISA KODE (FORM & MODAL TETAP SAMA SEPERTI SEBELUMNYA)    */
+.agenda-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-utama) !important;
+}
+
+.catatan-full {
+    grid-column: span 2;
+}
+
+.btn-simpan-agenda {
+    grid-column: span 2;
+    padding: 14px;
+    background-color: var(--primary-btn);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-simpan-agenda:hover {
+    background-color: #2563eb;
+}
+
+.badge-kategori {
+    background-color: #f59e0b; 
+    color: white;
+    padding: 6px 10px; /* Sedikit diperbesar agar lebih proporsional */
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-block; /* Memaksa elemen menjadi balok utuh yang tidak bisa dipatahkan */
+    white-space: nowrap;   /* Mencegah teks terlipat ke baris bawah */
+}
+
+.link-foto {
+    background-color: #10b981;
+    color: white;
+    padding: 8px 12px; /* Ruang dalam diperbesar agar lebih empuk */
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-flex; /* Menggunakan flex agar rapi */
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap; /* Mencegah tombol terlipat dua baris */
+    transition: background-color 0.3s;
+}
+
+.link-foto:hover {
+    background-color: #059669;
+}
+
+/* Tombol Upload Bukti Susulan di Tabel Agenda */
+.btn-upload-susulan {
+    background-color: #10b981 !important; /* Hijau standar ONE EKBANG */
+    color: white !important;
+    border: none !important;
+    padding: 8px 14px !important;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    
+    /* KUNCI AGAR RAPI MEMANJANG KE SAMPING */
+    display: inline-flex !important; 
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; 
+    white-space: nowrap !important; /* Melarang teks turun ke bawah */
+    min-width: max-content !important; /* Memaksa kotak membentang selebar isi teks */
+    
+    transition: all 0.3s ease;
+}
+
+.btn-upload-susulan:hover {
+    background-color: #059669 !important; /* Hijau lebih gelap saat disorot mouse */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+}
+
+.btn-hapus-agenda {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 16px; 
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.btn-hapus-agenda:hover {
+    background-color: #dc2626;
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--bg-card) !important;
+    color: var(--text-utama) !important;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    position: relative;
+    animation: turunDariAtas 0.3s ease-out;
+}
+
+@keyframes turunDariAtas {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.btn-tutup-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.btn-tutup-modal:hover {
+    background-color: #dc2626;
+}
+
+/* RESPONSIVE HP: KALENDER DI ATAS, TABEL DI BAWAH */
+@media screen and (max-width: 768px) {
+    .kalender-layout {
+        grid-template-columns: 1fr; 
+    }
+    .agenda-form {
+        grid-template-columns: 1fr; 
+    }
+    .catatan-full, .btn-simpan-agenda {
+        grid-column: span 1;
+    }
+    .header-tabel-agenda {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}

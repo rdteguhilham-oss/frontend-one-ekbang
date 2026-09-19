@@ -1,0 +1,249 @@
+/* BACKGROUND UTAMA MENGIKUTI TEMA ONE EKBANG */
+.login-wrapper-modern {
+    min-height: 100vh;
+    width: 100%; 
+    background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
+}
+
+body.dark-mode .login-wrapper-modern {
+    background: linear-gradient(135deg, #1E1B4B 0%, #2E3856 100%);
+}
+
+/* KARTU SPLIT PANEL (KIRI KANAN) */
+.login-card-split {
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    min-height: 500px;
+    background-color: var(--bg-card); /* Otomatis jadi gelap di Dark Mode */
+    border-radius: 20px; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    overflow: hidden; 
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+/* PANEL KIRI (BRANDING & BIRU) */
+.login-branding {
+    flex: 1;
+    background: linear-gradient(135deg, var(--primary-btn) 0%, #2563eb 100%);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 60px;
+    position: relative;
+}
+
+.branding-content {
+    position: relative;
+    z-index: 10;
+}
+
+.icon-roket {
+    font-size: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 90px;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin: 0 auto 15px auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.branding-content h2 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.branding-content p {
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+/* DEKORASI AWAN PEMBATAS */
+.awan-desktop {
+    position: absolute;
+    top: 0;
+    right: -1px; /* Menutup celah piksel */
+    width: 40px;
+    height: 100%;
+    z-index: 5;
+}
+
+.awan-mobile {
+    display: none; /* Sembunyikan di desktop */
+}
+
+/* PANEL KANAN (FORM) */
+.login-form-section {
+    flex: 1.2;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: var(--bg-card);
+}
+
+.form-header h3 {
+    color: var(--text-utama);
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.input-group-login {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.input-group-login label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-redup);
+    margin-bottom: 8px;
+    margin-left: 15px;
+}
+
+/* DESAIN INPUT KAPSUL (KONSISTEN DENGAN TAMBAH LAYANAN) */
+.input-login-pill {
+    background-color: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    color: #1e293b;
+    border-radius: 30px !important; 
+    padding: 14px 20px !important;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body.dark-mode .input-login-pill {
+    background-color: var(--bg-body);
+    border-color: var(--border-halus);
+    color: var(--text-utama);
+}
+
+.input-login-pill:focus {
+    background-color: #ffffff;
+    border-color: var(--primary-btn);
+    box-shadow: 0 0 0 3px rgba(60, 80, 224, 0.1);
+}
+
+body.dark-mode .input-login-pill:focus {
+    background-color: var(--bg-card);
+}
+
+/* TOMBOL SIGN IN */
+.btn-login-pill {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-btn);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(60, 80, 224, 0.25);
+    margin-top: 10px;
+}
+
+.btn-login-pill:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+.lupa-password-container-modern {
+    text-align: right;
+    margin-top: -10px; 
+    margin-bottom: 25px;
+    margin-right: 10px;
+}
+
+.link-lupa-password {
+    color: var(--primary-btn);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.link-lupa-password:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+/* MODAL LUPA PASSWORD TETAP KONSISTEN */
+.login-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.login-modal-content {
+    background-color: var(--bg-card);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid var(--border-halus);
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    position: relative;
+    text-align: left;
+    animation: turunDariAtas 0.3s ease-out;
+}
+
+/* RESPONSIVE LAYAR HP (MENGUBAH JADI STACK VERTIKAL) */
+@media screen and (max-width: 768px) {
+    .login-card-split {
+        flex-direction: column;
+        max-width: 400px;
+        min-height: auto;
+    }
+    
+    .login-branding {
+        padding: 40px 20px 60px 20px; /* Bawah diperlebar agar awan pas */
+    }
+    
+    .awan-desktop {
+        display: none; /* Matikan awan samping */
+    }
+    
+    .awan-mobile {
+        display: block; /* Nyalakan awan bawah */
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        z-index: 5;
+    }
+
+    .login-form-section {
+        padding: 40px 25px;
+    }
+}

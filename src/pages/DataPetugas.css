@@ -1,0 +1,217 @@
+/* Container Utama */
+.petugas-container {
+    padding: 20px;
+    color: var(--text-utama);
+}
+
+.petugas-title {
+    margin-bottom: 20px;
+    margin-top: 0;
+    color: var(--text-utama);
+}
+
+/* Kartu Pembungkus Tabel */
+.petugas-table-card {
+    background-color: var(--bg-card);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Form Grid */
+.petugas-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-utama);
+}
+
+/* Tombol Simpan */
+.btn-simpan {
+    grid-column: span 2;
+    padding: 12px;
+    background-color: var(--primary-btn);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-simpan:hover {
+    background-color: #2563eb;
+}
+
+/* Tombol Lihat SK */
+.btn-lihat {
+    background-color: #10b981; /* Hijau cerah Tailwind */
+    color: white;
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.3s;
+    display: inline-block;
+}
+
+.btn-lihat:hover {
+    background-color: #059669;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+/* POP-UP / MODAL DATA PETUGAS    */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--bg-card) !important; /* !important memaksa warna mengikuti mode gelap */
+    color: var(--text-utama) !important;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Bayangan sedikit ditebalkan agar pop-up menonjol */
+    position: relative;
+    animation: turunDariAtas 0.3s ease-out;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.petugas-form .form-group label {
+    color: var(--text-utama) !important;
+}
+
+@keyframes turunDariAtas {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.btn-tutup-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #ef4444; /* Merah terang */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.btn-tutup-modal:hover {
+    background-color: #dc2626;
+}
+
+/* Tombol + Tambah Petugas */
+.btn-tambah-utama {
+    background-color: var(--primary-btn);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.btn-tambah-utama:hover {
+    background-color: #2563eb;
+}
+
+/* PENCARIAN DATA PETUGAS                                    */
+.header-tabel-petugas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-tabel-petugas h3 {
+    margin: 0;
+    color: var(--text-utama);
+}
+
+.search-petugas-group {
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 8px; 
+}
+
+.search-petugas-group label {
+    font-weight: bold;
+    font-size: 14px;
+    color: var(--text-utama);
+}
+
+.search-petugas-group input {
+    padding: 8px 12px;
+    min-width: 240px;
+}
+
+/* RESPONSIVE PENCARIAN HP */
+@media screen and (max-width: 768px) {
+    .header-tabel-petugas {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .search-petugas-group {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .search-petugas-group input {
+        width: 100%; /* Kotak pencarian memenuhi layar di HP */
+    }
+}
+
+/* RESPONSIVE HP */
+@media screen and (max-width: 768px) {
+    .petugas-form {
+        grid-template-columns: 1fr;
+    }
+    .btn-simpan {
+        grid-column: span 1;
+    }
+}
