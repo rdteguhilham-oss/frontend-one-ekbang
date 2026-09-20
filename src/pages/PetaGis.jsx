@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { getTitikPeta, hapusTitikPeta, tambahTitikPeta, updateStatusPeta } from '../services/api'; 
+import Swal from 'sweetalert2'; // <-- SWAL MASUK!
 import 'leaflet/dist/leaflet.css'; 
 import './PetaGis.css'; 
 
@@ -21,15 +22,18 @@ export default function PetaGIS() {
     const [ketua, setKetua] = useState('');
     const [luasLahan, setLuasLahan] = useState('');
     const [dataRw, setDataRw] = useState('');
-    const [statusRutilahu, setStatusRutilahu] = useState('');
+    const [statusProgres, setStatusProgres] = useState('');
     const [jenisOrganik, setJenisOrganik] = useState('');
+
+    // Array kategori yang diizinkan untuk di-update statusnya
+    const kategoriBisaUpdate = ['RUTILAHU', 'POHON TUMBANG', 'INFRASTRUKTUR UMUM'];
 
     const fetchDataPeta = async () => {
         try {
             const hasil = await getTitikPeta();
             setDataTitik(hasil);
         } catch (error) {
-            console.error("Gagal menarik data titik peta");
+            Swal.fire({ title: 'Gagal Memuat Peta', text: 'Koneksi ke server terputus.', icon: 'error' });
         }
     };
 
@@ -41,8 +45,6 @@ export default function PetaGIS() {
         e.preventDefault();
         
         const formData = new FormData();
-        
-        // Kategori bisa saja ditambahkan dengan sub-kategori organik
         const kategoriFinal = kategori === 'PENGOLAHAN SAMPAH ORGANIK' 
             ? `SAMPAH ORGANIK (${jenisOrganik})` 
             : kategori;
@@ -59,58 +61,91 @@ export default function PetaGIS() {
             formData.append('luas_lahan', luasLahan);
         } else if (kategori === 'KBS') {
             formData.append('data_rw', dataRw);
-        } else if (kategori === 'RUTILAHU') {
-            formData.append('status', statusRutilahu);
+        } else if (kategoriBisaUpdate.includes(kategori)) {
+            formData.append('status', statusProgres);
         }
+
         try {
             const result = await tambahTitikPeta(formData);
             if (result.status === 'sukses') {
-                alert(result.pesan);
+                Swal.fire({ title: 'Berhasil!', text: result.pesan, icon: 'success', confirmButtonColor: '#3C50E0' });
                 fetchDataPeta(); 
                 
-                // Reset semua form
                 setKategori(''); setNamaLokasi(''); setAlamat('');
                 setLatitude(''); setLongitude(''); setFoto(null);
                 setKetua(''); setLuasLahan(''); setDataRw('');
-                setStatusRutilahu(''); setJenisOrganik('');
+                setStatusProgres(''); setJenisOrganik('');
                 document.getElementById('inputFotoPeta').value = '';
             } else {
-                alert("Gagal: " + result.pesan);
+                Swal.fire({ title: 'Gagal!', text: result.pesan, icon: 'error' });
             }
         } catch (error) {
-            alert("Kesalahan server saat menyimpan titik!");
+            Swal.fire({ title: 'Error!', text: 'Kesalahan server saat menyimpan titik!', icon: 'error' });
         }
     };
 
     const handleHapusId = async (id) => {
-        const konfirmasi = window.confirm('Yakin menghapus titik pada peta?');
-        if (!konfirmasi) return; 
-            try {
-                const result = await hapusTitikPeta(id);
-                if (result.status === "sukses") {
-                    alert(result.pesan);
-                    fetchDataPeta();
-                } else {
-                    alert ("Gagal: " + result.pesan);
+        Swal.fire({
+            title: 'Hapus Titik Peta?',
+            text: 'Yakin menghapus titik pada peta?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const resultApi = await hapusTitikPeta(id);
+                    if (resultApi.status === "sukses") {
+                        Swal.fire({ title: 'Terhapus!', text: resultApi.pesan, icon: 'success', confirmButtonColor: '#3C50E0' });
+                        fetchDataPeta();
+                    } else {
+                        Swal.fire({ title: 'Gagal!', text: resultApi.pesan, icon: 'error' });
+                    }
+                } catch (error) {
+                    Swal.fire({ title: 'Error', text: 'Kesalahan saat menghapus titik pada peta!', icon: 'error' });
                 }
-            } catch (error) {
-                alert('Terjadi Kesalahan saat menghapus titik pada peta, periksa jaringan!');
             }
-    }
+        });
+    };
+
+    const handleUpdateStatusPopup = async (idTitik, statusBaru) => {
+        Swal.fire({
+            title: 'Perbarui Status Progres?',
+            text: `Ubah status lokasi ini menjadi "${statusBaru}"?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3C50E0',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Perbarui!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await updateStatusPeta(idTitik, statusBaru);
+                    Swal.fire({ title: 'Berhasil!', text: 'Status lokasi berhasil diperbarui!', icon: 'success', confirmButtonColor: '#3C50E0' });
+                    fetchDataPeta(); 
+                } catch (error) {
+                    Swal.fire({ title: 'Gagal', text: "Gagal mengubah status peta.", icon: 'error' });
+                }
+            }
+        });
+    };
 
     return (
         <div className="peta-container">
             <div className="header-peta">
                 <h2>Peta Interaktif GIS (Modul Pemetaan Ekbang)</h2>
-                <p>Sistem Informasi Geografis sebaran titik Rutilahu, Buruan Sae, KBS, dan Pengolahan Sampah.</p>
+                <p>Sistem Informasi Geografis sebaran titik infrastruktur dan pengelolaan wilayah.</p>
             </div>
 
             <div className="peta-layout">
                 <div className="form-peta-card">
-                    <h3>Tambah Titik Baru</h3>
+                    <h3 className="judul-form-peta">Tambah Titik Baru</h3>
                     <form onSubmit={handleSimpan}>
                         
-                        {/* 1. PILIH KATEGORI UTAMA */}
                         <div className="form-group-peta">
                             <label>Kategori Lokasi</label>
                             <select value={kategori} onChange={(e) => setKategori(e.target.value)} required>
@@ -121,26 +156,23 @@ export default function PetaGIS() {
                                 <option value="PENGOLAHAN SAMPAH ORGANIK">PENGOLAHAN SAMPAH ORGANIK</option>
                                 <option value="BANK SAMPAH">BANK SAMPAH (Anorganik)</option>
                                 <option value="POHON TUMBANG">POHON TUMBANG</option>
-                                <option value="INFRASTRUKTUR UMUM">INFRASTRUKTUR UMUM (Jalan/Gorong-gorong/Fasum)</option>
+                                <option value="INFRASTRUKTUR UMUM">INFRASTRUKTUR UMUM (Jalan/Gorong/Fasum)</option>
                             </select>
                         </div>
 
-                        {/* FORM DINAMIS (MUNCUL SESUAI PILIHAN KATEGORI)  */}
-                        
-                        {/* Dinamis: RUTILAHU */}
-                        {kategori === 'RUTILAHU' && (
+                        {/* FORM DINAMIS */}
+                        {kategoriBisaUpdate.includes(kategori) && (
                             <div className="form-group-peta">
-                                <label>Status Rutilahu</label>
-                                <select value={statusRutilahu} onChange={(e) => setStatusRutilahu(e.target.value)} required>
+                                <label>Status Penanganan Awal</label>
+                                <select value={statusProgres} onChange={(e) => setStatusProgres(e.target.value)} required>
                                     <option value="">-- Pilih Status --</option>
-                                    <option value="Selesai Dibangun">Selesai Dibangun</option>
-                                    <option value="Sedang Diproses">Sedang Diproses</option>
-                                    <option value="Pengajuan">Pengajuan</option>
+                                    <option value="Pengajuan">Pengajuan Baru</option>
+                                    <option value="Sedang Diproses">Sedang Diproses / Dikerjakan</option>
+                                    <option value="Selesai Ditangani">Selesai Ditangani</option>
                                 </select>
                             </div>
                         )}
 
-                        {/* Dinamis: BURUAN SAE */}
                         {kategori === 'BURUAN SAE' && (
                             <>
                                 <div className="form-group-peta">
@@ -154,7 +186,6 @@ export default function PetaGIS() {
                             </>
                         )}
 
-                        {/* Dinamis: KBS (Kawasan Bebas Sampah) */}
                         {kategori === 'KBS' && (
                             <div className="form-group-peta">
                                 <label>Data RW</label>
@@ -162,7 +193,6 @@ export default function PetaGIS() {
                             </div>
                         )}
 
-                        {/* Dinamis: PENGOLAHAN SAMPAH ORGANIK */}
                         {kategori === 'PENGOLAHAN SAMPAH ORGANIK' && (
                             <div className="form-group-peta">
                                 <label>Sub-Kategori Organik</label>
@@ -176,10 +206,8 @@ export default function PetaGIS() {
                             </div>
                         )}
 
-                        {/* FORM UMUM (SELALU MUNCUL)*/}
-
                         <div className="form-group-peta">
-                            <label>Nama Penerima / Nama Titik Lokasi</label>
+                            <label>Nama Penerima / Titik Lokasi</label>
                             <input type="text" placeholder="Contoh: Bpk. Asep / Bank Sampah RW 02" value={namaLokasi} onChange={(e) => setNamaLokasi(e.target.value)} required />
                         </div>
                         <div className="form-group-peta">
@@ -196,9 +224,7 @@ export default function PetaGIS() {
                         </div>
                         <div className="form-group-peta">
                             <label>Foto Lokasi / Dokumentasi</label>
-                            <small style={{ color: '#ef4444', marginTop: '6px', display: 'block', fontWeight: 'bold' }}>
-                                *Ukuran file maksimal 5 MB
-                            </small>
+                            <small className="teks-peringatan-peta">*Ukuran file maksimal 5 MB</small>
                             <input id="inputFotoPeta" type="file" accept="image/*" onChange={(e) => setFoto(e.target.files[0])} required />
                         </div>
                         <button type="submit" className="btn-simpan-titik">Tanam Pin di Peta</button>
@@ -216,51 +242,43 @@ export default function PetaGIS() {
                             <Marker key={titik.id} position={[titik.latitude, titik.longitude]}>
                                 <Popup>
                                     <span className="badge-popup">{titik.kategori_lokasi}</span><br/>
-                                    <strong style={{color: 'var(--text-utama)'}}>{titik.nama_lokasi}</strong><br/>
-                                    <small style={{color: 'var(--text-redup)'}}>{titik.alamat}</small>
-                                    {/* AREA DATA DINAMIS (Tampil jika data ada) */}
-                                    <div style={{ marginTop: '8px', marginBottom: '8px', fontSize: '12px', color: 'var(--text-utama)' }}>
+                                    <strong className="teks-utama-peta">{titik.nama_lokasi}</strong><br/>
+                                    <small className="teks-redup-peta">{titik.alamat}</small>
+                                    
+                                    {/* INFO DINAMIS */}
+                                    <div className="wadah-info-dinamis">
                                         {titik.ketua && (
-                                            <div style={{ marginBottom: '2px' }}><strong>Ketua:</strong> {titik.ketua}</div>
+                                            <div className="baris-info-peta"><strong>Ketua:</strong> {titik.ketua}</div>
                                         )}
                                         {titik.luas_lahan && (
-                                            <div style={{ marginBottom: '2px' }}><strong>Luas Lahan:</strong> {titik.luas_lahan}</div>
+                                            <div className="baris-info-peta"><strong>Luas Lahan:</strong> {titik.luas_lahan}</div>
                                         )}
                                         {titik.data_rw && (
-                                            <div style={{ marginBottom: '2px' }}><strong>Data RW:</strong> {titik.data_rw}</div>
+                                            <div className="baris-info-peta"><strong>Data RW:</strong> {titik.data_rw}</div>
                                         )}
-                                        {/* LOGIKA UBAH STATUS RUTILAHU */}
-                                        {titik.kategori_lokasi === 'RUTILAHU' ? (
-                                            <div style={{ marginTop: '8px', padding: '8px', backgroundColor: 'var(--bg-hover)', borderRadius: '6px' }}>
-                                                <strong style={{display: 'block', marginBottom: '5px'}}>Status Saat Ini: {titik.status}</strong>
+                                        
+                                        {/* DROPDOWN UPDATE STATUS UNTUK 3 KATEGORI */}
+                                        {kategoriBisaUpdate.includes(titik.kategori_lokasi) ? (
+                                            <div className="container-status-peta">
+                                                <strong className="label-status-peta">Status: {titik.status}</strong>
                                                 <select 
-                                                    style={{padding: '4px', fontSize: '11px', width: '100%', borderRadius: '4px', border: '1px solid var(--border-halus)'}}
-                                                    onChange={async (e) => {
-                                                        const confirm = window.confirm("Ubah status progres lokasi ini?");
-                                                        if(confirm) {
-                                                            try {
-                                                                await updateStatusPeta(titik.id, e.target.value);
-                                                                fetchDataPeta(); // Refresh peta
-                                                            } catch (error) {
-                                                                alert("Gagal mengubah status peta.");
-                                                            }
-                                                        }
-                                                    }}
+                                                    className="select-status-peta"
+                                                    onChange={(e) => handleUpdateStatusPopup(titik.id, e.target.value)}
                                                     defaultValue=""
                                                 >
                                                     <option value="" disabled>-- Perbarui Status --</option>
-                                                    <option value="Pengajuan">Pengajuan</option>
+                                                    <option value="Pengajuan">Pengajuan Baru</option>
                                                     <option value="Sedang Diproses">Sedang Diproses</option>
-                                                    <option value="Selesai Dibangun">Selesai Dibangun</option>
+                                                    <option value="Selesai Ditangani">Selesai Ditangani</option>
                                                 </select>
                                             </div>
                                         ) : (
-                                            titik.status && (<div style={{ marginBottom: '2px' }}><strong>Status:</strong> {titik.status}</div>)
+                                            titik.status && (<div className="baris-info-peta"><strong>Status:</strong> {titik.status}</div>)
                                         )}
                                     </div>
 
                                     {titik.foto_url && (
-                                        <a href={`https://backend-one-ekbang-production.up.railway.app/uploads/${titik.foto_url}`} target="_blank" rel="noreferrer" style={{color: 'var(--primary-btn)', fontWeight: 'bold', display: 'inline-block', marginTop: '5px'}}>
+                                        <a href={`https://backend-one-ekbang-production.up.railway.app/uploads/${titik.foto_url}`} target="_blank" rel="noreferrer" className="link-foto-peta">
                                             Lihat Foto Lokasi
                                         </a>
                                     )}

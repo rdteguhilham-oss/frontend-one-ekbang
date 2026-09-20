@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 import { tambahLayanan } from "../services/api"; 
 import './TambahLayanan.css';
 
@@ -27,17 +28,17 @@ export default function TambahLayanan() {
         e.preventDefault(); 
 
         if (!nik || !nama || !noTelepon || !jenisLayanan) {
-            alert('Lengkapi form terlebih dahulu.');
+            Swal.fire('Lengkapi form terlebih dahulu.');
             return;
         }
 
         if (nik.length !== 16) {
-            alert("Maaf, NIK harus pas 16 digit!");
+            Swal.fire("Maaf, NIK harus pas 16 digit!");
             return;
         }
 
         if (isNaN(nik)) {
-            alert("Maaf, NIK hanya boleh berisi angka!");
+            Swal.fire("Maaf, NIK hanya boleh berisi angka!");
             return;
         }
         
@@ -65,13 +66,13 @@ export default function TambahLayanan() {
         try {
             const data = await tambahLayanan(formData);
             if (data && data.status === 'sukses') {
-                alert('Berhasil: ' + data.pesan);
+                Swal.fire('Berhasil: ' + data.pesan);
                 window.location.reload();
             } else {
-                alert('Gagal menyimpan pengajuan.');
+                Swal.fire('Gagal menyimpan pengajuan.');
             }
         } catch (error) {
-            alert("Terjadi kesalahan sistem/server mati saat mengirim data!");
+            Swal.fire("Terjadi kesalahan sistem/server mati saat mengirim data!");
         }
     };
 

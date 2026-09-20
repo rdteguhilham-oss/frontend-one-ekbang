@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import { getDataAdmin, tambahAdmin, hapusAdmin, getDataLayanan, getPetugas, getKegiatanAgenda, getNotifikasi, tandaiNotifikasiDibaca } from '../services/api';
 import './DaftarAdmin.css'; 
 
@@ -53,7 +54,7 @@ export default function DaftarAdmin() {
           await tandaiNotifikasiDibaca(id);
           fetchNotifikasi(); // Refresh data notifikasi setelah diklik
       } catch (error) {
-          alert("Gagal memperbarui status notifikasi.");
+          Swal.fire("Gagal memperbarui status notifikasi.");
       }
   };
 
@@ -76,38 +77,53 @@ export default function DaftarAdmin() {
       try {
           const result = await tambahAdmin(dataBaru);
           if (result.status === 'sukses') {
-              alert(result.pesan);
+              Swal.fire(result.pesan);
               fetchAdmin(); 
               setNik(''); setNamaLengkap(''); setUsername(''); setPassword('');
           } else {
-              alert("Gagal: " + result.pesan);
+              Swal.fire("Gagal: " + result.pesan);
           }
       } catch (error) {
-          alert("Terjadi kesalahan sistem saat membuat akun.");
+          Swal.fire("Terjadi kesalahan sistem saat membuat akun.");
       }
-  };
+    };
 
-  const handleHapus = async (id) => {
-      if (dataAdmin.length <= 1) {
-          alert("PERINGATAN: Penghapusan ditolak! Harus ada minimal 1 akun Master Admin yang tersisa agar sistem tidak terkunci.");
-          return; 
-      }
+    const handleHapus = async (id) => {
+        if (dataAdmin.length <= 1) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak!',
+                text: 'Harus ada minimal 1 akun Master Admin yang tersisa agar sistem tidak terkunci.',
+                confirmButtonColor: '#3C50E0'
+            });
+            return; 
+        }
 
-      const konfirmasi = window.confirm("Yakin ingin mencabut akses akun staf ini secara permanen?");
-      if (!konfirmasi) return;
-
-      try {
-          const result = await hapusAdmin(id);
-          if (result.status === 'sukses') {
-              alert(result.pesan);
-              fetchAdmin(); 
-          } else {
-              alert("Gagal: " + result.pesan);
-          }
-      } catch (error) {
-          alert("Terjadi kesalahan sistem saat menghapus akun.");
-      }
-  };
+        Swal.fire({
+            title: 'Cabut Akses Staf?',
+            text: "Yakin ingin mencabut akses akun staf ini secara permanen?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Cabut Akses!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const resultApi = await hapusAdmin(id);
+                    if (resultApi.status === 'sukses') {
+                        Swal.fire({ title: 'Terhapus!', text: resultApi.pesan, icon: 'success', confirmButtonColor: '#3C50E0' });
+                        fetchAdmin(); 
+                    } else {
+                        Swal.fire({ title: 'Gagal!', text: resultApi.pesan, icon: 'error' });
+                    }
+                } catch (error) {
+                    Swal.fire({ title: 'Error', text: "Terjadi kesalahan sistem saat menghapus akun.", icon: 'error' });
+                }
+            }
+        });
+    };
 
   return (
     <div className="admin-container">

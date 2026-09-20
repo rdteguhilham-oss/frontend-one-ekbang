@@ -134,6 +134,83 @@ body.dark-mode .leaflet-popup-tip {
     background-color: transparent !important;
 }
 
+/* KELAS CSS PENGGANTI INLINE STYLE DI REACT              */
+.judul-form-peta {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.teks-peringatan-peta {
+    color: #ef4444;
+    margin-top: 6px;
+    display: block;
+    font-weight: bold;
+}
+
+.teks-utama-peta {
+    color: var(--text-utama);
+    font-weight: bold;
+}
+
+.teks-redup-peta {
+    color: var(--text-redup);
+}
+
+.wadah-info-dinamis {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--text-utama);
+}
+
+.baris-info-peta {
+    margin-bottom: 2px;
+}
+
+.container-status-peta {
+    margin-top: 8px;
+    padding: 8px;
+    background-color: var(--bg-hover);
+    border-radius: 6px;
+}
+
+.label-status-peta {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.select-status-peta {
+    padding: 4px;
+    font-size: 11px;
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid var(--border-halus);
+    background-color: var(--bg-card); 
+    color: var(--text-utama);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.select-status-peta:focus {
+    border-color: var(--primary-btn);
+}
+
+.link-foto-peta {
+    color: var(--primary-btn);
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 5px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.link-foto-peta:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
 /* RESPONSIVE HP */
 @media screen and (max-width: 768px) {
     .peta-layout {

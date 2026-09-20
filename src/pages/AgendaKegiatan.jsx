@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar'; 
 import 'react-calendar/dist/Calendar.css'; 
+import Swal from 'sweetalert2';
 import { getKegiatanAgenda, tambahKegiatanAgenda, uploadFotoAgenda, hapusKegiatanAgenda } from '../services/api';
 import './AgendaKegiatan.css';
 
@@ -51,7 +52,7 @@ export default function AgendaKegiatan() {
         try {
             const result = await tambahKegiatanAgenda(formData);
             if (result.status === 'sukses') {
-                alert(result.pesan);
+                Swal.fire(result.pesan);
                 fetchAgenda(); 
                 
                 setJudul(''); setKategori(''); setTanggalWaktu(''); 
@@ -60,50 +61,70 @@ export default function AgendaKegiatan() {
 
                 setIsModalOpen(false);
             } else {
-                alert("Gagal: " + result.pesan);
+                Swal.fire("Gagal: " + result.pesan);
             }
         } catch (error) {
-            alert("Terjadi kesalahan saat menyimpan agenda (Server mati)!");
+            Swal.fire("Terjadi kesalahan saat menyimpan agenda (Server mati)!");
         }
     };
 
     const handleUploadSusulan = async (id, file) => {
         if (!file) return; 
 
-        const konfirmasi = window.confirm("Yakin ingin mengunggah foto ini sebagai dokumentasi?");
-        if (!konfirmasi) return;
+        Swal.fire({
+            title: 'Unggah Dokumentasi?',
+            text: "Yakin ingin mengunggah foto ini sebagai dokumentasi?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3C50E0',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Unggah!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData();
+                formData.append('foto_dokumentasi', file);
 
-        const formData = new FormData();
-        formData.append('foto_dokumentasi', file);
-
-        try {
-            const result = await uploadFotoAgenda(id, formData);
-            if (result.status === 'sukses') {
-                alert(result.pesan);
-                fetchAgenda(); 
-            } else {
-                alert("Gagal: " + result.pesan);
+                try {
+                    const resultApi = await uploadFotoAgenda(id, formData);
+                    if (resultApi.status === 'sukses') {
+                        Swal.fire({ title: 'Berhasil!', text: resultApi.pesan, icon: 'success', confirmButtonColor: '#3C50E0' });
+                        fetchAgenda(); 
+                    } else {
+                        Swal.fire({ title: 'Gagal!', text: resultApi.pesan, icon: 'error' });
+                    }
+                } catch (error) {
+                    Swal.fire({ title: 'Error', text: "Terjadi kesalahan saat mengunggah foto!", icon: 'error' });
+                }
             }
-        } catch (error) {
-            alert("Terjadi kesalahan saat mengunggah foto!");
-        }
+        });
     };
 
     const hapusAgenda = async (id) => {
-        const konfirmasi = window.confirm("Yakin ingin membatalkan dan menghapus agenda ini?");
-        if (!konfirmasi) return; 
-
-        try {
-            const result = await hapusKegiatanAgenda(id);
-            if (result.status === 'sukses') {
-                alert(result.pesan);
-                fetchAgenda(); 
-            } else {
-                alert("Gagal: " + result.pesan);
+        Swal.fire({
+            title: 'Hapus Agenda?',
+            text: "Yakin ingin membatalkan dan menghapus agenda ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const resultApi = await hapusKegiatanAgenda(id);
+                    if (resultApi.status === 'sukses') {
+                        Swal.fire({ title: 'Terhapus!', text: resultApi.pesan, icon: 'success', confirmButtonColor: '#3C50E0' });
+                        fetchAgenda(); 
+                    } else {
+                        Swal.fire({ title: 'Gagal!', text: resultApi.pesan, icon: 'error' });
+                    }
+                } catch (error) {
+                    Swal.fire({ title: 'Error', text: "Terjadi kesalahan saat menghapus data.", icon: 'error' });
+                }
             }
-        } catch (error) {
-            alert("Terjadi kesalahan saat menghapus data (Koneksi Mati).");
-        }
+        });
     };
 
     // LOGIKA KALENDER: Memberi Titik Merah pada tanggal yg ada jadwal

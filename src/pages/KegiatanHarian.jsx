@@ -1,13 +1,15 @@
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import { 
     getPetugas, 
     tambahKegiatanGober, 
     getKegiatanGober, 
     tambahKegiatanSampah, 
     getKegiatanSampah 
-} from '../services/api';
+}
+from '../services/api';
 import './KegiatanHarian.css';
 
 export default function KegiatanHarian() {
@@ -60,7 +62,7 @@ export default function KegiatanHarian() {
     const submitGober = async (e) => {
         e.preventDefault();
         if (!fotoGober) {
-            alert("Foto kegiatan Gober wajib diunggah!");
+            Swal.fire("Foto kegiatan Gober wajib diunggah!");
             return;
         }
 
@@ -74,15 +76,15 @@ export default function KegiatanHarian() {
         try {
             const result = await tambahKegiatanGober(formData);
             if (result.status === 'sukses') {
-                alert(result.pesan);
+                Swal.fire(result.pesan);
                 fetchData(); 
                 setIdPetugasGober(''); setLokasi(''); setPanjangMeter(''); setFotoGober(null);
                 setIsModalOpen(false);
             } else {
-                alert("Gagal: " + result.pesan);
+                Swal.fire("Gagal: " + result.pesan);
             }
         } catch (error) {
-            alert("Koneksi gagal saat menyimpan laporan Gober!");
+            Swal.fire("Koneksi gagal saat menyimpan laporan Gober!");
         }
     };
 
@@ -91,7 +93,7 @@ export default function KegiatanHarian() {
         
         // WAJIB ADA FOTO SEKARANG
         if (!fotoSampah) {
-            alert("Foto bukti timbangan wajib diunggah!");
+            Swal.fire("Foto bukti timbangan wajib diunggah!");
             return;
         }
 
@@ -106,15 +108,15 @@ export default function KegiatanHarian() {
         try {
             const result = await tambahKegiatanSampah(formData);
             if (result.status === 'sukses') {
-                alert(result.pesan);
+                Swal.fire(result.pesan);
                 fetchData();
                 setIdPetugasSampah(''); setDataRw(''); setBeratKiloan(''); setFotoSampah(null);
                 setIsModalOpen(false);
             } else {
-                alert("Gagal: " + result.pesan);
+                Swal.fire("Gagal: " + result.pesan);
             }
         } catch (error) {
-            alert("Koneksi gagal saat menyimpan laporan Sampah!");
+            Swal.fire("Koneksi gagal saat menyimpan laporan Sampah!");
         }
     };
 

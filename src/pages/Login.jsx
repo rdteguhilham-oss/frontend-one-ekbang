@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import { loginAdmin, kirimLupaPassword } from "../services/api";
 import './Login.css';
 
@@ -20,15 +21,15 @@ export default function Login() {
             const respons = await loginAdmin(username, password);
 
             if (respons && respons.status === 'sukses') {
-                alert(respons.pesan);
+                Swal.fire(respons.pesan);
                 localStorage.setItem("isLoggedIn","true");
                 localStorage.setItem("token", respons.token);
                 navigate("/admin"); 
             } else {
-                alert(respons?.pesan || "Login Gagal!");
+                Swal.fire(respons?.pesan || "Login Gagal!");
             }
         } catch (error) {
-            alert("Koneksi ke server gagal! Pastikan server menyala.");
+            Swal.fire("Koneksi ke server gagal! Pastikan server menyala.");
         }
     };
 
@@ -37,14 +38,14 @@ export default function Login() {
         try {
             const result = await kirimLupaPassword(resetUsername);
             if (result.status === 'sukses') {
-                alert(result.pesan);
+                Swal.fire(result.pesan);
                 setIsModalOpen(false); 
                 setResetUsername(""); 
             } else {
-                alert("Gagal: " + result.pesan);
+                Swal.fire("Gagal: " + result.pesan);
             }
         } catch (error) {
-            alert("Koneksi ke server gagal saat mengirim permintaan.");
+            Swal.fire("Koneksi ke server gagal saat mengirim permintaan.");
         }
     };
 

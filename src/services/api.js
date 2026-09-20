@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 const getAuthHeader = () => {
     const token = localStorage.getItem("token");
     return token ? { 'Authorization': `Bearer ${token}` } : {};
@@ -8,8 +10,15 @@ const tanganiRespons = async (respons) => {
     if (respons.status === 401 || respons.status === 403) {
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("token");
-        alert("Sesi login Anda telah berakhir demi keamanan. Silakan login kembali!");
-        window.location.href = '/login'; 
+        
+        Swal.fire({
+            title: 'Sesi Berakhir!',
+            text: 'Sesi login Anda telah habis demi keamanan. Silakan login kembali.',
+            icon: 'warning',
+            confirmButtonColor: '#f59e0b'
+        }).then(() => {
+            window.location.href = '/login'; 
+        });
         return Promise.reject("Sesi Habis"); 
     }
     return await respons.json();

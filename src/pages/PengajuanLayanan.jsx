@@ -1,6 +1,7 @@
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useState, useEffect } from "react";
+import Swal from 'sweetalert2';
 import { getDataLayanan, updateStatusLayanan } from "../services/api"; 
 import { Link } from "react-router-dom";
 import './PengajuanLayanan.css';
@@ -31,21 +32,30 @@ export default function PengajuanLayanan() {
     }, []);
     
     const handleUbahStatus = async (id, statusBaru) => {
-        const konfirmasi = window.confirm(`Yakin ingin mengubah status menjadi: ${statusBaru}?`);
-        
-        if (konfirmasi) {
-            try {
-                const respons = await updateStatusLayanan(id, statusBaru);
-                if (respons && respons.status === 'sukses') {
-                    alert(respons.pesan);
-                    muatData(); 
-                } else {
-                    alert('Gagal mengubah status.');
+        Swal.fire({
+            title: 'Perbarui Status?',
+            text: `Yakin ingin mengubah status menjadi: ${statusBaru}?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3C50E0',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Ubah!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const respons = await updateStatusLayanan(id, statusBaru);
+                    if (respons && respons.status === 'sukses') {
+                        Swal.fire({ title: 'Berhasil!', text: respons.pesan, icon: 'success', confirmButtonColor: '#3C50E0' });
+                        muatData(); 
+                    } else {
+                        Swal.fire({ title: 'Gagal!', text: 'Gagal mengubah status.', icon: 'error' });
+                    }
+                } catch (error) {
+                    Swal.fire({ title: 'Error', text: "Gagal terhubung ke server! Cek koneksi Anda.", icon: 'error' });
                 }
-            } catch (error) {
-                alert("Gagal terhubung ke server! Cek koneksi Anda.");
             }
-        }
+        });
     };
 
     const bukaModalDokumen = (data) => {

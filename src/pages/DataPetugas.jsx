@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './DataPetugas.css';
+import Swal from 'sweetalert2';
 import { getPetugas, tambahPetugas } from '../services/api';
 
 export default function DataPetugas () {
@@ -39,7 +40,7 @@ export default function DataPetugas () {
     try {
       const result = await tambahPetugas(formData);
       if (result.status === 'sukses') {
-        alert('Data Petugas berhasil disimpan!');
+        Swal.fire('Data Petugas berhasil disimpan!');
         fetchPetugas();
         setNamaPetugas('');
         setKategoriPetugas('');
@@ -50,12 +51,12 @@ export default function DataPetugas () {
         
         setIsModalOpen(false);
       } else {
-        alert('Gagal: ' + result.pesan);
+        Swal.fire('Gagal: ' + result.pesan);
       }
 
     } catch (error) {
       console.error("Error submit:", error);
-      alert("Terjadi kesalahan sistem saat menyimpan data.");
+      Swal.fire("Terjadi kesalahan sistem saat menyimpan data.");
     }
   };
 
