@@ -227,7 +227,7 @@ export default function AgendaKegiatan() {
                                             <td>{item.catatan_reminder || '-'}</td>
                                             <td>
                                                 {item.foto_dokumentasi ? (
-                                                    <a href={`https://backend-one-ekbang-production.up.railway.app/uploads/${item.foto_dokumentasi}`} target="_blank" rel="noreferrer" className="link-foto">Lihat Foto</a>
+                                                    <a href={item.foto_dokumentasi.startsWith('http') ? item.foto_dokumentasi : `https://backend-one-ekbang-production.up.railway.app/uploads/${item.foto_dokumentasi}`} target="_blank" rel="noreferrer" className="link-foto">Lihat Foto</a>
                                                 ) : (
                                                     <label className="btn-upload-susulan">
                                                         📷 Upload Bukti

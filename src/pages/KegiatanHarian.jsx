@@ -169,7 +169,8 @@ export default function KegiatanHarian() {
             // 3. Masukkan gambar dengan titik koordinat yang sejajar (Zero-based index)
             if (item.foto) {
                 try {
-                    const response = await fetch(`https://backend-one-ekbang-production.up.railway.app/uploads/${item.foto}`);
+                    const urlFoto = item.foto.startsWith('http') ? item.foto : `https://backend-one-ekbang-production.up.railway.app/uploads/${item.foto}`;
+                    const response = await fetch(urlFoto);
                     const arrayBuffer = await response.arrayBuffer();
                     const ekstensi = item.foto.split('.').pop().toLowerCase() === 'png' ? 'png' : 'jpeg';
                     
@@ -259,7 +260,7 @@ export default function KegiatanHarian() {
                                         <td>{item.lokasi}</td>
                                         <td>{item.panjang_meter}</td>
                                         <td>
-                                            <a href={`https://backend-one-ekbang-production.up.railway.app/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Foto</a>
+                                            <a href={item.foto.startsWith('http') ? item.foto : `https://backend-one-ekbang-production.up.railway.app/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Foto</a>
                                         </td>
                                     </tr>
                                 ))}
@@ -306,7 +307,7 @@ export default function KegiatanHarian() {
                                         <td>{item.berat_kiloan} Kg</td>
                                         <td>
                                             {item.foto ? (
-                                                <a href={`https://backend-one-ekbang-production.up.railway.app/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Bukti</a>
+                                                <a href={item.foto.startsWith('http') ? item.foto : `https://backend-one-ekbang-production.up.railway.app/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Bukti</a>
                                             ) : '-'}
                                         </td>
                                     </tr>

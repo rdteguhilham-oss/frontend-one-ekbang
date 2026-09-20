@@ -68,13 +68,17 @@ export default function PengajuanLayanan() {
     };
 
     const renderLink = (namaFile, label) => {
-        if (!namaFile) return null; 
-        return (
-            <a href={`https://backend-one-ekbang-production.up.railway.app/uploads/${namaFile}`} target="_blank" rel="noreferrer" className="btn-link-dokumen">
-                📄 Lihat {label}
-            </a>
-        );
-    };
+    if (!namaFile) return null; 
+    
+    // Trik deteksi link cerdas
+    const linkAman = namaFile.startsWith('http') ? namaFile : `https://backend-one-ekbang-production.up.railway.app/uploads/${namaFile}`;
+    
+    return (
+        <a href={linkAman} target="_blank" rel="noreferrer" className="btn-link-dokumen">
+            📄 Lihat {label}
+        </a>
+    );
+};
 
     const hasilFilter = dataLayanan.filter((item) => {
         const cocokKategori = filterKategori === "Semua" || item.jenis_layanan === filterKategori;

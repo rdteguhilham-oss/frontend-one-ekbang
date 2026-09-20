@@ -109,8 +109,8 @@ export default function DataPetugas () {
                     <td>{petugas.wilayah}</td>
                     <td>{petugas.no_sk}</td>
                     <td>
-                        <a href={`https://backend-one-ekbang-production.up.railway.app/uploads/${petugas.file_sk}`} target="_blank" rel="noreferrer" className="btn-lihat">
-                        Lihat SK
+                        <a href={petugas.file_sk.startsWith('http') ? petugas.file_sk : `https://backend-one-ekbang-production.up.railway.app/uploads/${petugas.file_sk}`} target="_blank" rel="noreferrer" className="btn-lihat">
+                        lihat SK
                         </a>
                     </td>
                     </tr>
