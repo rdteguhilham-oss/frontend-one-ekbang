@@ -22,7 +22,7 @@ export default function Login() {
 
             if (respons && respons.status === 'sukses') {
                 await Swal.fire({ 
-                    title: 'Berhasil', 
+                    title: 'Success', 
                     text: respons.pesan, 
                     icon: 'success', 
                     confirmButtonColor: '#3C50E0' });
