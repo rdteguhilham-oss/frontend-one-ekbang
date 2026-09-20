@@ -21,7 +21,11 @@ export default function Login() {
             const respons = await loginAdmin(username, password);
 
             if (respons && respons.status === 'sukses') {
-                await Swal.fire(respons.pesan);
+                await Swal.fire({ 
+                    title: 'Berhasil', 
+                    text: respons.pesan, 
+                    icon: 'success', 
+                    confirmButtonColor: '#3C50E0' });
                 localStorage.setItem("isLoggedIn","true");
                 localStorage.setItem("token", respons.token);
                 navigate("/admin"); 
