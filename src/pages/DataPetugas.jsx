@@ -91,7 +91,7 @@ export default function DataPetugas () {
             <table className="tabel-utama">
             <thead>
                 <tr>
-                <th>ID</th>
+                <th>No</th>
                 <th>Nama Petugas</th>
                 <th>Kategori</th>
                 <th>Wilayah</th>

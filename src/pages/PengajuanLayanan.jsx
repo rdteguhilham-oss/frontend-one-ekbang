@@ -156,7 +156,7 @@ export default function PengajuanLayanan() {
                     <table className="tabel-utama">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>No</th>
                                 <th>Jenis Layanan</th>
                                 <th>Nama Pemohon</th>
                                 <th>No. Telepon</th>
@@ -171,9 +171,9 @@ export default function PengajuanLayanan() {
                                     <td colSpan="7" style={{textAlign: 'center'}}>Belum ada data pengajuan.</td>
                                 </tr>
                             ) : (
-                                hasilFilter.map((data) => (
+                                hasilFilter.map((data, index) => (
                                     <tr key={data.id}>
-                                        <td>{data.id}</td>
+                                        <td>{index +1}</td>
                                         <td>{data.jenis_layanan}</td>
                                         <td>{data.nama_pemohon}</td>
                                         <td>{data.no_telepon || '-'}</td>

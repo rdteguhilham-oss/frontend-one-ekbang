@@ -203,7 +203,7 @@ export default function DaftarAdmin() {
             <table className='tabel-utama'>
             <thead>
                 <tr>
-                <th>ID</th>
+                <th>No</th>
                 <th>NIK</th>
                 <th>Nama Lengkap</th>
                 <th>Username</th>
@@ -212,9 +212,9 @@ export default function DaftarAdmin() {
                 </tr>
             </thead>
             <tbody>
-                {dataAdmin.map((data) => (
+                {dataAdmin.map((data, index) => (
                 <tr key={data.id}>
-                    <td>{data.id}</td>
+                    <td>{index +1}</td>
                     <td>{data.nik || '-'}</td>
                     <td>{data.nama_lengkap}</td> 
                     <td>{data.username}</td>
