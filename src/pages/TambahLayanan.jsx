@@ -42,6 +42,22 @@ export default function TambahLayanan() {
             return;
         }
         
+        if (jenisLayanan === 'RUTILAHU' && (!fotoKtp || !fotoKk || !sertifikatTanah || !fotoRumah)) {
+            Swal.fire({ icon: 'warning', title: 'Berkas Kurang', text: 'Harap unggah KTP, KK, Sertifikat, dan Foto Rumah.' }); return;
+        }
+        if (jenisLayanan === 'POHON TUMBANG' && (!fotoKtp || !fotoKk || !fotoLokasi)) {
+            Swal.fire({ icon: 'warning', title: 'Berkas Kurang', text: 'Harap unggah KTP, KK, dan Foto Lokasi Pohon.' }); return;
+        }
+        if (jenisLayanan === 'BURUAN SAE' && (!skBuruanSae || !fotoHalaman || !kebutuhanTanaman)) {
+            Swal.fire({ icon: 'warning', title: 'Berkas Kurang', text: 'Harap unggah SK, Foto Halaman, dan File Tanaman.' }); return;
+        }
+        if (jenisLayanan === 'MUSRENBANG' && (!docA1 || !docA2 || !fotoRembuk || !daftarHadir)) {
+            Swal.fire({ icon: 'warning', title: 'Berkas Kurang', text: 'Harap unggah A1, A2, Foto Rembuk, dan Daftar Hadir.' }); return;
+        }
+        if (jenisLayanan === 'DAU DAN PRAKARSA' && (!baMuskel || !fotoMuskel || !docA1 || !docA2)) {
+            Swal.fire({ icon: 'warning', title: 'Berkas Kurang', text: 'Harap unggah BA Muskel, Foto Muskel, A1, dan A2.' }); return;
+        }
+
         const formData = new FormData();
         formData.append('nik', nik);
         formData.append('nama', nama);
@@ -66,7 +82,7 @@ export default function TambahLayanan() {
         try {
             const data = await tambahLayanan(formData);
             if (data && data.status === 'sukses') {
-                Swal.fire('Berhasil: ' + data.pesan);
+                await Swal.fire('Berhasil: ' + data.pesan);
                 window.location.reload();
             } else {
                 Swal.fire('Gagal menyimpan pengajuan.');

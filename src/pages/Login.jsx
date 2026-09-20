@@ -21,7 +21,7 @@ export default function Login() {
             const respons = await loginAdmin(username, password);
 
             if (respons && respons.status === 'sukses') {
-                Swal.fire(respons.pesan);
+                await Swal.fire(respons.pesan);
                 localStorage.setItem("isLoggedIn","true");
                 localStorage.setItem("token", respons.token);
                 navigate("/admin"); 
