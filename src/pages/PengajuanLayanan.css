@@ -414,6 +414,41 @@
     }
 }
 
+/* PENYESUAIAN KHUSUS INPUT TANGGAL (DATE) */
+input[type="date"] {
+    background-color: var(--bg-card);
+    border: 1.5px solid var(--border-halus);
+    color: var(--text-utama);
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+input[type="date"]:focus {
+    border-color: var(--primary-btn);
+    box-shadow: 0 0 0 3px rgba(60, 80, 224, 0.1);
+}
+
+/* Penyesuaian ikon kalender bawaan browser agar mengikuti tema */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+/* Membalikkan warna ikon kalender jika sedang mode gelap */
+body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
 /* RESPONSIVE UNTUK HP */
 @media screen and (max-width: 768px) {
     .filter-layanan-area {

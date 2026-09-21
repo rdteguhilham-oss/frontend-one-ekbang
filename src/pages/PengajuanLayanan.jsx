@@ -10,11 +10,11 @@ export default function PengajuanLayanan() {
     const [dataLayanan, setDataLayanan] = useState([]);
     const [filterKategori, setFilterKategori] = useState("Semua");
     const [kataKunci, setKataKunci] = useState("");
-    
+    const [tanggalMulai, setTanggalMulai] = useState("");
+    const [tanggalSelesai, setTanggalSelesai] = useState("");
     // STATE UNTUK POP-UP BERKAS
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataPilih, setDataPilih] = useState(null);
-
     // STATE UNTUK FITUR CETAK SURAT FISIK
     const [suratPilih, setSuratPilih] = useState(null);
     
@@ -85,7 +85,18 @@ export default function PengajuanLayanan() {
         const teksCari = kataKunci.toLowerCase();
         const cocokNama = item.nama_pemohon && item.nama_pemohon.toLowerCase().includes(teksCari);
         
-        return cocokKategori && cocokNama;
+        let cocokTanggal = true;
+        if (tanggalMulai && tanggalSelesai) {
+            const tglData = new Date(item.tanggal_pengajuan).getTime();
+            const tglAwal = new Date(tanggalMulai).getTime();
+            const tglAkhir = new Date(tanggalSelesai).setHours(23, 59, 59, 999); // Sampai detik terakhir hari itu
+            
+            if (!isNaN(tglData)) {
+                cocokTanggal = tglData >= tglAwal && tglData <= tglAkhir;
+            }
+        }
+        
+        return cocokKategori && cocokNama && cocokTanggal;
     });
 
     const unduhExcel = async () => {
@@ -94,6 +105,7 @@ export default function PengajuanLayanan() {
 
         worksheet.columns = [
             { header: 'No', key: 'no', width: 5 },
+            { header: 'Tanggal', key: 'tanggal', width: 15 },
             { header: 'NIK Pemohon', key: 'nik', width: 25 },
             { header: 'Nama Pemohon', key: 'nama', width: 30 },
             { header: 'No. Telepon / WA', key: 'telepon', width: 20 },
@@ -107,7 +119,7 @@ export default function PengajuanLayanan() {
         hasilFilter.forEach((item, index) => {
             worksheet.addRow({
                 no: index + 1,
-                id: item.id,
+                tanggal: item.tanggal_pengajuan ? new Date(item.tanggal_pengajuan).toLocaleDateString('id-ID') : '-',
                 nik: item.nik_pemohon,
                 nama: item.nama_pemohon,
                 telepon: item.no_telepon || '-',
@@ -152,6 +164,16 @@ export default function PengajuanLayanan() {
                         <option value="DAU DAN PRAKARSA">DAU & PRAKARSA</option>
                     </select>
                 </div>
+
+                <div className="filter-group">
+                    <label>Dari Tanggal:</label>
+                    <input type="date" value={tanggalMulai} onChange={(e) => setTanggalMulai(e.target.value)} />
+                </div>
+                
+                <div className="filter-group">
+                    <label>Sampai Tanggal:</label>
+                    <input type="date" value={tanggalSelesai} onChange={(e) => setTanggalSelesai(e.target.value)} />
+                </div>
             </div>
             
             <div className="layanan-table-card">
@@ -160,6 +182,7 @@ export default function PengajuanLayanan() {
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Tanggal</th>
                                 <th>Jenis Layanan</th>
                                 <th>Nama Pemohon</th>
                                 <th>No. Telepon</th>
@@ -177,6 +200,7 @@ export default function PengajuanLayanan() {
                                 hasilFilter.map((data, index) => (
                                     <tr key={data.id}>
                                         <td>{index +1}</td>
+                                        <td>{new Date(data.tanggal_pengajuan).toLocaleDateString('id-ID')}</td>
                                         <td>{data.jenis_layanan}</td>
                                         <td>{data.nama_pemohon}</td>
                                         <td>{data.no_telepon || '-'}</td>
