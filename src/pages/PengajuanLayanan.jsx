@@ -94,7 +94,6 @@ export default function PengajuanLayanan() {
 
         worksheet.columns = [
             { header: 'No', key: 'no', width: 5 },
-            { header: 'ID Pengajuan', key: 'id', width: 15 },
             { header: 'NIK Pemohon', key: 'nik', width: 25 },
             { header: 'Nama Pemohon', key: 'nama', width: 30 },
             { header: 'No. Telepon / WA', key: 'telepon', width: 20 },
