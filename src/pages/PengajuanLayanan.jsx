@@ -194,7 +194,7 @@ export default function PengajuanLayanan() {
                         <tbody>
                             {hasilFilter.length === 0 ? (
                                 <tr>
-                                    <td colSpan="7" style={{textAlign: 'center'}}>Belum ada data pengajuan.</td>
+                                    <td colSpan="8" style={{textAlign: 'center'}}>Belum ada data pengajuan.</td>
                                 </tr>
                             ) : (
                                 hasilFilter.map((data, index) => (
