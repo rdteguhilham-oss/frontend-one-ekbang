@@ -24,6 +24,10 @@ export default function TambahLayanan() {
     const [fotoMuskel, setFotoMuskel] = useState(null);
     const [fotoHalaman, setFotoHalaman] = useState(null);
     
+    // TAMBAHAN STATE BARU UNTUK SARPRAS DLH
+    const [proposalSarpras, setProposalSarpras] = useState(null);
+    const [fotoSarpras, setFotoSarpras] = useState(null);
+    
     const simpanData = async (e) => {
         e.preventDefault(); 
 
@@ -57,6 +61,10 @@ export default function TambahLayanan() {
         if (jenisLayanan === 'DAU DAN PRAKARSA' && (!baMuskel || !fotoMuskel || !docA1 || !docA2)) {
             Swal.fire({ icon: 'warning', title: 'Berkas Kurang', text: 'Harap unggah BA Muskel, Foto Muskel, A1, dan A2.' }); return;
         }
+        // VALIDASI UNTUK SARPRAS DLH
+        if (jenisLayanan === 'SARPRAS DLH' && (!fotoKtp || !fotoKk || !proposalSarpras || !fotoSarpras)) {
+            Swal.fire({ icon: 'warning', title: 'Berkas Kurang', text: 'Harap unggah KTP, KK, Proposal Sarpras, dan Foto Sasaran.' }); return;
+        }
 
         const formData = new FormData();
         formData.append('nik', nik);
@@ -78,16 +86,20 @@ export default function TambahLayanan() {
         if (baMuskel) formData.append('ba_muskel', baMuskel);
         if (fotoMuskel) formData.append('foto_muskel', fotoMuskel);
         if (fotoHalaman) formData.append('foto_halaman', fotoHalaman);
+        
+        // TAMBAHKAN KE BUNGKUSAN DATA
+        if (proposalSarpras) formData.append('proposal_sarpras', proposalSarpras);
+        if (fotoSarpras) formData.append('foto_sarpras', fotoSarpras);
 
         try {
             const data = await tambahLayanan(formData);
-                if (data && data.status === 'sukses') {
-                    await Swal.fire({ 
-                        title: 'Berhasil!', 
-                        text: data.pesan, 
-                        icon: 'success', 
-                        confirmButtonColor: '#3C50E0' 
-                    });
+            if (data && data.status === 'sukses') {
+                await Swal.fire({ 
+                    title: 'Berhasil!', 
+                    text: data.pesan, 
+                    icon: 'success', 
+                    confirmButtonColor: '#3C50E0' 
+                });
                 window.location.reload();
             } else {
                 Swal.fire('Gagal menyimpan pengajuan.');
@@ -101,7 +113,6 @@ export default function TambahLayanan() {
         <div className="form-publik-wrapper">
             <div className="form-container-publik">
                 
-                {/* Bagian Header Form (Mirip Referensi Gambar) */}
                 <div className="form-publik-header">
                     <div className="toggles-palsu">
                         <span className="toggle-aktif">Form Warga</span>
@@ -113,7 +124,6 @@ export default function TambahLayanan() {
                 <form onSubmit={simpanData}>
                     <div className="form-publik-body">
                         
-                        {/* GRID 2 KOLOM (Kiri Kanan) */}
                         <div className="input-grid">
                             <div className="input-group-pill">
                                 <label>NIK Pemohon</label>
@@ -139,11 +149,11 @@ export default function TambahLayanan() {
                                     <option value="BURUAN SAE">Program Buruan Sae</option>
                                     <option value="MUSRENBANG">Pengajuan Musrenbang</option>
                                     <option value="DAU DAN PRAKARSA">DAU & Prakarsa</option>
+                                    <option value="SARPRAS DLH">Sarpras DLH</option>
                                 </select>
                             </div>
                         </div>
 
-                        {/* MUNCUL OTOMATIS SAAT LAYANAN DIPILIH */}
                         {jenisLayanan && (
                             <div className="dokumen-section animasi-muncul">
                                 <div className="dokumen-header">
@@ -247,11 +257,33 @@ export default function TambahLayanan() {
                                         </label>
                                     </div>
                                 )}
+
+                                {/* UI UPLOAD KHUSUS SARPRAS DLH */}
+                                {jenisLayanan === 'SARPRAS DLH' && (
+                                    <div className="input-grid">
+                                        <label className="kotak-upload-pill">
+                                            {fotoKtp ? `✓ ${fotoKtp.name}` : '📁 Upload KTP'}
+                                            <input type="file" className="file-input-asli" onChange={(e) => setFotoKtp(e.target.files[0])} />
+                                        </label>
+                                        <label className="kotak-upload-pill">
+                                            {fotoKk ? `✓ ${fotoKk.name}` : '📁 Upload KK'}
+                                            <input type="file" className="file-input-asli" onChange={(e) => setFotoKk(e.target.files[0])} />
+                                        </label>
+                                        <label className="kotak-upload-pill">
+                                            {proposalSarpras ? `✓ ${proposalSarpras.name}` : '📁 Proposal Permohonan'}
+                                            <input type="file" className="file-input-asli" onChange={(e) => setProposalSarpras(e.target.files[0])} />
+                                        </label>
+                                        <label className="kotak-upload-pill">
+                                            {fotoSarpras ? `✓ ${fotoSarpras.name}` : '📁 Foto Lokasi / Sasaran'}
+                                            <input type="file" className="file-input-asli" onChange={(e) => setFotoSarpras(e.target.files[0])} />
+                                        </label>
+                                    </div>
+                                )}
+
                             </div>
                         )}
                     </div>
 
-                    {/* BAGIAN FOOTER BERWARNA (Sesuai Referensi) */}
                     <div className="form-publik-footer">
                         <div className="footer-info">
                             <strong>Konfirmasi:</strong>

@@ -29,6 +29,12 @@ export const FORMAT_SURAT = {
         redaksiTengah: (jenisLayanan) => 
             `Bahwa perwakilan warga tersebut di atas mengajukan kelengkapan usulan kegiatan yang bersumber dari Dana Alokasi Umum (DAU) dan Prakarsa Masyarakat melalui Sistem Informasi ONE EKBANG.`
     },
+    "SARPRAS DLH": {
+        judul: "SURAT PENGANTAR PENGAJUAN SARPRAS DLH",
+        kodeFormat: "660", // 660 adalah kode surat birokrasi umum untuk Lingkungan Hidup
+        redaksiTengah: (jenisLayanan) => 
+            `Bahwa warga/kelompok tersebut di atas mengajukan permohonan bantuan Sarana dan Prasarana (Sarpras) Dinas Lingkungan Hidup melalui Sistem Informasi ONE EKBANG guna mendukung kawasan bebas sampah di Kelurahan Pasteur.`
+    },
     // Cadangan jika sewaktu-waktu ada layanan yang tidak terdaftar
     "DEFAULT": {
         judul: "SURAT KETERANGAN PENGAJUAN LAYANAN",

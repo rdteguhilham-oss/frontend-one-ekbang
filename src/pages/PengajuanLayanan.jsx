@@ -263,6 +263,8 @@ export default function PengajuanLayanan() {
                             {renderLink(dataPilih.ba_muskel, "BA Muskel")}
                             {renderLink(dataPilih.foto_muskel, "Foto Muskel")}
                             {renderLink(dataPilih.foto_halaman, "Foto Halaman")}
+                            {renderLink(dataPilih.proposal_sarpras, "Proposal Sarpras")}
+                            {renderLink(dataPilih.foto_sarpras, "Foto Sasaran")}
                         </div>
                     </div>
                 </div>
