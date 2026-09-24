@@ -30,7 +30,12 @@ export default function Login() {
                 localStorage.setItem("token", respons.token);
                 navigate("/admin"); 
             } else {
-                Swal.fire(respons?.pesan || "Login Gagal!");
+                Swal.fire({
+                    icon: 'error',
+                    text: respons.pesan,
+                    title: 'Akses ditolak',
+                    confirmButtonColor: '#3C50E0'
+                })
             }
         } catch (error) {
             Swal.fire("Koneksi ke server gagal! Pastikan server menyala.");
