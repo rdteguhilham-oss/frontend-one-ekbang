@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import { getDataLayanan, updateStatusLayanan } from "../services/api"; 
 import { Link } from "react-router-dom";
+import { FORMAT_SURAT } from "../utils/formatSurat";
 import './PengajuanLayanan.css';
 
 export default function PengajuanLayanan() {
@@ -294,8 +295,15 @@ export default function PengajuanLayanan() {
                             </div>
 
                             <div className="isi-surat">
-                                <h4 className="judul-surat">SURAT KETERANGAN PENGAJUAN LAYANAN</h4>
-                                <p className="nomor-surat">Nomor: B/ ... / Ekbang / Kel.Pst / {new Date().getFullYear()}</p>
+                                {/* MENGAMBIL JUDUL DARI formatSurat.js ATAU GUNAKAN DEFAULT */}
+                                <h4 className="judul-surat">
+                                    {(FORMAT_SURAT[suratPilih.jenis_layanan] || FORMAT_SURAT["DEFAULT"]).judul}
+                                </h4>
+                                
+                                {/* MENGAMBIL KODE SURAT DARI formatSurat.js */}
+                                <p className="nomor-surat">
+                                    Nomor: {(FORMAT_SURAT[suratPilih.jenis_layanan] || FORMAT_SURAT["DEFAULT"]).kodeFormat} / {suratPilih.id} / Ekbang / Kel.Pst / {new Date().getFullYear()}
+                                </p>
 
                                 <p>Yang bertanda tangan di bawah ini Lurah Pasteur, Kecamatan Sukajadi, Kota Bandung, menerangkan dengan sesungguhnya bahwa:</p>
 
@@ -308,8 +316,10 @@ export default function PengajuanLayanan() {
                                     </tbody>
                                 </table>
 
+                                {/* MENGAMBIL REDAKSI TENGAH DARI formatSurat.js */}
                                 <p style={{textIndent: '40px', marginTop: '20px'}}>
-                                    Bahwa nama tersebut di atas benar warga Kelurahan Pasteur yang telah mengajukan permohonan layanan <strong>{suratPilih.jenis_layanan}</strong> melalui Sistem Informasi Tata Kelola Ekbang (ONE EKBANG). Saat ini, status dokumen dan pengajuan yang bersangkutan terdata dalam sistem dengan status: <strong>{suratPilih.status || 'Baru'}</strong>.
+                                    {(FORMAT_SURAT[suratPilih.jenis_layanan] || FORMAT_SURAT["DEFAULT"]).redaksiTengah(suratPilih.jenis_layanan)} 
+                                    {" "}Saat ini, status dokumen dan pengajuan yang bersangkutan terdata dalam sistem dengan status: <strong>{suratPilih.status || 'Baru'}</strong>.
                                 </p>
                                 <p style={{textIndent: '40px'}}>
                                     Demikian surat keterangan ini dibuat dengan sebenarnya untuk dapat dipergunakan sebagaimana mestinya.

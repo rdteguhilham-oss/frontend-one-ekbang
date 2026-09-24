@@ -5,20 +5,31 @@ const getAuthHeader = () => {
     return token ? { 'Authorization': `Bearer ${token}` } : {};
 };
 
+// 1. Tambahkan gembok penahan di luar fungsi
+let sedangLogout = false; 
+
 // MESIN DETEKTOR AUTO-LOGOUT
 const tanganiRespons = async (respons) => {
     if (respons.status === 401 || respons.status === 403) {
         localStorage.removeItem("isLoggedIn");
         localStorage.removeItem("token");
         
-        Swal.fire({
-            title: 'Sesi Berakhir!',
-            text: 'Sesi login Anda telah habis demi keamanan. Silakan login kembali.',
-            icon: 'warning',
-            confirmButtonColor: '#f59e0b'
-        }).then(() => {
+        // 2. Cek apakah gembok masih terbuka
+        if (!sedangLogout) {
+            sedangLogout = true; // Kunci gemboknya agar API lain yang gagal tidak memicu popup lagi
+            
+            // 3. Gunakan await seperti tebakanmu!
+            await Swal.fire({
+                title: 'Sesi Berakhir!',
+                text: 'Sesi login Anda telah habis demi keamanan. Silakan login kembali.',
+                icon: 'warning',
+                confirmButtonColor: '#f59e0b'
+            });
+
+            // 4. Baris ini baru akan berjalan SETELAH kamu menekan tombol OK
             window.location.href = '/login'; 
-        });
+        }
+        
         return Promise.reject("Sesi Habis"); 
     }
     return await respons.json();
