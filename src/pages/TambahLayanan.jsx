@@ -81,8 +81,13 @@ export default function TambahLayanan() {
 
         try {
             const data = await tambahLayanan(formData);
-            if (data && data.status === 'sukses') {
-                await Swal.fire('Berhasil: ' + data.pesan);
+                if (data && data.status === 'sukses') {
+                    await Swal.fire({ 
+                        title: 'Berhasil!', 
+                        text: data.pesan, 
+                        icon: 'success', 
+                        confirmButtonColor: '#3C50E0' 
+                    });
                 window.location.reload();
             } else {
                 Swal.fire('Gagal menyimpan pengajuan.');

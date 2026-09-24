@@ -9,7 +9,7 @@
     margin-bottom: 25px;
 }
 
-/* GRID LAYOUT: KALENDER KIRI, TABEL KANAN                   */
+/* GRID LAYOUT: KALENDER KIRI, TABEL KANAN*/
 .kalender-layout {
     display: grid;
     grid-template-columns: 1fr 2fr; /* Proporsi: Kalender 1 bagian, Tabel 2 bagian */
