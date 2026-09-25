@@ -1,154 +1,158 @@
-/* BACKGROUND PUTIH BERSIH / FORMAL */
-.login-wrapper-formal {
+/* BACKGROUND BIRU ALA PORTAL RESMI */
+.login-wrapper-portal {
     min-height: 100vh;
     width: 100%; 
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #3b769f; /* Biru retro khas portal */
+    background-image: radial-gradient(circle at center, #4b8ebf 0%, #35688c 100%);
     padding: 20px;
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
-    /* Latar belakang abu-abu sangat muda agar kartu putih terlihat */
-    background-color: #f8fafc; 
 }
 
-body.dark-mode .login-wrapper-formal {
-    background-color: #111827;
+body.dark-mode .login-wrapper-portal {
+    background-color: #1e293b;
+    background-image: none;
 }
 
-/* KARTU LOGIN FORMAL */
-.login-card-formal {
+/* KARTU TENGAH BERSIH */
+.login-card-portal {
     background-color: #ffffff;
-    padding: 50px 40px;
-    border-radius: 12px; /* Lebih kotak, tidak terlalu membulat */
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Bayangan sangat halus */
     width: 100%;
     max-width: 420px;
+    padding: 40px 35px;
+    border-radius: 6px; /* Siku kotak ala portal */
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
     text-align: center;
 }
 
-body.dark-mode .login-card-formal {
+body.dark-mode .login-card-portal {
     background-color: var(--bg-card);
-    border-color: var(--border-halus);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
-/* GRUP HEADER (LOGO & TEKS) */
-.login-header-group {
-    margin-bottom: 35px;
-}
-
-.brand-logo-text {
+/* AREA LOGO & TEKS HEADER */
+.portal-logo-area {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px; /* Jarak antara logo dan teks */
-    margin-bottom: 25px;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 20px;
 }
 
-.logo-pemkot {
-    width: 45px; /* Sesuaikan ukuran logo */
+body.dark-mode .portal-logo-area { border-color: var(--border-halus); }
+
+.portal-logo-img {
+    width: 55px;
     height: auto;
     object-fit: contain;
 }
 
-.brand-logo-text h2 {
+.portal-logo-text {
+    text-align: left;
+}
+
+.portal-logo-text h1 {
     margin: 0;
-    font-size: 24px;
-    color: #1e293b;
+    font-size: 26px;
+    color: #2980b9; /* Biru teks judul */
     font-weight: 800;
     letter-spacing: 1px;
 }
 
-body.dark-mode .brand-logo-text h2 { color: white; }
-
-.login-header-group h3 {
-    margin: 0 0 8px 0;
-    font-size: 20px;
-    color: #111827;
+.portal-logo-text p {
+    margin: 0;
+    font-size: 11px;
+    color: #1e293b;
     font-weight: 700;
     letter-spacing: 0.5px;
 }
 
-body.dark-mode .login-header-group h3 { color: var(--text-utama); }
+body.dark-mode .portal-logo-text h1 { color: #3b82f6; }
+body.dark-mode .portal-logo-text p { color: var(--text-redup); }
 
-.login-header-group p {
-    margin: 0;
-    color: #64748b;
+.portal-subtext {
     font-size: 14px;
+    color: #64748b;
+    margin-bottom: 25px;
 }
 
-body.dark-mode .login-header-group p { color: var(--text-redup); }
+/* INPUT GRUP DENGAN IKON KOTAK HITAM */
+.input-group-portal {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    overflow: hidden; /* Memotong ikon agar rapi */
+    background-color: white;
+}
 
-/* INPUT PERSEGI PANJANG (BUKAN KAPSUL) */
-.input-login-rect {
-    background-color: #ffffff;
-    border: 1.5px solid #cbd5e1;
-    color: #1e293b;
-    border-radius: 8px !important; /* Persegi dengan sudut sedikit tumpul */
-    padding: 16px 15px !important; /* Padding vertikal diperbesar agar lebih tinggi ke bawah */
-    font-size: 15px;
-    transition: all 0.3s ease;
-    width: 100%;
-    box-sizing: border-box;
-    margin-bottom: 18px;
+body.dark-mode .input-group-portal { border-color: var(--border-halus); background-color: var(--bg-body); }
+
+/* KOTAK HITAM IKON DI KIRI */
+.input-icon-portal {
+    background-color: #111827; 
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+body.dark-mode .input-icon-portal { background-color: #000000; }
+
+/* KOTAK TEKS INPUT */
+.input-field-portal {
+    border: none !important; /* Mematikan border bawaan global css */
+    border-radius: 0 !important; 
+    flex: 1;
+    padding: 12px 15px !important;
     outline: none;
+    font-size: 14px;
+    color: #1e293b;
+    background-color: transparent !important;
 }
 
-body.dark-mode .input-login-rect {
-    background-color: var(--bg-body);
-    border-color: var(--border-halus);
-    color: var(--text-utama);
-}
-
-.input-login-rect:focus {
-    border-color: #3C50E0;
-    box-shadow: 0 0 0 3px rgba(60, 80, 224, 0.1);
-}
-
-.input-login-rect::placeholder {
-    color: #94a3b8;
-}
+.input-field-portal::placeholder { color: #94a3b8; }
 
 /* LINK LUPA PASSWORD */
-.link-forgot-formal {
+.link-forgot-portal {
     display: block;
     text-align: right;
-    font-size: 13px;
-    color: #3C50E0;
-    margin-top: -8px;
-    margin-bottom: 25px;
-    text-decoration: none;
+    font-size: 12px;
+    color: #3b769f;
+    margin-top: -5px;
+    margin-bottom: 20px;
     cursor: pointer;
-    font-weight: 600;
+    text-decoration: none;
 }
 
-.link-forgot-formal:hover { text-decoration: underline; color: #2563eb; }
+.link-forgot-portal:hover { text-decoration: underline; }
 
-/* TOMBOL LOGIN PERSEGI PANJANG */
-.btn-login-rect {
+/* TOMBOL LOGIN BIRU PORTAL */
+.btn-login-portal {
     width: 100%;
-    padding: 15px; /* Lebih tebal ke bawah */
-    background-color: #3C50E0; 
+    background-color: #2980b9;
     color: white;
     border: none;
-    border-radius: 8px; /* Mengikuti bentuk input */
+    padding: 12px;
     font-size: 15px;
     font-weight: bold;
+    border-radius: 4px;
     cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: background-color 0.3s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Jarak ikon dengan teks */
+    transition: background-color 0.3s;
 }
 
-.btn-login-rect:hover { 
-    background-color: #2563eb; 
-}
-
-.btn-login-rect:active {
-    transform: scale(0.98);
-}
+.btn-login-portal:hover { background-color: #1f6391; }
 
 /* MODAL LUPA PASSWORD (TETAP) */
 .login-modal-overlay {
@@ -157,7 +161,7 @@ body.dark-mode .input-login-rect {
     align-items: center; z-index: 1000;
 }
 .login-modal-content {
-    background-color: var(--bg-card); padding: 30px; border-radius: 12px;
+    background-color: var(--bg-card); padding: 30px; border-radius: 6px;
     width: 90%; max-width: 400px; text-align: left; position: relative;
     border: 1px solid var(--border-halus);
 }
