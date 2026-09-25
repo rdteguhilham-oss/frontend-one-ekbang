@@ -79,7 +79,7 @@ export default function Login() {
                 {/* PANEL KANAN: FORM LOGIN */}
                 <div className="login-form-section">
                     <div className="form-header">
-                        <h3>Masuk ke Akun Anda</h3>
+                        <h3>Masukan akun Anda</h3>
                     </div>
 
                     <form onSubmit={handleLogin} className="login-form-modern">
