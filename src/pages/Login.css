@@ -1,5 +1,5 @@
-/* BACKGROUND MESH GRADIENT ALA REFERENSI */
-.login-wrapper-modern {
+/* BACKGROUND PUTIH BERSIH / FORMAL */
+.login-wrapper-formal {
     min-height: 100vh;
     width: 100%; 
     display: flex;
@@ -9,138 +9,146 @@
     padding: 20px;
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
-    /* Efek Mesh Gradient */
-    background-color: #f3e8ff;
-    background-image: 
-        radial-gradient(at 0% 0%, #fbc2eb 0px, transparent 50%),
-        radial-gradient(at 100% 100%, #a18cd1 0px, transparent 50%),
-        radial-gradient(at 0% 100%, #ffecd2 0px, transparent 50%),
-        radial-gradient(at 100% 0%, #c2e9fb 0px, transparent 50%);
+    /* Latar belakang abu-abu sangat muda agar kartu putih terlihat */
+    background-color: #f8fafc; 
 }
 
-body.dark-mode .login-wrapper-modern {
-    background-color: #1e1b4b;
-    background-image: 
-        radial-gradient(at 0% 0%, #312e81 0px, transparent 50%),
-        radial-gradient(at 100% 100%, #1e1b4b 0px, transparent 50%),
-        radial-gradient(at 0% 100%, #4c1d95 0px, transparent 50%),
-        radial-gradient(at 100% 0%, #0f172a 0px, transparent 50%);
+body.dark-mode .login-wrapper-formal {
+    background-color: #111827;
 }
 
-/* LOGO MELAYANG DI ATAS KARTU */
-.login-brand-top {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 25px;
-    color: #1e293b;
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-}
-
-body.dark-mode .login-brand-top { color: white; }
-
-.icon-brand {
-    color: #4f46e5; /* Ungu/Biru sesuai referensi */
-    font-size: 28px;
-}
-
-/* KARTU LOGIN TENGAH */
-.login-card-centered {
+/* KARTU LOGIN FORMAL */
+.login-card-formal {
     background-color: #ffffff;
-    padding: 45px 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    padding: 50px 40px;
+    border-radius: 12px; /* Lebih kotak, tidak terlalu membulat */
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Bayangan sangat halus */
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
     text-align: center;
 }
 
-body.dark-mode .login-card-centered {
+body.dark-mode .login-card-formal {
     background-color: var(--bg-card);
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    border-color: var(--border-halus);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
-.login-card-centered h3 {
-    margin: 0 0 8px 0;
+/* GRUP HEADER (LOGO & TEKS) */
+.login-header-group {
+    margin-bottom: 35px;
+}
+
+.brand-logo-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px; /* Jarak antara logo dan teks */
+    margin-bottom: 25px;
+}
+
+.logo-pemkot {
+    width: 45px; /* Sesuaikan ukuran logo */
+    height: auto;
+    object-fit: contain;
+}
+
+.brand-logo-text h2 {
+    margin: 0;
     font-size: 24px;
+    color: #1e293b;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+body.dark-mode .brand-logo-text h2 { color: white; }
+
+.login-header-group h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
     color: #111827;
     font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
-body.dark-mode .login-card-centered h3 { color: var(--text-utama); }
+body.dark-mode .login-header-group h3 { color: var(--text-utama); }
 
-.login-card-centered p {
-    margin: 0 0 35px 0;
-    color: #6b7280;
+.login-header-group p {
+    margin: 0;
+    color: #64748b;
     font-size: 14px;
 }
 
-body.dark-mode .login-card-centered p { color: var(--text-redup); }
+body.dark-mode .login-header-group p { color: var(--text-redup); }
 
-/* INPUT BENTUK KAPSUL */
-.input-login-pill {
+/* INPUT PERSEGI PANJANG (BUKAN KAPSUL) */
+.input-login-rect {
     background-color: #ffffff;
-    border: 1.5px solid #e5e7eb;
-    color: #111827;
-    border-radius: 30px !important; 
-    padding: 14px 20px !important;
-    font-size: 14px;
+    border: 1.5px solid #cbd5e1;
+    color: #1e293b;
+    border-radius: 8px !important; /* Persegi dengan sudut sedikit tumpul */
+    padding: 16px 15px !important; /* Padding vertikal diperbesar agar lebih tinggi ke bawah */
+    font-size: 15px;
     transition: all 0.3s ease;
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 15px;
+    margin-bottom: 18px;
     outline: none;
 }
 
-body.dark-mode .input-login-pill {
+body.dark-mode .input-login-rect {
     background-color: var(--bg-body);
     border-color: var(--border-halus);
     color: var(--text-utama);
 }
 
-.input-login-pill:focus {
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+.input-login-rect:focus {
+    border-color: #3C50E0;
+    box-shadow: 0 0 0 3px rgba(60, 80, 224, 0.1);
 }
 
-.input-login-pill::placeholder {
-    color: #9ca3af;
+.input-login-rect::placeholder {
+    color: #94a3b8;
 }
 
-/* LINK FORGOT PASSWORD DI KANAN */
-.link-forgot {
+/* LINK LUPA PASSWORD */
+.link-forgot-formal {
     display: block;
     text-align: right;
     font-size: 13px;
-    color: #4f46e5;
-    margin-top: -5px;
+    color: #3C50E0;
+    margin-top: -8px;
     margin-bottom: 25px;
-    margin-right: 5px;
     text-decoration: none;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
 }
 
-.link-forgot:hover { text-decoration: underline; }
+.link-forgot-formal:hover { text-decoration: underline; color: #2563eb; }
 
-/* TOMBOL LOGIN UNGU/BIRU */
-.btn-login-pill {
+/* TOMBOL LOGIN PERSEGI PANJANG */
+.btn-login-rect {
     width: 100%;
-    padding: 14px;
-    background-color: #4f46e5; /* Mengikuti warna referensi */
+    padding: 15px; /* Lebih tebal ke bawah */
+    background-color: #3C50E0; 
     color: white;
     border: none;
-    border-radius: 30px;
+    border-radius: 8px; /* Mengikuti bentuk input */
     font-size: 15px;
-    font-weight: 600;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s, transform 0.1s;
 }
 
-.btn-login-pill:hover { background-color: #4338ca; }
+.btn-login-rect:hover { 
+    background-color: #2563eb; 
+}
+
+.btn-login-rect:active {
+    transform: scale(0.98);
+}
 
 /* MODAL LUPA PASSWORD (TETAP) */
 .login-modal-overlay {
@@ -149,11 +157,12 @@ body.dark-mode .input-login-pill {
     align-items: center; z-index: 1000;
 }
 .login-modal-content {
-    background-color: var(--bg-card); padding: 30px; border-radius: 20px;
+    background-color: var(--bg-card); padding: 30px; border-radius: 12px;
     width: 90%; max-width: 400px; text-align: left; position: relative;
+    border: 1px solid var(--border-halus);
 }
 .btn-tutup-modal {
     position: absolute; top: 15px; right: 15px; background-color: #ef4444;
     color: white; border: none; border-radius: 50%; width: 30px; height: 30px;
-    cursor: pointer; font-weight: bold;
+    cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;
 }

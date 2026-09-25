@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { loginAdmin, kirimLupaPassword } from "../services/api";
+// Memanggil gambar logo dari folder assets
+import logoBandung from "../assets/logo-bandung.jpg"; 
 import './Login.css';
 
 export default function Login() {
@@ -21,7 +23,7 @@ export default function Login() {
                     title: 'Success', 
                     text: respons.pesan, 
                     icon: 'success', 
-                    confirmButtonColor: '#4f46e5' 
+                    confirmButtonColor: '#3C50E0' 
                 });
                 localStorage.setItem("isLoggedIn","true");
                 localStorage.setItem("token", respons.token);
@@ -51,22 +53,26 @@ export default function Login() {
     };
 
     return (
-        <div className="login-wrapper-modern">
+        <div className="login-wrapper-formal">
             
-            {/* LOGO DI LUAR KARTU */}
-            <div className="login-brand-top">
-                <span className="icon-brand">✦</span> ONE EKBANG
-            </div>
-
-            {/* KARTU TENGAH */}
-            <div className="login-card-centered">
-                <h3>Welcome Back</h3>
-                <p>Silakan masuk untuk mengelola data kelurahan</p>
+            {/* KARTU TENGAH YANG BERSIH */}
+            <div className="login-card-formal">
+                
+                {/* HEADER LOGIN DENGAN LOGO */}
+                <div className="login-header-group">
+                    <div className="brand-logo-text">
+                        <img src={logoBandung} alt="Logo Bandung Kiri" className="logo-pemkot" />
+                        <h2>ONE EKBANG</h2>
+                        <img src={logoBandung} alt="Logo Bandung Kanan" className="logo-pemkot" />
+                    </div>
+                    <h3>SELAMAT DATANG</h3>
+                    <p>Silakan masuk untuk mengelola data kelurahan</p>
+                </div>
 
                 <form onSubmit={handleLogin}>
                     <input 
                         type="text" 
-                        className="input-login-pill"
+                        className="input-login-rect"
                         placeholder="Username"
                         value={username} 
                         onChange={(e) => setUsername(e.target.value)} 
@@ -75,19 +81,19 @@ export default function Login() {
                     
                     <input 
                         type="password" 
-                        className="input-login-pill"
+                        className="input-login-rect"
                         placeholder="Password"
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
                         required 
                     />
 
-                    <span className="link-forgot" onClick={() => setIsModalOpen(true)}>
-                        Forgot Password?
+                    <span className="link-forgot-formal" onClick={() => setIsModalOpen(true)}>
+                        Lupa Password?
                     </span>
 
-                    <button type="submit" className="btn-login-pill">
-                        Login
+                    <button type="submit" className="btn-login-rect">
+                        MASUK
                     </button>
                 </form>
             </div>
@@ -106,14 +112,14 @@ export default function Login() {
                         <form onSubmit={handleLupaPassword}>
                             <input 
                                 type="text" 
-                                className="input-login-pill"
+                                className="input-login-rect"
                                 placeholder="Masukkan username Anda..." 
                                 value={resetUsername}
                                 onChange={(e) => setResetUsername(e.target.value)}
                                 required
                                 style={{ marginBottom: '15px' }}
                             />
-                            <button type="submit" className="btn-login-pill">Kirim Permintaan Reset</button>
+                            <button type="submit" className="btn-login-rect">Kirim Permintaan Reset</button>
                         </form>
                     </div>
                 </div>
