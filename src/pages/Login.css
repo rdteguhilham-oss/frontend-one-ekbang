@@ -1,35 +1,35 @@
-/* BACKGROUND BIRU CERAH (Sesuai Referensi ONE EKBANG) */
+/* BACKGROUND SESUAI PERMINTAAN (#f8fafc) */
 .login-wrapper-portal {
     min-height: 100vh;
     width: 100%; 
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #3558ec; /* Biru cerah sesuai referensi */
-    background-image: linear-gradient(135deg, #3c50e0 0%, #2b3fc2 100%);
+    background-color: #f8fafc; /* BERUBAH: Sesuai kode warna permintaanmu */
     padding: 20px;
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
 }
 
 body.dark-mode .login-wrapper-portal {
-    background-color: #1e293b;
-    background-image: none;
+    background-color: #0f172a;
 }
 
-/* KARTU TENGAH BERSIH */
+/* KARTU TENGAH BERSIH - LEBAR DIPERSEMPIT */
 .login-card-portal {
     background-color: #ffffff;
     width: 100%;
-    max-width: 420px;
-    padding: 45px 40px; /* Padding diperbesar agar proporsional */
+    max-width: 360px; /* BERUBAH: Dipersempit dari 420px ke 360px agar input tidak terlalu lebar ke samping */
+    padding: 40px 30px; /* Padding disesuaikan dengan lebar baru */
     border-radius: 6px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Bayangan diperhalus */
+    border: 1px solid #e2e8f0; /* Tambahan bingkai halus pemisah background */
     text-align: center;
 }
 
 body.dark-mode .login-card-portal {
     background-color: var(--bg-card);
+    border-color: var(--border-halus);
 }
 
 /* AREA LOGO & TEKS HEADER */
@@ -37,7 +37,7 @@ body.dark-mode .login-card-portal {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 20px;
     border-bottom: 2px solid #f1f5f9;
     padding-bottom: 20px;
@@ -46,7 +46,7 @@ body.dark-mode .login-card-portal {
 body.dark-mode .portal-logo-area { border-color: var(--border-halus); }
 
 .portal-logo-img {
-    width: 60px; /* Logo sedikit dibesarkan karena subteks hilang */
+    width: 50px; /* Sedikit disesuaikan agar pas dengan kartu yang menyempit */
     height: auto;
     object-fit: contain;
 }
@@ -57,24 +57,24 @@ body.dark-mode .portal-logo-area { border-color: var(--border-halus); }
 
 .portal-logo-text h1 {
     margin: 0;
-    font-size: 28px;
-    color: #3c50e0; /* Menyesuaikan biru tema utama */
+    font-size: 24px; /* Ukuran font disesuaikan sedikit */
+    color: #3c50e0; 
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 body.dark-mode .portal-logo-text h1 { color: #3b82f6; }
 
 .portal-subtext {
-    font-size: 14px;
+    font-size: 13px;
     color: #64748b;
     margin-bottom: 30px;
 }
 
-/* INPUT GRUP - MEMBENTUK PERSEGI PANJANG KE BAWAH */
+/* INPUT GRUP - TINGGI & TEBAL */
 .input-group-portal {
     display: flex;
-    align-items: stretch; /* Memaksa kotak ikon dan teks sama tinggi */
+    align-items: stretch; 
     margin-bottom: 18px;
     border: 1px solid #cbd5e1;
     border-radius: 4px;
@@ -88,7 +88,7 @@ body.dark-mode .input-group-portal { border-color: var(--border-halus); backgrou
 .input-icon-portal {
     background-color: #111827; 
     color: white;
-    padding: 16px 20px; /* PADDING DIPERBESAR: Membuat kotak lebih tinggi */
+    padding: 16px 18px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -102,9 +102,9 @@ body.dark-mode .input-icon-portal { background-color: #000000; }
     border: none !important; 
     border-radius: 0 !important; 
     flex: 1;
-    padding: 16px 15px !important; /* PADDING DIPERBESAR: Membuat area ketik lebih tinggi */
+    padding: 16px 15px !important; 
     outline: none;
-    font-size: 15px;
+    font-size: 14px;
     color: #1e293b;
     background-color: transparent !important;
 }
@@ -115,7 +115,7 @@ body.dark-mode .input-icon-portal { background-color: #000000; }
 .link-forgot-portal {
     display: block;
     text-align: right;
-    font-size: 13px;
+    font-size: 12px;
     color: #3c50e0;
     margin-top: -5px;
     margin-bottom: 25px;
@@ -132,8 +132,8 @@ body.dark-mode .input-icon-portal { background-color: #000000; }
     background-color: #3c50e0;
     color: white;
     border: none;
-    padding: 15px; /* PADDING DIPERBESAR: Proporsional dengan input */
-    font-size: 16px;
+    padding: 15px; 
+    font-size: 15px;
     font-weight: bold;
     border-radius: 4px;
     cursor: pointer;
@@ -146,7 +146,7 @@ body.dark-mode .input-icon-portal { background-color: #000000; }
 
 .btn-login-portal:hover { background-color: #2b3fc2; }
 
-/* MODAL LUPA PASSWORD (TETAP) */
+/* MODAL LUPA PASSWORD */
 .login-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center;
