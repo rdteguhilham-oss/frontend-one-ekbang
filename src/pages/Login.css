@@ -5,7 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #3b769f; /* Biru retro khas portal */
+    background-color: #f8fafc; /* Biru retro khas portal */
     background-image: radial-gradient(circle at center, #4b8ebf 0%, #35688c 100%);
     padding: 20px;
     font-family: 'Inter', sans-serif;
