@@ -1,12 +1,12 @@
-/* BACKGROUND BIRU ALA PORTAL RESMI */
+/* BACKGROUND BIRU CERAH (Sesuai Referensi ONE EKBANG) */
 .login-wrapper-portal {
     min-height: 100vh;
     width: 100%; 
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f8fafc; /* Biru retro khas portal */
-    background-image: radial-gradient(circle at center, #4b8ebf 0%, #35688c 100%);
+    background-color: #3558ec; /* Biru cerah sesuai referensi */
+    background-image: linear-gradient(135deg, #3c50e0 0%, #2b3fc2 100%);
     padding: 20px;
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
@@ -22,9 +22,9 @@ body.dark-mode .login-wrapper-portal {
     background-color: #ffffff;
     width: 100%;
     max-width: 420px;
-    padding: 40px 35px;
-    border-radius: 6px; /* Siku kotak ala portal */
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    padding: 45px 40px; /* Padding diperbesar agar proporsional */
+    border-radius: 6px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     text-align: center;
 }
 
@@ -46,7 +46,7 @@ body.dark-mode .login-card-portal {
 body.dark-mode .portal-logo-area { border-color: var(--border-halus); }
 
 .portal-logo-img {
-    width: 55px;
+    width: 60px; /* Logo sedikit dibesarkan karena subteks hilang */
     height: auto;
     object-fit: contain;
 }
@@ -57,37 +57,28 @@ body.dark-mode .portal-logo-area { border-color: var(--border-halus); }
 
 .portal-logo-text h1 {
     margin: 0;
-    font-size: 26px;
-    color: #2980b9; /* Biru teks judul */
+    font-size: 28px;
+    color: #3c50e0; /* Menyesuaikan biru tema utama */
     font-weight: 800;
     letter-spacing: 1px;
 }
 
-.portal-logo-text p {
-    margin: 0;
-    font-size: 11px;
-    color: #1e293b;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-}
-
 body.dark-mode .portal-logo-text h1 { color: #3b82f6; }
-body.dark-mode .portal-logo-text p { color: var(--text-redup); }
 
 .portal-subtext {
     font-size: 14px;
     color: #64748b;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
-/* INPUT GRUP DENGAN IKON KOTAK HITAM */
+/* INPUT GRUP - MEMBENTUK PERSEGI PANJANG KE BAWAH */
 .input-group-portal {
     display: flex;
-    align-items: stretch;
-    margin-bottom: 15px;
+    align-items: stretch; /* Memaksa kotak ikon dan teks sama tinggi */
+    margin-bottom: 18px;
     border: 1px solid #cbd5e1;
     border-radius: 4px;
-    overflow: hidden; /* Memotong ikon agar rapi */
+    overflow: hidden; 
     background-color: white;
 }
 
@@ -97,7 +88,7 @@ body.dark-mode .input-group-portal { border-color: var(--border-halus); backgrou
 .input-icon-portal {
     background-color: #111827; 
     color: white;
-    padding: 12px 16px;
+    padding: 16px 20px; /* PADDING DIPERBESAR: Membuat kotak lebih tinggi */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -108,12 +99,12 @@ body.dark-mode .input-icon-portal { background-color: #000000; }
 
 /* KOTAK TEKS INPUT */
 .input-field-portal {
-    border: none !important; /* Mematikan border bawaan global css */
+    border: none !important; 
     border-radius: 0 !important; 
     flex: 1;
-    padding: 12px 15px !important;
+    padding: 16px 15px !important; /* PADDING DIPERBESAR: Membuat area ketik lebih tinggi */
     outline: none;
-    font-size: 14px;
+    font-size: 15px;
     color: #1e293b;
     background-color: transparent !important;
 }
@@ -124,35 +115,36 @@ body.dark-mode .input-icon-portal { background-color: #000000; }
 .link-forgot-portal {
     display: block;
     text-align: right;
-    font-size: 12px;
-    color: #3b769f;
+    font-size: 13px;
+    color: #3c50e0;
     margin-top: -5px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     cursor: pointer;
     text-decoration: none;
+    font-weight: 600;
 }
 
-.link-forgot-portal:hover { text-decoration: underline; }
+.link-forgot-portal:hover { text-decoration: underline; color: #2563eb; }
 
 /* TOMBOL LOGIN BIRU PORTAL */
 .btn-login-portal {
     width: 100%;
-    background-color: #2980b9;
+    background-color: #3c50e0;
     color: white;
     border: none;
-    padding: 12px;
-    font-size: 15px;
+    padding: 15px; /* PADDING DIPERBESAR: Proporsional dengan input */
+    font-size: 16px;
     font-weight: bold;
     border-radius: 4px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px; /* Jarak ikon dengan teks */
+    gap: 8px; 
     transition: background-color 0.3s;
 }
 
-.btn-login-portal:hover { background-color: #1f6391; }
+.btn-login-portal:hover { background-color: #2b3fc2; }
 
 /* MODAL LUPA PASSWORD (TETAP) */
 .login-modal-overlay {

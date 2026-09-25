@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { loginAdmin, kirimLupaPassword } from "../services/api";
 import logoBandung from "../assets/logo-bandung.jpg"; 
-import { FaUser, FaKey, FaSignInAlt } from "react-icons/fa"; // Memanggil ikon
+import { FaUser, FaKey, FaSignInAlt } from "react-icons/fa"; 
 import './Login.css';
 
 export default function Login() {
@@ -23,7 +23,7 @@ export default function Login() {
                     title: 'Success', 
                     text: respons.pesan, 
                     icon: 'success', 
-                    confirmButtonColor: '#2980b9' 
+                    confirmButtonColor: '#3C50E0' 
                 });
                 localStorage.setItem("isLoggedIn","true");
                 localStorage.setItem("token", respons.token);
@@ -57,12 +57,10 @@ export default function Login() {
             
             <div className="login-card-portal">
                 
-                {/* HEADER LOGO ALA PORTAL */}
                 <div className="portal-logo-area">
                     <img src={logoBandung} alt="Logo Bandung" className="portal-logo-img" />
                     <div className="portal-logo-text">
                         <h1>ONE EKBANG</h1>
-                        <p>TATA KELOLA KELURAHAN</p>
                     </div>
                 </div>
 
@@ -70,7 +68,6 @@ export default function Login() {
 
                 <form onSubmit={handleLogin}>
                     
-                    {/* INPUT USERNAME BER-IKON */}
                     <div className="input-group-portal">
                         <span className="input-icon-portal">
                             <FaUser />
@@ -85,7 +82,6 @@ export default function Login() {
                         />
                     </div>
                     
-                    {/* INPUT PASSWORD BER-IKON */}
                     <div className="input-group-portal">
                         <span className="input-icon-portal">
                             <FaKey />
@@ -110,7 +106,6 @@ export default function Login() {
                 </form>
             </div>
 
-            {/* MODAL LUPA PASSWORD */}
             {isModalOpen && (
                 <div className="login-modal-overlay">
                     <div className="login-modal-content">
@@ -125,7 +120,7 @@ export default function Login() {
                             <input 
                                 type="text" 
                                 className="input-field-portal"
-                                style={{ border: '1px solid #cbd5e1', marginBottom: '15px' }}
+                                style={{ border: '1px solid #cbd5e1', marginBottom: '15px', padding: '16px' }}
                                 placeholder="Masukkan username Anda..." 
                                 value={resetUsername}
                                 onChange={(e) => setResetUsername(e.target.value)}
