@@ -68,7 +68,6 @@ export default function KegiatanHarian() {
 
         const formData = new FormData();
         formData.append('petugas_id', idPetugasGober);
-        formData.append('nama_petugas', getNamaPetugas(idPetugasGober));
         formData.append('lokasi', lokasi);
         formData.append('panjang_meter', panjangMeter);
         formData.append('foto', fotoGober);
@@ -91,7 +90,6 @@ export default function KegiatanHarian() {
     const submitSampah = async (e) => {
         e.preventDefault();
         
-        // WAJIB ADA FOTO SEKARANG
         if (!fotoSampah) {
             Swal.fire("Foto bukti timbangan wajib diunggah!");
             return;
@@ -99,11 +97,10 @@ export default function KegiatanHarian() {
 
         const formData = new FormData();
         formData.append('petugas_id', idPetugasSampah);
-        formData.append('nama_petugas', getNamaPetugas(idPetugasSampah));
         formData.append('kategori_tugas', kategoriTugas);
         formData.append('data_rw', dataRw);
         formData.append('berat_kiloan', beratKiloan);
-        formData.append('foto', fotoSampah); // Memasukkan foto ke paketan
+        formData.append('foto', fotoSampah);
 
         try {
             const result = await tambahKegiatanSampah(formData);
