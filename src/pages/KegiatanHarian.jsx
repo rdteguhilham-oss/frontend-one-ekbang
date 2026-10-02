@@ -336,11 +336,11 @@ export default function KegiatanHarian() {
                                     </div>
                                     <div className="form-group">
                                         <label>Lokasi Pengerjaan</label>
-                                        <input type="text" value={lokasi} onChange={(e) => setLokasi(e.target.value)} required />
+                                        <input type="text" placeholder='Contoh: Jl. Anyelir 2' value={lokasi} onChange={(e) => setLokasi(e.target.value)} required />
                                     </div>
                                     <div className="form-group">
                                         <label>Ukuran Panjang/Luas</label>
-                                        <input type="text" value={panjangMeter} onChange={(e) => setPanjangMeter(e.target.value)} required />
+                                        <input type="text" placeholder='Contoh: 30 = 30m' value={panjangMeter} onChange={(e) => setPanjangMeter(e.target.value)} required />
                                     </div>
                                     <div className="form-group">
                                         <label>Foto Kegiatan</label>
@@ -375,7 +375,7 @@ export default function KegiatanHarian() {
                                     </div>
                                     <div className="form-group">
                                         <label>Berat Kiloan (Kg)</label>
-                                        <input type="number" step="0.01" value={beratKiloan} onChange={(e) => setBeratKiloan(e.target.value)} required />
+                                        <input type="number" placeholder='Contoh: 30' step="0.01" value={beratKiloan} onChange={(e) => setBeratKiloan(e.target.value)} required />
                                     </div>
                                     
                                     {/* INPUT FOTO UNTUK SAMPAH */}
