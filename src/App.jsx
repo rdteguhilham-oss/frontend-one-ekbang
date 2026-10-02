@@ -95,11 +95,11 @@ export default function App() {
               </Link>
               
               <Link to="/data_petugas" className="nav-link">
-                  <FaUsers className="nav-icon" /> Data Ekbang
+                  <FaUsers className="nav-icon" /> Data Petugas Ekbang
               </Link>
               
               <Link to="/kegiatan_harian" className="nav-link">
-                  <FaClipboardCheck className="nav-icon" /> Kegiatan Harian
+                  <FaClipboardCheck className="nav-icon" /> Kegiatan Harian Petugas
               </Link>
               
               <Link to="/agenda_kegiatan" className="nav-link">
