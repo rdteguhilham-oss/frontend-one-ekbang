@@ -6,10 +6,9 @@ import DataPetugas from './pages/DataPetugas';
 import KegiatanHarian from './pages/KegiatanHarian';
 import AgendaKegiatan from './pages/AgendaKegiatan';
 import PetaGIS from './pages/PetaGis';
-import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { FaUserShield, FaClipboardList, FaUsers, FaClipboardCheck, FaCalendarAlt, FaMapMarkedAlt, FaHome, FaTree, FaRecycle, FaFileAlt, FaCog } from "react-icons/fa";
+import { FaUserShield, FaClipboardList, FaUsers, FaClipboardCheck, FaCalendarAlt, FaMapMarkedAlt } from "react-icons/fa";
 import React, { useState, useEffect } from 'react';
 import { getDataLayanan } from './services/api'; 
 import './App.css';
@@ -82,37 +81,33 @@ export default function App() {
                   </button>
               </div>
 
-              <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}>
-                  <FaHome className="nav-icon" /> Dashboard
-              </Link>
-              
-              <Link to="/agenda_kegiatan" className={`nav-link ${location.pathname === '/agenda_kegiatan' ? 'active' : ''}`}>
-                  <FaCalendarAlt className="nav-icon" /> Agenda Kegiatan
-              </Link>
-
-              <Link to="/admin" className={`nav-link ${location.pathname === '/admin' ? 'active' : ''}`}>
-                  <FaUserShield className="nav-icon" /> Data Personel
+              <Link to="/admin" className="nav-link">
+                  <FaUserShield className="nav-icon" /> Data Admin
               </Link> 
-
-              <Link to="/data_petugas" className={`nav-link ${location.pathname === '/data_petugas' ? 'active' : ''}`}>
-                  <FaUsers className="nav-icon" /> Data Ekbang
-              </Link>
               
-              <Link to="/pengajuan_layanan" className={`nav-link menu-pengajuan ${location.pathname === '/pengajuan_layanan' ? 'active' : ''}`}>
+              <Link to="/pengajuan_layanan" className="nav-link menu-pengajuan">
                   <div className="nav-kiri">
-                      <FaClipboardList className="nav-icon" /> Pengajuan Masyarakat
+                      <FaClipboardList className="nav-icon" /> Pengajuan Layanan
                   </div>
                   {jumlahNotif > 0 && (
                       <span className="badge-notif">{jumlahNotif}</span>
                   )}
               </Link>
               
-              <Link to="/peta_gis" className={`nav-link ${location.pathname === '/peta_gis' ? 'active' : ''}`}>
-                  <FaMapMarkedAlt className="nav-icon" /> Pemetaan Wilayah
+              <Link to="/data_petugas" className="nav-link">
+                  <FaUsers className="nav-icon" /> Data Petugas Ekbang
               </Link>
-
-              <Link to="/kegiatan_harian" className={`nav-link ${location.pathname === '/kegiatan_harian' ? 'active' : ''}`}>
-                  <FaClipboardCheck className="nav-icon" /> Kegiatan Harian
+              
+              <Link to="/kegiatan_harian" className="nav-link">
+                  <FaClipboardCheck className="nav-icon" /> Kegiatan Harian Petugas
+              </Link>
+              
+              <Link to="/agenda_kegiatan" className="nav-link">
+                  <FaCalendarAlt className="nav-icon" /> Agenda Kegiatan
+              </Link>
+              
+              <Link to="/peta_gis" className="nav-link">
+                  <FaMapMarkedAlt className="nav-icon" /> Peta Interaktif GIS
               </Link>
 
               <button className="btn-tema" onClick={() => setIsDarkMode(!isDarkMode)}>
@@ -142,12 +137,11 @@ export default function App() {
         )}
 
         <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Navigate to="/admin" replace />} />
+            <Route path="*" element={<Navigate to="/admin" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/tambah_layanan" element={<TambahLayanan />} />
           
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><DaftarAdmin /></ProtectedRoute>} />
             <Route path="/pengajuan_layanan" element={<ProtectedRoute><PengajuanLayanan/></ProtectedRoute>} />
             <Route path="/data_petugas" element={<ProtectedRoute><DataPetugas/></ProtectedRoute>} />
