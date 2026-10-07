@@ -1,0 +1,334 @@
+.dashboard-container {
+  padding: 20px;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-banner {
+  background: linear-gradient(to right, #1e3c72, #2a5298);
+  border-radius: 10px;
+  padding: 30px;
+  color: white;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.banner-content h1 {
+  font-size: 24px;
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+
+.banner-content p {
+  margin: 0;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.top-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.top-card {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.top-card.admin { background-color: #3498db; }
+.top-card.layanan { background-color: #9b59b6; }
+.top-card.lapangan { background-color: #2ecc71; }
+.top-card.sampah { background-color: #e67e22; }
+
+.card-icon {
+  font-size: 40px;
+  margin-right: 20px;
+  opacity: 0.8;
+}
+
+.card-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.card-value {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.card-value span {
+  font-size: 14px;
+  font-weight: normal;
+  opacity: 0.8;
+}
+
+.middle-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+}
+
+.dashboard-panel {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.panel-header h3 {
+  font-size: 16px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #333;
+}
+
+.lihat-semua {
+  font-size: 12px;
+  color: #3498db;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Agenda */
+.agenda-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.agenda-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.agenda-time {
+  font-weight: bold;
+  color: #555;
+  width: 50px;
+}
+
+.agenda-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.agenda-detail strong {
+  font-size: 14px;
+  color: #333;
+}
+
+.agenda-detail span {
+  font-size: 12px;
+  color: #777;
+}
+
+.badge-status {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.badge-status.berlangsung { background: #e8f5e9; color: #2e7d32; }
+.badge-status.terjadwal { background: #e3f2fd; color: #1565c0; }
+
+/* Status Pengajuan */
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.status-icon {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.status-item.rutilahu .status-icon { color: #e67e22; }
+.status-item.pohon .status-icon { color: #2ecc71; }
+.status-item.buruan .status-icon { color: #27ae60; }
+.status-item.musrenbang .status-icon { color: #8e44ad; }
+.status-item.dau .status-icon { color: #3498db; }
+
+.status-item span { font-size: 11px; margin-bottom: 5px; height: 26px; }
+.status-item strong { font-size: 18px; }
+.status-item small { font-size: 10px; color: #777; }
+
+/* Peta */
+.map-container {
+  flex: 1;
+  min-height: 250px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Berita */
+.berita-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.berita-item {
+  display: flex;
+  gap: 15px;
+}
+
+.placeholder-img {
+  width: 60px;
+  height: 60px;
+  background-color: #ddd;
+  border-radius: 8px;
+}
+
+.berita-detail h4 {
+  font-size: 13px;
+  margin: 0 0 5px 0;
+  color: #333;
+}
+
+.berita-detail span {
+  font-size: 11px;
+  color: #777;
+}
+
+/* Laporan */
+.laporan-grid {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+}
+
+.laporan-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.laporan-icon {
+  font-size: 40px;
+}
+
+.laporan-icon.excel { color: #27ae60; }
+.laporan-icon.pdf { color: #e74c3c; }
+.laporan-icon.doc { color: #3498db; }
+
+.laporan-item span {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.btn-download {
+  background: none;
+  border: none;
+  color: #3498db;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.btn-download:hover {
+  text-decoration: underline;
+}
+
+/* Menu Utama */
+.menu-utama-panel {
+  margin-top: 10px;
+}
+
+.menu-utama-grid {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.menu-utama-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  text-decoration: none;
+  color: #333;
+  gap: 10px;
+}
+
+.menu-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  border: 1px solid #eee;
+}
+
+.menu-utama-item span {
+  font-size: 11px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.text-primary { color: #3498db; }
+.text-info { color: #00bcd4; }
+.text-success { color: #2ecc71; }
+
+@media (max-width: 1024px) {
+  .top-cards-grid, .middle-grid, .bottom-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .top-cards-grid, .middle-grid, .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
