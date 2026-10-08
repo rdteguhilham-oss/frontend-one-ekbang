@@ -130,7 +130,7 @@ export default function DaftarAdmin() {
       
       {/* JUDUL DASBOR KINI BERDIRI SENDIRI TANPA TOMBOL LOGOUT */}
       <div className="header-admin">
-        <h2>Data Admin</h2>
+        <h2>Dasbor Utama & Manajemen Akun</h2>
       </div>
 
       {/* KOTAK NOTIFIKASI LUPA PASSWORD */}
