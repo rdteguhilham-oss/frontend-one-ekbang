@@ -6,6 +6,7 @@ import DataPetugas from './pages/DataPetugas';
 import KegiatanHarian from './pages/KegiatanHarian';
 import AgendaKegiatan from './pages/AgendaKegiatan';
 import PetaGIS from './pages/PetaGis';
+import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { FaUserShield, FaClipboardList, FaUsers, FaClipboardCheck, FaCalendarAlt, FaMapMarkedAlt } from "react-icons/fa";
@@ -75,11 +76,15 @@ export default function App() {
 
             <nav className={`sidebar ${isSidebarOpen ? '' : 'sembunyi'}`}>
               <div className="sidebar-header">
-                  <h2>ONE EKBANG 🚀</h2>
+                  <img src="/logo-one-ekbang.jpg" alt="Logo Kelurahan" style={{width: '100%', borderRadius: '12px', background: 'white'}} />
                   <button className="btn-hamburger-dalam" onClick={() => setIsSidebarOpen(false)}>
                       ☰
                   </button>
               </div>
+
+              <Link to="/dashboard" className="nav-link">
+                  <FaUserShield className="nav-icon" /> Dashboard Utama
+              </Link>
 
               <Link to="/admin" className="nav-link">
                   <FaUserShield className="nav-icon" /> Data Admin
@@ -137,11 +142,12 @@ export default function App() {
         )}
 
         <Routes>
-            <Route path="/" element={<Navigate to="/admin" replace />} />
-            <Route path="*" element={<Navigate to="/admin" replace />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
             <Route path="/login" element={<Login />} />
             <Route path="/tambah_layanan" element={<TambahLayanan />} />
           
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><DaftarAdmin /></ProtectedRoute>} />
             <Route path="/pengajuan_layanan" element={<ProtectedRoute><PengajuanLayanan/></ProtectedRoute>} />
             <Route path="/data_petugas" element={<ProtectedRoute><DataPetugas/></ProtectedRoute>} />

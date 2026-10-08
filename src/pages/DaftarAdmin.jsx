@@ -156,23 +156,8 @@ export default function DaftarAdmin() {
           </div>
       )}
     
-      <div className="statistik-container">
-          <div className="kartu-statistik">
-              <h3>{totalLayanan}</h3>
-              <p>Total Pengajuan</p>
-          </div>
-          <div className="kartu-statistik">
-              <h3>{totalPetugas}</h3>
-              <p>Total Petugas</p>
-          </div>
-          <div className="kartu-statistik">
-              <h3>{totalAgenda}</h3>
-              <p>Agenda Ekbang</p>
-          </div>
-          <div className="kartu-statistik" style={{borderBottomColor: '#ef4444'}}>
-              <h3>{dataAdmin.length}</h3>
-              <p>Akun Staf Aktif</p>
-          </div>
+      <div className="statistik-container" style={{display: 'none'}}>
+          {/* Stats dipindah ke Dashboard Utama */}
       </div>
       
       <div className="admin-form-card">

@@ -1,0 +1,272 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0;
+}
+
+/* BANNER HEADER */
+.dashboard-header-banner {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.banner-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to right, rgba(255,255,255,0.95) 30%, rgba(255,255,255,0.5) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 40px;
+}
+
+.banner-overlay h1 {
+    font-size: 24px;
+    color: #0b3b2c;
+    margin: 0 0 8px 0;
+    font-weight: 800;
+}
+
+.banner-overlay p {
+    font-size: 16px;
+    color: #475569;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* SUMMARY CARDS PETUGAS */
+.summary-petugas-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+}
+
+.card-petugas {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.card-petugas.gober { background: #10B981; }
+.card-petugas.taman { background: #3B82F6; }
+.card-petugas.gorong { background: #F59E0B; }
+.card-petugas.gaslah { background: #8B5CF6; }
+.card-petugas.magot { background: #6B7280; }
+.card-petugas.admin { background: #ef4444; }
+
+.ikon-petugas {
+    font-size: 30px;
+    margin-right: 15px;
+    opacity: 0.8;
+}
+
+.teks-petugas h4 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.9;
+}
+
+.teks-petugas h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.teks-petugas h2 span {
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+/* WIDGET GRIDS */
+.dashboard-grid-utama {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.dashboard-grid-bawah {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.widget-card {
+    background: var(--bg-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.widget-card.span-2 {
+    grid-column: span 1;
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-halus);
+    background: var(--bg-hover);
+}
+
+.widget-header h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-utama);
+}
+
+.widget-header a {
+    font-size: 13px;
+    color: var(--primary-btn);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.widget-body {
+    padding: 20px;
+    flex: 1;
+    color: var(--text-utama);
+}
+
+.widget-body.p-0 {
+    padding: 0;
+}
+
+/* AGENDA */
+.agenda-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.agenda-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed var(--border-halus);
+}
+.agenda-item:last-child { border-bottom: none; padding-bottom: 0; }
+.agenda-waktu {
+    font-weight: 700;
+    color: var(--text-utama);
+    font-size: 14px;
+    min-width: 50px;
+}
+.agenda-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.agenda-info strong { font-size: 14px; color: var(--text-utama); }
+.agenda-info span { font-size: 12px; color: var(--text-redup); }
+.agenda-status {
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+.agenda-status.berlangsung { background: #dcfce7; color: #166534; }
+
+/* GRID PENGAJUAN */
+.grid-pengajuan {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.item-pengajuan {
+    text-align: center;
+    padding: 15px 10px;
+    border-radius: 8px;
+    background: var(--bg-hover);
+    border: 1px solid var(--border-halus);
+}
+.item-pengajuan h2 { margin: 0; font-size: 24px; color: var(--text-utama); }
+.item-pengajuan p { margin: 0; font-size: 11px; color: var(--text-redup); font-weight: 600; }
+.item-pengajuan span { 
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 11px; 
+    font-weight: 700;
+    color: #10B981; 
+    background: rgba(16, 185, 129, 0.1);
+    padding: 3px 8px;
+    border-radius: 12px;
+}
+
+/* MINI MAP */
+.mini-map {
+    width: 100%;
+    height: 300px;
+}
+
+/* BERITA */
+.berita-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.berita-item {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.berita-item img {
+    width: 80px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+.berita-placeholder {
+    width: 80px;
+    height: 60px;
+    border-radius: 6px;
+    background: var(--border-halus);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--text-redup);
+}
+.berita-info {
+    display: flex;
+    flex-direction: column;
+}
+.berita-info strong {
+    font-size: 13px;
+    color: var(--text-utama);
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+.berita-info span {
+    font-size: 11px;
+    color: var(--text-redup);
+}
+
+@media (max-width: 1200px) {
+    .summary-petugas-grid { grid-template-columns: repeat(3, 1fr); }
+    .dashboard-grid-utama { grid-template-columns: 1fr; }
+    .dashboard-grid-bawah { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .summary-petugas-grid { grid-template-columns: 1fr 1fr; }
+    .banner-overlay { padding: 0 20px; }
+}

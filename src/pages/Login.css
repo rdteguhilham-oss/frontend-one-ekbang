@@ -1,248 +1,294 @@
-.login-wrapper-modern {
+.login-v2-wrapper {
     min-height: 100vh;
-    width: 100%; 
-    background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    font-family: 'Inter', sans-serif;
-    box-sizing: border-box;
-}
-
-body.dark-mode .login-wrapper-modern {
-    background: linear-gradient(135deg, #1E1B4B 0%, #2E3856 100%);
-}
-
-/* KARTU SPLIT PANEL (KIRI KANAN) */
-.login-card-split {
-    display: flex;
-    width: 100%;
-    max-width: 900px;
-    min-height: 500px;
-    background-color: var(--bg-card); /* Otomatis jadi gelap di Dark Mode */
-    border-radius: 20px; 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-    overflow: hidden; 
+    width: 100vw;
+    background-size: cover;
+    background-position: bottom;
+    background-repeat: no-repeat;
     position: relative;
-    transition: background-color 0.3s ease;
+    font-family: 'Inter', sans-serif;
 }
 
-/* PANEL KIRI (BRANDING & BIRU) */
-.login-branding {
-    flex: 1;
-    background: linear-gradient(135deg, var(--primary-btn) 0%, #2563eb 100%);
-    color: white;
+.login-v2-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to bottom, rgba(240, 248, 255, 0.9) 0%, rgba(240, 248, 255, 0.6) 100%);
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    text-align: center;
-    padding: 40px 60px;
-    position: relative;
+    padding: 40px 20px;
+    overflow-y: auto;
 }
 
-.branding-content {
+/* LOGO */
+.login-v2-logo {
+    margin-top: auto;
+    margin-bottom: 25px;
+    z-index: 10;
+}
+
+.login-v2-logo img {
+    height: 90px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: white;
+}
+
+/* KOTAK LOGIN */
+.login-v2-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 40px 30px 40px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    text-align: center;
     position: relative;
     z-index: 10;
 }
 
-.icon-roket {
-    font-size: 50px;
-    background: rgba(255, 255, 255, 0.2);
-    width: 90px;
-    height: 90px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    margin: 0 auto 15px auto;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.branding-content h2 {
-    margin: 0 0 10px 0;
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: 1px;
-}
-
-.branding-content p {
-    font-size: 14px;
-    line-height: 1.5;
-    opacity: 0.9;
-}
-
-/* DEKORASI AWAN PEMBATAS */
-.awan-desktop {
-    position: absolute;
-    top: 0;
-    right: -1px; /* Menutup celah piksel */
-    width: 40px;
-    height: 100%;
-    z-index: 5;
-}
-
-.awan-mobile {
-    display: none; /* Sembunyikan di desktop */
-}
-
-/* PANEL KANAN (FORM) */
-.login-form-section {
-    flex: 1.2;
-    padding: 60px 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: var(--bg-card);
-}
-
-.form-header h3 {
-    color: var(--text-utama);
-    font-size: 24px;
-    margin-top: 0;
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-.input-group-login {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-}
-
-.input-group-login label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-redup);
-    margin-bottom: 8px;
-    margin-left: 15px;
-}
-
-/* DESAIN INPUT KAPSUL (KONSISTEN DENGAN TAMBAH LAYANAN) */
-.input-login-pill {
-    background-color: #f8fafc;
-    border: 1.5px solid #e2e8f0;
-    color: #1e293b;
-    border-radius: 30px !important; 
-    padding: 14px 20px !important;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-body.dark-mode .input-login-pill {
-    background-color: var(--bg-body);
-    border-color: var(--border-halus);
-    color: var(--text-utama);
-}
-
-.input-login-pill:focus {
-    background-color: #ffffff;
-    border-color: var(--primary-btn);
-    box-shadow: 0 0 0 3px rgba(60, 80, 224, 0.1);
-}
-
-body.dark-mode .input-login-pill:focus {
-    background-color: var(--bg-card);
-}
-
-/* TOMBOL SIGN IN */
-.btn-login-pill {
-    width: 100%;
-    padding: 14px;
-    background-color: var(--primary-btn);
+.login-v2-icon-top {
+    background: #0a58ca;
     color: white;
-    border: none;
-    border-radius: 30px;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.3s;
-    box-shadow: 0 4px 10px rgba(60, 80, 224, 0.25);
-    margin-top: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 10px rgba(10, 88, 202, 0.3);
 }
 
-.btn-login-pill:hover {
-    background-color: #2563eb;
-    transform: translateY(-2px);
+.login-v2-card h2 {
+    margin: 20px 0 5px 0;
+    font-size: 22px;
+    color: #0f172a;
+    font-weight: 800;
 }
 
-.lupa-password-container-modern {
-    text-align: right;
-    margin-top: -10px; 
-    margin-bottom: 25px;
-    margin-right: 10px;
-}
-
-.link-lupa-password {
-    color: var(--primary-btn);
+.login-v2-card p {
     font-size: 13px;
+    color: #64748b;
+    margin-bottom: 30px;
+    font-weight: 500;
+}
+
+/* FORM INPUT */
+.login-v2-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group-v2 {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon-left {
+    position: absolute;
+    left: 15px;
+    color: #94a3b8;
+    font-size: 16px;
+}
+
+.input-group-v2 input {
+    width: 100%;
+    padding: 14px 15px 14px 45px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.3s;
+    background: #f8fafc;
+}
+
+.input-group-v2 input:focus {
+    border-color: #0a58ca;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(10, 88, 202, 0.1);
+}
+
+.btn-toggle-pass {
+    position: absolute;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+}
+
+.btn-toggle-pass:hover {
+    color: #0f172a;
+}
+
+/* OPTIONS */
+.login-v2-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.checkbox-ingat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.link-lupa-v2 {
+    color: #0a58ca;
     font-weight: 600;
     cursor: pointer;
-    transition: color 0.3s;
+    text-decoration: none;
 }
 
-.link-lupa-password:hover {
-    color: #2563eb;
+.link-lupa-v2:hover {
     text-decoration: underline;
 }
 
-/* MODAL LUPA PASSWORD TETAP KONSISTEN */
-.login-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.6); 
+/* TOMBOL LOGIN */
+.btn-login-v2 {
+    background: #0a58ca;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    gap: 10px;
+}
+
+.btn-login-v2:hover {
+    background: #084298;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(10, 88, 202, 0.3);
+}
+
+.mt-3 {
+    margin-top: 15px;
+}
+
+/* FLOATING MENU */
+.login-v2-floating-menu {
+    display: flex;
+    gap: 30px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 15px 40px;
+    border-radius: 20px;
+    margin-top: 30px;
+    margin-bottom: auto;
+    z-index: 10;
+    color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.floating-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    opacity: 0.9;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.floating-item:hover {
+    opacity: 1;
+    transform: translateY(-3px);
+}
+
+.floating-icon {
+    font-size: 24px;
+}
+
+.floating-item span {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+/* MODAL LUPA PASSWORD */
+.login-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
 }
 
 .login-modal-content {
-    background-color: var(--bg-card);
+    background: white;
     padding: 30px;
-    border-radius: 20px;
-    border: 1px solid var(--border-halus);
-    width: 90%;
+    border-radius: 16px;
+    width: 100%;
     max-width: 400px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     position: relative;
-    text-align: left;
-    animation: turunDariAtas 0.3s ease-out;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
 }
 
-/* RESPONSIVE LAYAR HP (MENGUBAH JADI STACK VERTIKAL) */
-@media screen and (max-width: 768px) {
-    .login-card-split {
-        flex-direction: column;
-        max-width: 400px;
-        min-height: auto;
-    }
-    
-    .login-branding {
-        padding: 40px 20px 60px 20px; /* Bawah diperlebar agar awan pas */
-    }
-    
-    .awan-desktop {
-        display: none; /* Matikan awan samping */
-    }
-    
-    .awan-mobile {
-        display: block; /* Nyalakan awan bawah */
-        position: absolute;
-        bottom: -1px;
-        left: 0;
-        width: 100%;
-        height: 40px;
-        z-index: 5;
-    }
+.btn-tutup-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #94a3b8;
+    cursor: pointer;
+}
 
-    .login-form-section {
-        padding: 40px 25px;
+.btn-tutup-modal:hover {
+    color: #ef4444;
+}
+
+.input-login-v2-modal {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+@media (max-width: 768px) {
+    .login-v2-floating-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 15px 20px;
+        border-radius: 12px;
+    }
+    .floating-item span {
+        display: none;
+    }
+    .login-v2-card {
+        padding: 40px 20px 30px 20px;
     }
 }
