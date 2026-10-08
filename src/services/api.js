@@ -1,5 +1,8 @@
 import Swal from "sweetalert2";
 
+// Kunci API Dinamis: Localhost saat "npm run dev", Railway saat production
+export const BASE_URL = import.meta.env.DEV ? "http://localhost:5000" : "https://backend-one-ekbang-production.up.railway.app";
+
 const getAuthHeader = () => {
     const token = localStorage.getItem("token");
     return token ? { 'Authorization': `Bearer ${token}` } : {};
@@ -37,10 +40,11 @@ const tanganiRespons = async (respons) => {
 
 export const getDataAdmin = async () => {
     try {
-        const respons = await fetch('https://backend-one-ekbang-production.up.railway.app/admin', {
+        const respons = await fetch(`${BASE_URL}/admin`, {
             headers: { ...getAuthHeader() } 
         });
-        return await tanganiRespons(respons);
+        const res = await tanganiRespons(respons);
+        return Array.isArray(res) ? res : [];
     } catch (error) {
         console.error('Gagal mengambil data admin:', error);
         throw error;
@@ -49,7 +53,7 @@ export const getDataAdmin = async () => {
 
 export const tambahAdmin = async (dataAdmin) => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/admin', {
+        const response = await fetch(`${BASE_URL}/admin`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -66,7 +70,7 @@ export const tambahAdmin = async (dataAdmin) => {
 
 export const hapusAdmin = async (id) => {
     try {
-        const response = await fetch(`https://backend-one-ekbang-production.up.railway.app/admin/${id}`, {
+        const response = await fetch(`${BASE_URL}/admin/${id}`, {
             method: 'DELETE',
             headers: { ...getAuthHeader() }
         });
@@ -79,11 +83,11 @@ export const hapusAdmin = async (id) => {
 
 export const getDataLayanan = async () => {
     try {
-        const respons = await fetch('https://backend-one-ekbang-production.up.railway.app/layanan', {
+        const respons = await fetch(`${BASE_URL}/layanan`, {
             headers: { ...getAuthHeader() }
         });
         const hasil = await tanganiRespons(respons);
-        return hasil.data;
+        return (hasil && Array.isArray(hasil.data)) ? hasil.data : [];
     } catch (error) {
         console.error('Gagal mengambil data layanan:', error);
         throw error; 
@@ -104,7 +108,7 @@ export const tambahLayanan = async (dataPaket) => {
             pengaturanFetch.headers['Content-Type'] = 'application/json';
         }
 
-        const response = await fetch("https://backend-one-ekbang-production.up.railway.app/layanan", pengaturanFetch);
+        const response = await fetch(`${BASE_URL}/layanan`, pengaturanFetch);
         return await response.json();
     } catch (error) {
         console.error("Gagal mengirim data:", error);
@@ -114,7 +118,7 @@ export const tambahLayanan = async (dataPaket) => {
 
 export const updateStatusLayanan = async (id, status) => {
     try {
-        const response = await fetch(`https://backend-one-ekbang-production.up.railway.app/layanan/${id}`, {
+        const response = await fetch(`${BASE_URL}/layanan/${id}`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
@@ -132,7 +136,7 @@ export const updateStatusLayanan = async (id, status) => {
 // Login (Jalur Publik - Tidak pakai tanganiRespons)
 export const loginAdmin = async (username, password) => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/login', {
+        const response = await fetch(`${BASE_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: username, password: password })
@@ -146,10 +150,11 @@ export const loginAdmin = async (username, password) => {
 
 export const getPetugas = async () => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/petugas', {
+        const response = await fetch(`${BASE_URL}/petugas`, {
             headers: { ...getAuthHeader() }
         });
-        return await tanganiRespons(response);
+        const res = await tanganiRespons(response);
+        return Array.isArray(res) ? res : [];
     } catch (error) {
         console.error("Gagal mengambil data petugas:", error);
         throw error;
@@ -158,7 +163,7 @@ export const getPetugas = async () => {
 
 export const tambahPetugas = async (formData) => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/petugas', {
+        const response = await fetch(`${BASE_URL}/petugas`, {
             method: 'POST',
             headers: { ...getAuthHeader() },
             body: formData, 
@@ -172,10 +177,11 @@ export const tambahPetugas = async (formData) => {
 
 export const getKegiatanGober = async () => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/kegiatan-gober', {
+        const response = await fetch(`${BASE_URL}/kegiatan-gober`, {
             headers: { ...getAuthHeader() }
         });
-        return await tanganiRespons(response);
+        const res = await tanganiRespons(response);
+        return Array.isArray(res) ? res : [];
     } catch (error) {
         console.error("Gagal mengambil data Gober:", error);
         throw error;
@@ -184,7 +190,7 @@ export const getKegiatanGober = async () => {
 
 export const tambahKegiatanGober = async (formData) => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/kegiatan-gober', {
+        const response = await fetch(`${BASE_URL}/kegiatan-gober`, {
             method: 'POST',
             headers: { ...getAuthHeader() },
             body: formData, 
@@ -198,10 +204,11 @@ export const tambahKegiatanGober = async (formData) => {
 
 export const getKegiatanSampah = async () => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/kegiatan-sampah', {
+        const response = await fetch(`${BASE_URL}/kegiatan-sampah`, {
             headers: { ...getAuthHeader() }
         });
-        return await tanganiRespons(response);
+        const res = await tanganiRespons(response);
+        return Array.isArray(res) ? res : [];
     } catch (error) {
         console.error("Gagal mengambil data Sampah:", error);
         throw error;
@@ -210,7 +217,7 @@ export const getKegiatanSampah = async () => {
 
 export const tambahKegiatanSampah = async (formData) => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/kegiatan-sampah', {
+        const response = await fetch(`${BASE_URL}/kegiatan-sampah`, {
             method: 'POST',
             headers: { ...getAuthHeader() }, 
             body: formData, 
@@ -224,10 +231,11 @@ export const tambahKegiatanSampah = async (formData) => {
 
 export const getKegiatanAgenda = async () => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/kegiatan-agenda', {
+        const response = await fetch(`${BASE_URL}/kegiatan-agenda`, {
             headers: { ...getAuthHeader() }
         });
-        return await tanganiRespons(response);
+        const res = await tanganiRespons(response);
+        return Array.isArray(res) ? res : [];
     } catch (error) {
         console.error("Gagal mengambil data agenda:", error);
         throw error;
@@ -236,7 +244,7 @@ export const getKegiatanAgenda = async () => {
 
 export const tambahKegiatanAgenda = async (formData) => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/kegiatan-agenda', {
+        const response = await fetch(`${BASE_URL}/kegiatan-agenda`, {
             method: 'POST',
             headers: { ...getAuthHeader() },
             body: formData, 
@@ -250,7 +258,7 @@ export const tambahKegiatanAgenda = async (formData) => {
 
 export const uploadFotoAgenda = async (id, formData) => {
     try {
-        const response = await fetch(`https://backend-one-ekbang-production.up.railway.app/kegiatan-agenda/${id}/foto`, {
+        const response = await fetch(`${BASE_URL}/kegiatan-agenda/${id}/foto`, {
             method: 'PUT',
             headers: { ...getAuthHeader() },
             body: formData, 
@@ -264,7 +272,7 @@ export const uploadFotoAgenda = async (id, formData) => {
 
 export const hapusKegiatanAgenda = async (id) => {
     try {
-        const response = await fetch(`https://backend-one-ekbang-production.up.railway.app/kegiatan-agenda/${id}`, {
+        const response = await fetch(`${BASE_URL}/kegiatan-agenda/${id}`, {
             method: 'DELETE', 
             headers: { ...getAuthHeader() } 
         });
@@ -277,10 +285,11 @@ export const hapusKegiatanAgenda = async (id) => {
 
 export const getTitikPeta = async () => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/peta-gis', {
+        const response = await fetch(`${BASE_URL}/peta-gis`, {
             headers: { ...getAuthHeader() }
         });
-        return await tanganiRespons(response);
+        const res = await tanganiRespons(response);
+        return Array.isArray(res) ? res : [];
     } catch (error) {
         console.error("Gagal mengambil data peta:", error);
         throw error;
@@ -289,7 +298,7 @@ export const getTitikPeta = async () => {
 
 export const tambahTitikPeta = async (formData) => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/peta-gis', {
+        const response = await fetch(`${BASE_URL}/peta-gis`, {
             method: 'POST',
             headers: { ...getAuthHeader() },
             body: formData, 
@@ -303,7 +312,7 @@ export const tambahTitikPeta = async (formData) => {
 
 export const updateStatusPeta = async (id, statusBaru) => {
     try {
-        const response = await fetch(`https://backend-one-ekbang-production.up.railway.app/peta-gis/${id}/status`, {
+        const response = await fetch(`${BASE_URL}/peta-gis/${id}/status`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
@@ -319,7 +328,7 @@ export const updateStatusPeta = async (id, statusBaru) => {
 
 export const hapusTitikPeta = async (id) => {
     try {
-        const response = await fetch(`https://backend-one-ekbang-production.up.railway.app/peta-gis/${id}`, {
+        const response = await fetch(`${BASE_URL}/peta-gis/${id}`, {
             method: 'DELETE', 
             headers: { ...getAuthHeader() } 
         });
@@ -333,7 +342,7 @@ export const hapusTitikPeta = async (id) => {
 // Lupa Password (Jalur Publik - Tidak pakai tanganiRespons)
 export const kirimLupaPassword = async (username) => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/lupa-password', {
+        const response = await fetch(`${BASE_URL}/lupa-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username })
@@ -346,11 +355,11 @@ export const kirimLupaPassword = async (username) => {
 
 export const getNotifikasi = async () => {
     try {
-        const response = await fetch('https://backend-one-ekbang-production.up.railway.app/notifikasi', {
+        const response = await fetch(`${BASE_URL}/notifikasi`, {
             headers: { ...getAuthHeader() }
         });
         const result = await tanganiRespons(response);
-        return result.data; 
+        return (result && Array.isArray(result.data)) ? result.data : []; 
     } catch (error) {
         throw error;
     }
@@ -358,7 +367,7 @@ export const getNotifikasi = async () => {
 
 export const tandaiNotifikasiDibaca = async (id) => {
     try {
-        const response = await fetch(`https://backend-one-ekbang-production.up.railway.app/notifikasi/${id}`, {
+        const response = await fetch(`${BASE_URL}/notifikasi/${id}`, {
             method: 'PUT',
             headers: { ...getAuthHeader() }
         });

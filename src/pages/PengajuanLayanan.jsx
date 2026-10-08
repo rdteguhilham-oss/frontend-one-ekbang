@@ -2,7 +2,7 @@ import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
-import { getDataLayanan, updateStatusLayanan } from "../services/api"; 
+import { getDataLayanan, updateStatusLayanan, BASE_URL } from "../services/api"; 
 import { Link } from "react-router-dom";
 import { FORMAT_SURAT } from "../utils/formatSurat";
 import './PengajuanLayanan.css';
@@ -25,6 +25,7 @@ export default function PengajuanLayanan() {
             setDataLayanan(hasil); 
         } catch (error) {
             setDataLayanan([]); 
+            Swal.fire({ title: 'Gagal Memuat Data', text: 'Koneksi ke server terputus.', icon: 'error' });
         }
     };
 
@@ -72,7 +73,7 @@ export default function PengajuanLayanan() {
     if (!namaFile) return null; 
     
     // Trik deteksi link cerdas
-    const linkAman = namaFile.startsWith('http') ? namaFile : `https://backend-one-ekbang-production.up.railway.app/uploads/${namaFile}`;
+    const linkAman = namaFile.startsWith('http') ? namaFile : `${BASE_URL}/uploads/${namaFile}`;
     
     return (
         <a href={linkAman} target="_blank" rel="noreferrer" className="btn-link-dokumen">

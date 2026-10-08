@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar'; 
 import 'react-calendar/dist/Calendar.css'; 
 import Swal from 'sweetalert2';
-import { getKegiatanAgenda, tambahKegiatanAgenda, uploadFotoAgenda, hapusKegiatanAgenda } from '../services/api';
+import { getKegiatanAgenda, tambahKegiatanAgenda, uploadFotoAgenda, hapusKegiatanAgenda, BASE_URL } from '../services/api';
 import './AgendaKegiatan.css';
 
 export default function AgendaKegiatan() {
@@ -28,6 +28,7 @@ export default function AgendaKegiatan() {
         } catch (error) {
             console.error("Gagal menarik data agenda:", error);
             setAgendaList([]);
+            Swal.fire({ title: 'Gagal Memuat Agenda', text: 'Koneksi ke server terputus.', icon: 'error' });
         }
     };
 
@@ -227,7 +228,7 @@ export default function AgendaKegiatan() {
                                             <td>{item.catatan_reminder || '-'}</td>
                                             <td>
                                                 {item.foto_dokumentasi ? (
-                                                    <a href={item.foto_dokumentasi.startsWith('http') ? item.foto_dokumentasi : `https://backend-one-ekbang-production.up.railway.app/uploads/${item.foto_dokumentasi}`} target="_blank" rel="noreferrer" className="link-foto">Lihat Foto</a>
+                                                    <a href={item.foto_dokumentasi.startsWith('http') ? item.foto_dokumentasi : `${BASE_URL}/uploads/${item.foto_dokumentasi}`} target="_blank" rel="noreferrer" className="link-foto">Lihat Foto</a>
                                                 ) : (
                                                     <label className="btn-upload-susulan">
                                                         📷 Upload Bukti

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './DataPetugas.css';
 import Swal from 'sweetalert2';
-import { getPetugas, tambahPetugas } from '../services/api';
+import { getPetugas, tambahPetugas, BASE_URL } from '../services/api';
 
 export default function DataPetugas () {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +20,7 @@ export default function DataPetugas () {
       setPetugasList(data);
     } catch (error) {
       console.error("Error dari server:", error);
+      Swal.fire({ title: 'Gagal Memuat Petugas', text: 'Koneksi ke server terputus.', icon: 'error' });
     }
   };
 
@@ -109,7 +110,7 @@ export default function DataPetugas () {
                     <td>{petugas.wilayah}</td>
                     <td>{petugas.no_sk}</td>
                     <td>
-                        <a href={petugas.file_sk.startsWith('http') ? petugas.file_sk : `https://backend-one-ekbang-production.up.railway.app/uploads/${petugas.file_sk}`} target="_blank" rel="noreferrer" className="btn-lihat">
+                        <a href={petugas.file_sk.startsWith('http') ? petugas.file_sk : `${BASE_URL}/uploads/${petugas.file_sk}`} target="_blank" rel="noreferrer" className="btn-lihat">
                         lihat SK
                         </a>
                     </td>

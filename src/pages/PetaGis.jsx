@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { getTitikPeta, hapusTitikPeta, tambahTitikPeta, updateStatusPeta } from '../services/api'; 
+import { getTitikPeta, hapusTitikPeta, tambahTitikPeta, updateStatusPeta, BASE_URL } from '../services/api'; 
 import Swal from 'sweetalert2'; // <-- SWAL MASUK!
 import 'leaflet/dist/leaflet.css'; 
 import './PetaGis.css'; 
@@ -278,7 +278,7 @@ export default function PetaGIS() {
                                     </div>
 
                                     {titik.foto_url && (
-                                        <a href={titik.foto_url.startsWith('http') ? titik.foto_url : `https://backend-one-ekbang-production.up.railway.app/uploads/${titik.foto_url}`} target="_blank" rel="noreferrer" className="link-foto-peta">
+                                        <a href={titik.foto_url.startsWith('http') ? titik.foto_url : `${BASE_URL}/uploads/${titik.foto_url}`} target="_blank" rel="noreferrer" className="link-foto-peta">
                                             Lihat Foto Lokasi
                                         </a>
                                     )}

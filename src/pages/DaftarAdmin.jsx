@@ -22,6 +22,7 @@ export default function DaftarAdmin() {
       setDataAdmin(hasil);
     } catch (error) {
       setDataAdmin([]); 
+      Swal.fire({ title: 'Gagal Memuat Admin', text: 'Koneksi ke server terputus.', icon: 'error' });
     }
   };
 
