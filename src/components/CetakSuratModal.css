@@ -1,0 +1,152 @@
+/* --- FITUR CETAK SURAT INTERAKTIF (SPLIT SCREEN) --- */
+.print-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.7);
+    display: flex; justify-content: flex-start; align-items: flex-start; overflow: auto;
+    z-index: 9999;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.cetak-surat-split {
+    display: flex; width: 100%; max-width: 1300px; height: 95vh; margin: auto;
+    background: #f1f5f9; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+.cetak-editor-panel {
+    width: 350px; flex-shrink: 0; background: white; padding: 20px;
+    border-right: 1px solid #cbd5e1; overflow-y: auto;
+    display: flex; flex-direction: column; gap: 15px;
+}
+.cetak-editor-panel h3 { margin: 0 0 10px 0; color: #1e293b; font-size: 18px; }
+.cetak-preview-panel {
+    flex: 1; padding: 40px; overflow: auto;
+    display: flex; flex-direction: column; align-items: center;
+    background: #94a3b8;
+}
+.form-grup-cetak { display: flex; flex-direction: column; gap: 5px; }
+.form-grup-cetak label { font-size: 13px; font-weight: 600; color: #475569; }
+.form-grup-cetak input, .form-grup-cetak textarea {
+    padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;
+    font-size: 13px; font-family: inherit; width: 100%; box-sizing: border-box;
+}
+.form-grup-cetak textarea { resize: vertical; min-height: 80px; }
+.form-grup-cetak input:focus, .form-grup-cetak textarea:focus {
+    outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+}
+
+/* Kertas A4 */
+.kertas-surat-a4 {
+    background: white; width: 21cm; min-height: 29.7cm; box-sizing: border-box;
+    padding: 2cm; box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    color: black; font-family: "Times New Roman", Times, serif;
+    font-size: 12pt; line-height: 1.5;
+}
+.kop-surat-resmi {
+    display: flex; align-items: flex-start; border-bottom: 3px solid black;
+    padding-bottom: 15px; margin-bottom: 20px; position: relative;
+}
+.kop-surat-resmi::after {
+    content: ""; position: absolute; bottom: -5px; left: 0; width: 100%;
+    border-bottom: 1px solid black;
+}
+.kop-logo { width: 90px; height: auto; margin-right: 20px; }
+.kop-teks { flex: 1; text-align: center; }
+.kop-teks h4, .kop-teks h3, .kop-teks h2 { margin: 0; padding: 0; line-height: 1.2; font-weight: bold; }
+.kop-teks h4 { font-size: 14pt; }
+.kop-teks h3 { font-size: 16pt; }
+.kop-teks h2 { font-size: 18pt; }
+.kop-teks p { margin: 5px 0 0 0; font-size: 10pt; }
+
+.tgl-surat-resmi { text-align: right; margin-bottom: 20px; }
+
+.meta-surat-resmi table { width: 100%; margin-bottom: 20px; }
+.meta-surat-resmi td { vertical-align: top; padding-bottom: 3px; }
+
+.tujuan-surat-resmi { margin-bottom: 30px; }
+
+.isi-surat-resmi p { text-align: justify; margin-bottom: 10px; }
+.isi-surat-resmi .indent { text-indent: 40px; }
+.tabel-data-warga {
+    width: 100%; margin: 15px 0; border-collapse: collapse;
+}
+.tabel-data-warga td, .tabel-data-warga th {
+    border: 1px solid black; padding: 8px; text-align: left;
+}
+.tabel-data-warga th { text-align: center; background: #f0f0f0; }
+
+.ttd-box-resmi { margin-top: 50px; display: flex; justify-content: flex-end; }
+.ttd-lurah { text-align: center; width: auto; min-width: 340px; }
+
+/* KOTAK TTE (BSrE) */
+.kotak-tte-bsre {
+    border: 1px solid black;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+    font-family: "Arial", sans-serif;
+    margin-bottom: 20px;
+}
+.kotak-tte-bsre img {
+    width: 55px;
+    height: auto;
+}
+.kotak-tte-teks {
+    font-size: 8pt;
+    line-height: 1.2;
+}
+.kotak-tte-teks .tte-head { margin-bottom: 15px; }
+.kotak-tte-teks .tte-nama { font-weight: bold; font-size: 9pt; color: #000; }
+.kotak-tte-teks .tte-nip { font-size: 8pt; margin-top: 2px; }
+
+/* NAMA LURAH BIASA (Tanpa TTE) */
+.nama-lurah-biasa { font-weight: bold; text-decoration: underline; margin-bottom: 0; margin-top: 70px; }
+.nip-lurah-biasa { margin-top: 0; }
+
+.tembusan-resmi { margin-top: 40px; font-size: 11pt; }
+.tembusan-resmi ol { margin: 5px 0 0 20px; padding: 0; }
+
+/* FOOTER BSrE */
+.footer-bsre {
+    margin-top: 50px; display: flex; justify-content: space-between; align-items: center;
+    font-family: "Arial", sans-serif;
+}
+.footer-bsre-kiri { display: flex; align-items: center; gap: 15px; flex: 1; }
+.fake-qr {
+    width: 60px; height: 60px;
+    background: repeating-linear-gradient(45deg, #000, #000 2px, #fff 2px, #fff 4px);
+    border: 2px solid black; padding: 2px;
+}
+.footer-bsre-teks { margin: 0; font-size: 7.5pt; font-style: italic; font-weight: bold; max-width: 360px; line-height: 1.3; }
+.fake-bsre-logo {
+    display: flex; align-items: center; gap: 8px; color: #0ea5e9; font-weight: bold; font-size: 10pt; line-height: 1.1;
+}
+.fake-bsre-logo span { text-align: left; }
+.fake-bsre-logo span small { display: block; font-size: 8pt; font-weight: normal; }
+.fake-bsre-bulat {
+    width: 35px; height: 35px; border-radius: 50%; background: #0ea5e9; color: white;
+    display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold;
+}
+
+.kotak-tte-teks { flex: 1; word-break: break-word; }
+
+@media print {
+    @page { margin: 0; }
+    body * { visibility: hidden; }
+    .print-modal-overlay, .print-modal-overlay * { visibility: visible; }
+    .print-modal-overlay { position: absolute; left: 0; top: 0; width: 100%; height: auto; background: white; padding: 0 !important; margin: 0; overflow: visible; }
+    .cetak-editor-panel { display: none !important; }
+    .cetak-preview-panel { padding: 0 !important; background: white !important; width: 100%; overflow: visible; }
+    .cetak-surat-split { max-width: 100% !important; background: white !important; box-shadow: none !important; height: auto !important; margin: 0 !important; }
+    .kertas-surat-a4 { padding: 2cm !important; width: 100% !important; margin: 0 !important; box-shadow: none !important; }
+}
+@media print { .footer-bsre, .ttd-box-resmi { page-break-inside: avoid; break-inside: avoid; } }
+
+@media print {
+    .ttd-box-resmi { margin-top: 20px !important; }
+    .tembusan-resmi { margin-top: 15px !important; }
+    .footer-bsre { margin-top: 20px !important; }
+}
+

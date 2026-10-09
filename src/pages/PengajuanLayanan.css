@@ -38,7 +38,6 @@
     display: flex;
     align-items: flex-start; 
     gap: 20px; 
-    flex-wrap: wrap; 
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -224,7 +223,6 @@
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
-    flex-wrap: wrap;
     align-items: center; 
 }
 
@@ -260,159 +258,6 @@
 }
 
 /* ======================================================== */
-/* 🖨️ DESAIN KHUSUS MODAL CETAK SURAT (OUTPUT FISIK)        */
-/* ======================================================== */
-.print-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.85); /* Latar belakang lebih gelap */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    overflow-y: auto;
-    z-index: 2000;
-    padding: 30px 20px;
-}
-
-.cetak-surat-container {
-    background: white;
-    color: black;
-    width: 100%;
-    max-width: 800px; /* Lebar optimal menyerupai kertas A4 */
-    min-height: 1000px;
-    padding: 50px 60px;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    position: relative;
-    font-family: 'Times New Roman', Times, serif; /* Mengunci font khusus surat resmi */
-}
-
-.aksi-print-non-cetak {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px dashed #ccc;
-}
-
-.btn-tutup-modal-print {
-    background-color: #ef4444;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-/* DESAIN KOP & KERTAS SURAT */
-.kertas-surat {
-    background: white; /* Selalu putih meski dark mode */
-}
-
-.kop-surat {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.kop-surat h4, .kop-surat h3, .kop-surat h2, .kop-surat p {
-    margin: 0;
-    line-height: 1.3;
-    color: black; /* Memaksa tinta hitam */
-}
-
-.kop-surat h4 { font-size: 18px; font-weight: normal; }
-.kop-surat h3 { font-size: 22px; }
-.kop-surat h2 { font-size: 26px; font-weight: bold; }
-.kop-surat p { margin-top: 5px; font-size: 14px; }
-
-/* Garis ganda khas Kop Surat Birokrasi */
-.garis-kop-1 { border: 0; border-top: 3px solid black; margin-top: 15px; margin-bottom: 2px; }
-.garis-kop-2 { border: 0; border-top: 1px solid black; margin-top: 0; }
-
-.judul-surat { 
-    text-align: center; 
-    text-decoration: underline; 
-    font-size: 18px; 
-    margin-bottom: 5px; 
-    font-weight: bold;
-    color: black;
-}
-
-.nomor-surat { 
-    text-align: center; 
-    margin-top: 0; 
-    margin-bottom: 40px; 
-    font-size: 16px;
-    color: black;
-}
-
-.isi-surat p { 
-    font-size: 16px; 
-    line-height: 1.6; 
-    text-align: justify; 
-    color: black;
-}
-
-.tabel-identitas { 
-    width: 85%; 
-    margin: 20px auto; 
-    font-size: 16px; 
-    color: black;
-    border-collapse: collapse;
-}
-
-.tabel-identitas td { padding: 6px 4px; vertical-align: top;}
-
-.ttd-surat { 
-    width: 300px; 
-    float: right; 
-    text-align: center; 
-    margin-top: 60px; 
-    font-size: 16px;
-    color: black;
-}
-
-@media print {
-    /* 1. Menghilangkan Header & Footer Bawaan Browser (Tanggal & Localhost) */
-    @page {
-        margin: 0; 
-    }
-
-    /* 2. Sembunyikan SEMUA elemen di body */
-    body * {
-        visibility: hidden;
-    }
-    
-    /* 3. Tampilkan HANYA kotak surat dan isinya */
-    .cetak-surat-container, .cetak-surat-container * {
-        visibility: visible;
-    }
-    
-    /* 4. Atur posisi surat agar pas di pojok kertas A4 */
-    .cetak-surat-container {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        max-width: none !important; /* Hapus batasan maksimal lebar */
-        box-sizing: border-box !important; /* KUNCI UTAMA: Agar padding tidak membengkakkan kertas */
-        margin: 0;
-        padding: 2cm !important; /* Jarak aman tepi kertas */
-        box-shadow: none;
-        border-radius: 0;
-    }
-    
-    /* 5. Sembunyikan tombol 'Cetak' dan 'Tutup' agar tidak ikut di-print */
-    .aksi-print-non-cetak {
-        display: none !important;
-    }
-}
-
 /* PENYESUAIAN KHUSUS INPUT TANGGAL (DATE) */
 input[type="date"] {
     background-color: var(--bg-card);
@@ -462,6 +307,6 @@ body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
     .grid-dokumen { grid-template-columns: 1fr; }
     
     /* Pengecilan modal surat di HP agar bisa digeser */
-    .cetak-surat-container { padding: 20px; }
+    .print-modal-overlay { padding: 20px; }
     .tabel-identitas { width: 100%; font-size: 14px; }
 }

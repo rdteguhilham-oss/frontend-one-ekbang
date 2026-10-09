@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import { getDataLayanan, updateStatusLayanan, BASE_URL } from "../services/api"; 
 import { Link } from "react-router-dom";
-import { FORMAT_SURAT } from "../utils/formatSurat";
 import './PengajuanLayanan.css';
+import CetakSuratModal from '../components/CetakSuratModal';
 
 export default function PengajuanLayanan() {
     const [dataLayanan, setDataLayanan] = useState([]);
@@ -164,6 +164,7 @@ export default function PengajuanLayanan() {
                         <option value="BURUAN SAE">BURUAN SAE</option>
                         <option value="MUSRENBANG">MUSRENBANG</option>
                         <option value="DAU DAN PRAKARSA">DAU & PRAKARSA</option>
+                        <option value="SARPRAS DLH">SARPRAS DLH</option>
                     </select>
                 </div>
 
@@ -271,76 +272,8 @@ export default function PengajuanLayanan() {
                 </div>
             )}
 
-            {/* MODAL CETAK SURAT (OUTPUT FISIK) */}
-            {suratPilih && (
-                <div className="print-modal-overlay">
-                    <div className="cetak-surat-container">
-                        
-                        {/* Area Tombol (Akan hilang saat di-print) */}
-                        <div className="aksi-print-non-cetak">
-                            <button className="btn-buka-berkas" onClick={() => window.print()} style={{ fontSize: '15px', padding: '10px 20px' }}>
-                                🖨️ Cetak / Simpan PDF
-                            </button>
-                            <button className="btn-tutup-modal-print" onClick={() => setSuratPilih(null)}>
-                                X Batal Cetak
-                            </button>
-                        </div>
-
-                        {/* KERTAS SURAT RESMI */}
-                        <div className="kertas-surat">
-                            <div className="kop-surat">
-                                <h4>PEMERINTAH KOTA BANDUNG</h4>
-                                <h3>KECAMATAN SUKAJADI</h3>
-                                <h2>KELURAHAN PASTEUR</h2>
-                                <p>Jl. Dr. Djunjunan, Pasteur, Kec. Sukajadi, Kota Bandung, Jawa Barat</p>
-                                <hr className="garis-kop-1" />
-                                <hr className="garis-kop-2" />
-                            </div>
-
-                            <div className="isi-surat">
-                                {/* MENGAMBIL JUDUL DARI formatSurat.js ATAU GUNAKAN DEFAULT */}
-                                <h4 className="judul-surat">
-                                    {(FORMAT_SURAT[suratPilih.jenis_layanan] || FORMAT_SURAT["DEFAULT"]).judul}
-                                </h4>
-                                
-                                {/* MENGAMBIL KODE SURAT DARI formatSurat.js */}
-                                <p className="nomor-surat">
-                                    Nomor: {(FORMAT_SURAT[suratPilih.jenis_layanan] || FORMAT_SURAT["DEFAULT"]).kodeFormat} / {suratPilih.id} / Ekbang / Kel.Pst / {new Date().getFullYear()}
-                                </p>
-
-                                <p>Yang bertanda tangan di bawah ini Lurah Pasteur, Kecamatan Sukajadi, Kota Bandung, menerangkan dengan sesungguhnya bahwa:</p>
-
-                                <table className="tabel-identitas">
-                                    <tbody>
-                                        <tr><td width="180">Nama Lengkap</td><td width="20">:</td><td><strong>{suratPilih.nama_pemohon}</strong></td></tr>
-                                        <tr><td>NIK</td><td>:</td><td>{suratPilih.nik_pemohon}</td></tr>
-                                        <tr><td>No. Telepon / WA</td><td>:</td><td>{suratPilih.no_telepon || '-'}</td></tr>
-                                        <tr><td>Keperluan / Layanan</td><td>:</td><td><strong>Pengajuan {suratPilih.jenis_layanan}</strong></td></tr>
-                                    </tbody>
-                                </table>
-
-                                {/* MENGAMBIL REDAKSI TENGAH DARI formatSurat.js */}
-                                <p style={{textIndent: '40px', marginTop: '20px'}}>
-                                    {(FORMAT_SURAT[suratPilih.jenis_layanan] || FORMAT_SURAT["DEFAULT"]).redaksiTengah(suratPilih.jenis_layanan)} 
-                                    {" "}Saat ini, status dokumen dan pengajuan yang bersangkutan terdata dalam sistem dengan status: <strong>{suratPilih.status || 'Baru'}</strong>.
-                                </p>
-                                <p style={{textIndent: '40px'}}>
-                                    Demikian surat keterangan ini dibuat dengan sebenarnya untuk dapat dipergunakan sebagaimana mestinya.
-                                </p>
-                            </div>
-
-                            <div className="ttd-surat">
-                                <p>Bandung, {new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                                <p style={{marginBottom: '70px'}}><strong>Lurah Pasteur</strong></p>
-                                <p style={{textDecoration: 'underline', fontWeight: 'bold', margin: '0'}}>.............................................</p>
-                                <p style={{margin: '0'}}>NIP. ......................................</p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            )}
-
+            {/* MODAL CETAK SURAT INTERAKTIF (SPLIT SCREEN) */}
+            <CetakSuratModal suratPilih={suratPilih} onClose={() => setSuratPilih(null)} />
         </div>
     );
 }

@@ -47,7 +47,8 @@ export default function Dashboard() {
         { name: 'Pohon', jumlah: dataLayanan.filter(d => d.jenis_layanan === 'POHON TUMBANG').length },
         { name: 'Buruan Sae', jumlah: dataLayanan.filter(d => d.jenis_layanan === 'BURUAN SAE').length },
         { name: 'Musrenbang', jumlah: dataLayanan.filter(d => d.jenis_layanan === 'MUSRENBANG').length },
-        { name: 'DAU & Prakarsa', jumlah: dataLayanan.filter(d => d.jenis_layanan === 'DAU DAN PRAKARSA').length }
+        { name: 'DAU & Prakarsa', jumlah: dataLayanan.filter(d => d.jenis_layanan === 'DAU DAN PRAKARSA').length },
+        { name: 'Sarpras DLH', jumlah: dataLayanan.filter(d => d.jenis_layanan === 'SARPRAS DLH').length }
     ];
 
     // 2. Data Petugas (Cards)

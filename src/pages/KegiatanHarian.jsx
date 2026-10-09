@@ -7,6 +7,7 @@ import {
     tambahKegiatanGober, 
     getKegiatanGober, 
     getKegiatanSampah,
+    tambahKegiatanSampah,
     BASE_URL
 }
 from '../services/api';
