@@ -39,11 +39,7 @@ export default function CetakSuratModal({ suratPilih, onClose }) {
                 {/* 1. PANEL EDITOR (Kiri) */}
                 <div className="cetak-editor-panel">
                     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                        <h3>Pengaturan Surat</h3><button onClick={() => window.print()} style={{background: '#3b82f6', color: 'white', border: 'none', padding: '8px 12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', marginBottom: '10px', width: '100%'}}>??? Cetak / Simpan PDF</button>
-                        <button type="button" onClick={onClose} style={{
-                            background: '#ef4444', color: 'white', border: 'none', padding: '5px 10px', 
-                            borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold'
-                        }}>Keluar</button>
+                        <h3 style={{margin:0}}>Pengaturan Surat</h3>
                     </div>
 
                     <div className="form-grup-cetak">
@@ -131,6 +127,15 @@ export default function CetakSuratModal({ suratPilih, onClose }) {
                     <div className="form-grup-cetak">
                         <label>Tembusan</label>
                         <textarea value={printTembusan} onChange={e => setPrintTembusan(e.target.value)} style={{minHeight:'50px'}} />
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px', paddingBottom: '30px' }}>
+                        <button onClick={() => window.print()} style={{ background: '#3b82f6', color: 'white', border: 'none', padding: '12px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', width: '100%', fontSize: '14px' }}>
+                            🖨️ Cetak / Simpan PDF
+                        </button>
+                        <button type="button" onClick={onClose} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '12px', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', width: '100%' }}>
+                            Batal / Keluar
+                        </button>
                     </div>
 
                 </div>

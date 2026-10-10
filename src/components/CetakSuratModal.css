@@ -150,3 +150,34 @@
     .footer-bsre { margin-top: 20px !important; }
 }
 
+
+/* RESPONSIVE MOBILE LAYOUT */
+@media (max-width: 900px) {
+    .print-modal-overlay {
+        padding: 10px;
+    }
+    .cetak-surat-split {
+        flex-direction: column;
+        height: auto;
+        min-height: 95vh;
+        overflow: visible;
+    }
+    .cetak-editor-panel {
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px dashed #cbd5e1;
+        overflow: visible;
+        padding: 15px;
+    }
+    .cetak-preview-panel {
+        width: 100%;
+        padding: 15px;
+        overflow-x: auto;
+    }
+    /* Scale down A4 slightly for mobile view, but keep its width so it resembles a paper */
+    .kertas-surat-a4 {
+        transform: scale(0.9);
+        transform-origin: top center;
+        margin-bottom: -10%; /* compensate for scaled height space */
+    }
+}
