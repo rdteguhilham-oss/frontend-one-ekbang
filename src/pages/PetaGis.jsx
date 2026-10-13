@@ -9,6 +9,7 @@ export default function PetaGIS() {
     const posisiTengah = [-6.891226, 107.601757]; 
 
     const [dataTitik, setDataTitik] = useState([]);
+    const [loadingSimpan, setLoadingSimpan] = useState(false);
     
     // State Default
     const [kategori, setKategori] = useState('');
@@ -227,7 +228,7 @@ export default function PetaGIS() {
                             <small className="teks-peringatan-peta">*Ukuran file maksimal 5 MB</small>
                             <input id="inputFotoPeta" type="file" accept="image/*" onChange={(e) => setFoto(e.target.files[0])} required />
                         </div>
-                        <button type="submit" className="btn-simpan-titik">Tanam Pin di Peta</button>
+                        <button type="submit" className="btn-simpan-titik" disabled={loadingSimpan} style={loadingSimpan ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingSimpan ? '⏳ Menanam Pin...' : 'Tanam Pin di Peta'}</button>
                     </form>
                 </div>
 

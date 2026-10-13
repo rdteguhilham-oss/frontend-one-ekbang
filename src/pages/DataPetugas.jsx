@@ -13,6 +13,7 @@ export default function DataPetugas () {
   const [wilayah, setWilayah] = useState('');
   const [noSk, setNoSk] = useState('');
   const [fileSk, setFileSk] = useState(null);
+  const [loadingSimpan, setLoadingSimpan] = useState(false);
 
   const fetchPetugas = async () => {
     try {
@@ -166,7 +167,7 @@ export default function DataPetugas () {
                     *Ukuran file maksimal 5 MB
                 </small>
               </div>
-              <button type="submit" className="btn-simpan">Simpan Data</button>
+              <button type="submit" className="btn-simpan" disabled={loadingSimpan} style={loadingSimpan ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingSimpan ? '⏳ Menyimpan Data...' : 'Simpan Data'}</button>
             </form>
           </div>
         </div>

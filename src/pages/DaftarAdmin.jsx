@@ -15,6 +15,7 @@ export default function DaftarAdmin() {
   const [namaLengkap, setNamaLengkap] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loadingSimpan, setLoadingSimpan] = useState(false);
 
   const fetchAdmin = async () => {
     try {
@@ -179,7 +180,7 @@ export default function DaftarAdmin() {
             <label>Password</label>
             <input type="password" placeholder="Masukkan password rahasia..." value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
-          <button type="submit" className="btn-simpan-admin">Buat Akun Sekarang</button>
+          <button type="submit" className="btn-simpan-admin" disabled={loadingSimpan} style={loadingSimpan ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingSimpan ? '⏳ Membuat Akun...' : 'Buat Akun Sekarang'}</button>
         </form>
       </div>
 

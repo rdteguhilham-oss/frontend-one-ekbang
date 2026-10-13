@@ -32,6 +32,8 @@ export default function KegiatanHarian() {
     const [beratKiloan, setBeratKiloan] = useState('');
     const [fotoSampah, setFotoSampah] = useState(null);
     const [kataKunci, setKataKunci] = useState('');
+    const [loadingGober, setLoadingGober] = useState(false);
+    const [loadingSampah, setLoadingSampah] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -348,7 +350,7 @@ export default function KegiatanHarian() {
                                         <label>Foto Kegiatan</label>
                                         <input type="file" accept="image/*" onChange={(e) => setFotoGober(e.target.files[0])} required />
                                     </div>
-                                    <button type="submit" className="btn-simpan-kegiatan">Simpan Laporan</button>
+                                    <button type="submit" className="btn-simpan-kegiatan" disabled={loadingGober} style={loadingGober ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingGober ? '⏳ Menyimpan...' : 'Simpan Laporan'}</button>
                                 </form>
                             </>
                         ) : (
@@ -386,7 +388,7 @@ export default function KegiatanHarian() {
                                         <input type="file" accept="image/*" onChange={(e) => setFotoSampah(e.target.files[0])} required />
                                     </div>
 
-                                    <button type="submit" className="btn-simpan-kegiatan">Simpan Laporan Sampah</button>
+                                    <button type="submit" className="btn-simpan-kegiatan" disabled={loadingSampah} style={loadingSampah ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingSampah ? '⏳ Menyimpan...' : 'Simpan Laporan Sampah'}</button>
                                 </form>
                             </>
                         )}

@@ -7,6 +7,7 @@ import './AgendaKegiatan.css';
 
 export default function AgendaKegiatan() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loadingSimpan, setLoadingSimpan] = useState(false);
 
     const [agendaList, setAgendaList] = useState([]);
     
@@ -310,7 +311,7 @@ export default function AgendaKegiatan() {
                                 <input id="inputFotoAgenda" type="file" accept="image/*" onChange={(e) => setFoto(e.target.files[0])} />
                             </div>
 
-                            <button type="submit" className="btn-simpan-agenda">Simpan Jadwal Kegiatan</button>
+                            <button type="submit" className="btn-simpan-agenda" disabled={loadingSimpan} style={loadingSimpan ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingSimpan ? '⏳ Menyimpan Jadwal...' : 'Simpan Jadwal Kegiatan'}</button>
                         </form>
                     </div>
                 </div>

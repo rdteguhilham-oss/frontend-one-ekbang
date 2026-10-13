@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { tambahLayanan } from "../services/api"; 
 import './TambahLayanan.css';
@@ -27,9 +28,14 @@ export default function TambahLayanan() {
     // TAMBAHAN STATE BARU UNTUK SARPRAS DLH
     const [proposalSarpras, setProposalSarpras] = useState(null);
     const [fotoSarpras, setFotoSarpras] = useState(null);
+
+    // ANTI DOUBLE SUBMIT / IDEMPOTENCY GUARD
+    const [isSubmitting, setIsSubmitting] = useState(false);
     
     const simpanData = async (e) => {
         e.preventDefault(); 
+
+        if (isSubmitting) return;
 
         if (!nik || !nama || !noTelepon || !jenisLayanan) {
             Swal.fire('Lengkapi form terlebih dahulu.');
@@ -91,6 +97,8 @@ export default function TambahLayanan() {
         if (proposalSarpras) formData.append('proposal_sarpras', proposalSarpras);
         if (fotoSarpras) formData.append('foto_sarpras', fotoSarpras);
 
+        setIsSubmitting(true);
+
         try {
             const data = await tambahLayanan(formData);
             if (data && data.status === 'sukses') {
@@ -102,23 +110,69 @@ export default function TambahLayanan() {
                 });
                 window.location.reload();
             } else {
-                Swal.fire('Gagal menyimpan pengajuan.');
+                Swal.fire(data?.pesan || 'Gagal menyimpan pengajuan.');
+                setIsSubmitting(false);
             }
         } catch (error) {
             Swal.fire("Terjadi kesalahan sistem/server mati saat mengirim data!");
+            setIsSubmitting(false);
         }
     };
 
     return (
         <div className="form-publik-wrapper">
+            {/* Top Bar: Tagline (Kiri) & Logo BerAKHLAK (Kanan) */}
+            <div className="top-banner-bar">
+                <div className="top-banner-kiri">
+                    <p className="tagline-sub">
+                        Layanan Publik<br />
+                        Lebih Mudah,<br />
+                        Lebih Dekat<br />
+                        untuk Warga Pasteur
+                    </p>
+                    <div className="tagline-line"></div>
+                </div>
+
+                <div className="top-banner-kanan">
+                    <div className="berakhlak-badge">
+                        <div className="berakhlak-title">
+                            <span className="text-red">Ber</span><span className="text-dark">AKHLAK</span>
+                            <span className="berakhlak-arrow">❯</span>
+                        </div>
+                        <span className="berakhlak-desc">
+                            Berorientasi Pelayanan Akuntabel Kompeten<br />
+                            Harmonis Loyal Adaptif Kolaboratif
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Logo One Ekbang Melayang */}
+            <div className="hero-logo-wrapper">
+                <img src="/rb-logo-oneEkbang.png" alt="Logo One Ekbang" className="hero-logo-img" />
+            </div>
+
+            {/* KARTU FORM UTAMA */}
             <div className="form-container-publik">
                 
                 <div className="form-publik-header">
-                    <div className="toggles-palsu">
-                        <span className="toggle-aktif">Form Warga</span>
-                        <span className="toggle-mati">ONE EKBANG</span>
+                    <div className="toggles-pills">
+                        <button type="button" className="pill-btn pill-btn-active">
+                            <svg className="pill-svg-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                            Form Warga
+                        </button>
+                        <Link to="/login" className="pill-btn pill-btn-inactive">
+                            <svg className="pill-svg-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+                            </svg>
+                            ONE EKBANG
+                        </Link>
                     </div>
-                    <h2>Formulir Pengajuan Layanan</h2>
+
+                    <h2 className="form-title-utama">Formulir Pengajuan Layanan</h2>
+                    <p className="form-subtitle-utama">Sampaikan kebutuhan layanan lingkungan Anda dengan mudah.</p>
                 </div>
 
                 <form onSubmit={simpanData}>
@@ -126,24 +180,52 @@ export default function TambahLayanan() {
                         
                         <div className="input-grid">
                             <div className="input-group-pill">
-                                <label>NIK Pemohon</label>
-                                <input type="text" placeholder="16 Digit Angka" value={nik} onChange={(e) => setNik(e.target.value)} /> 
+                                <label>
+                                    <span className="label-icon-badge id-badge">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-9 3h2v2h-2V7zm0 3h2v2h-2v-2zm-4-3h2v2H7V7zm0 3h2v2H7v-2zm-2 7v-1.5c0-.83.67-1.5 1.5-1.5h7c.83 0 1.5.67 1.5 1.5V17H5zm14 0h-3v-2h3v2zm0-3h-3v-2h3v2zm0-3h-3V8h3v3z"/>
+                                        </svg>
+                                    </span>
+                                    NIK Pemohon
+                                </label>
+                                <input type="text" placeholder="16 digit angka" value={nik} onChange={(e) => setNik(e.target.value)} /> 
                             </div>
                             
                             <div className="input-group-pill">
-                                <label>Nama Lengkap</label>
+                                <label>
+                                    <span className="label-icon-badge user-badge">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                        </svg>
+                                    </span>
+                                    Nama Lengkap
+                                </label>
                                 <input type="text" placeholder="Sesuai KTP" value={nama} onChange={(e) => setNama(e.target.value)} />
                             </div>
 
                             <div className="input-group-pill">
-                                <label>No. Telepon / WA</label>
+                                <label>
+                                    <span className="label-icon-badge phone-badge">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                        </svg>
+                                    </span>
+                                    No. Telepon / WhatsApp
+                                </label>
                                 <input type="text" placeholder="Contoh: 0812..." value={noTelepon} onChange={(e) => setNoTelepon(e.target.value)} />
                             </div>
                             
                             <div className="input-group-pill">
-                                <label>Jenis Layanan</label>
+                                <label>
+                                    <span className="label-icon-badge list-badge">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                                        </svg>
+                                    </span>
+                                    Jenis Layanan
+                                </label>
                                 <select value={jenisLayanan} onChange={(e) => setJenisLayanan(e.target.value)}>
-                                    <option value="">Pilih Kategori Layanan...</option>
+                                    <option value="">Pilih kategori layanan...</option>
                                     <option value="RUTILAHU">Bantuan RUTILAHU</option>
                                     <option value="POHON TUMBANG">Tebang Pohon / Pemangkasan</option>
                                     <option value="BURUAN SAE">Program Buruan Sae</option>
@@ -284,13 +366,25 @@ export default function TambahLayanan() {
                         )}
                     </div>
 
-                    <div className="form-publik-footer">
-                        <div className="footer-info">
-                            <strong>Konfirmasi:</strong>
-                            <p>Dengan menekan tombol, Anda menyetujui data yang dikirim adalah valid.</p>
+                    <div className="form-publik-footer-box">
+                        <div className="footer-box-kiri">
+                            <div className="shield-icon-badge">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                                </svg>
+                            </div>
+                            <div className="footer-box-teks">
+                                <strong>Konfirmasi:</strong>
+                                <p>Dengan menekan tombol, Anda menyetujui data yang dikirim adalah valid.</p>
+                            </div>
                         </div>
-                        <button type="submit" className="btn-submit-pill">
-                            Submit ➔
+                        <button 
+                            type="submit" 
+                            className="btn-kirim-pengajuan" 
+                            disabled={isSubmitting} 
+                            style={isSubmitting ? { opacity: 0.7, cursor: 'not-allowed' } : {}}
+                        >
+                            {isSubmitting ? '⏳ Mengirim Data...' : 'Kirim Pengajuan ➔'}
                         </button>
                     </div>
                 </form>
