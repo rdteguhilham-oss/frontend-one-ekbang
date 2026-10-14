@@ -62,11 +62,22 @@
 /* Kartu Pembungkus Tabel */
 .layanan-table-card {
     background-color: var(--bg-card);
-    padding: 25px;
+    padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--border-halus);
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.layanan-table-card .tabel-utama th:first-child,
+.layanan-table-card .tabel-utama td:first-child {
+    text-align: center;
+    width: 40px;
+}
+
+.layanan-table-card .tabel-utama th:nth-child(2),
+.layanan-table-card .tabel-utama td:nth-child(2) {
+    white-space: nowrap;
 }
 
 /* Tombol Aksi Verifikasi */
@@ -74,13 +85,14 @@
     background-color: #f59e0b; 
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
-    margin-right: 8px;
-    font-size: 13px;
-    transition: 0.3s;
+    margin-right: 0;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: 0.2s;
 }
 
 .btn-proses:hover { background-color: #d97706; }
@@ -89,27 +101,51 @@
     background-color: #10b981;
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 13px;
-    transition: 0.3s;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: 0.2s;
 }
 
 .btn-selesai:hover { background-color: #059669; }
+
+/* Status Badges */
+.badge-status {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-block;
+    white-space: nowrap;
+}
+.badge-status-baru {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #2563eb;
+}
+.badge-status-diproses {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #d97706;
+}
+.badge-status-selesai {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #059669;
+}
 
 /* DESAIN TOMBOL POP-UP */
 .btn-buka-berkas {
     background-color: var(--primary-btn); 
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 12px;
-    transition: background-color 0.3s;
+    white-space: nowrap;
+    transition: background-color 0.2s;
 }
 
 .btn-buka-berkas:hover { background-color: #2563eb; }
@@ -119,12 +155,13 @@
     background-color: #8b5cf6; /* Ungu Elegan */
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 12px;
-    transition: background-color 0.3s;
+    white-space: nowrap;
+    transition: background-color 0.2s;
 }
 
 .btn-cetak-surat:hover { background-color: #7c3aed; }
@@ -253,8 +290,9 @@
     display: flex;
     flex-direction: row; /* Memastikan arahnya ke samping */
     flex-wrap: nowrap; /* Melarang keras tombol jatuh ke bawah */
-    gap: 8px;
-    min-width: max-content; /* KUNCI UTAMA: Memaksa wadah membentang sepanjang ukuran tombol */
+    gap: 6px;
+    align-items: center;
+    width: max-content;
 }
 
 /* ======================================================== */

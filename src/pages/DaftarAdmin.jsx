@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import { getDataAdmin, tambahAdmin, hapusAdmin, getDataLayanan, getPetugas, getKegiatanAgenda, getNotifikasi, tandaiNotifikasiDibaca } from '../services/api';
+import { getDataAdmin, tambahAdmin, hapusAdmin, getNotifikasi, tandaiNotifikasiDibaca } from '../services/api';
 import './DaftarAdmin.css'; 
 
 export default function DaftarAdmin() {
   const [dataAdmin, setDataAdmin] = useState([]);
   const [dataNotif, setDataNotif] = useState([]);
-
-  const [totalLayanan, setTotalLayanan] = useState(0);
-  const [totalPetugas, setTotalPetugas] = useState(0);
-  const [totalAgenda, setTotalAgenda] = useState(0);
 
   const [nik, setNik] = useState('');
   const [namaLengkap, setNamaLengkap] = useState('');
@@ -21,32 +17,17 @@ export default function DaftarAdmin() {
     try {
       const hasil = await getDataAdmin();
       setDataAdmin(hasil);
-    } catch (error) {
+    } catch {
       setDataAdmin([]); 
       Swal.fire({ title: 'Gagal Memuat Admin', text: 'Koneksi ke server terputus.', icon: 'error' });
     }
-  };
-
-  const fetchStatistik = async () => {
-      try {
-          const resLayanan = await getDataLayanan();
-          setTotalLayanan(resLayanan.length); 
-
-          const resPetugas = await getPetugas();
-          setTotalPetugas(resPetugas.length);
-
-          const resAgenda = await getKegiatanAgenda();
-          setTotalAgenda(resAgenda.length);
-      } catch (error) {
-          console.error("Gagal menarik data statistik.");
-      }
   };
 
   const fetchNotifikasi = async () => {
       try {
           const hasil = await getNotifikasi();
           setDataNotif(hasil);
-      } catch (error) {
+      } catch {
           console.error("Gagal menarik data notifikasi.");
       }
   };
@@ -54,20 +35,20 @@ export default function DaftarAdmin() {
   const handleTandaiDibaca = async (id) => {
       try {
           await tandaiNotifikasiDibaca(id);
-          fetchNotifikasi(); // Refresh data notifikasi setelah diklik
-      } catch (error) {
+          fetchNotifikasi();
+      } catch {
           Swal.fire("Gagal memperbarui status notifikasi.");
       }
   };
 
   useEffect(() => {
     fetchAdmin();
-    fetchStatistik(); 
     fetchNotifikasi();
   }, []);
 
   const handleSubmit = async (e) => {
       e.preventDefault();
+      setLoadingSimpan(true);
       
       const dataBaru = {
           nik: nik,
@@ -85,52 +66,52 @@ export default function DaftarAdmin() {
           } else {
               Swal.fire("Gagal: " + result.pesan);
           }
-      } catch (error) {
+      } catch {
           Swal.fire("Terjadi kesalahan sistem saat membuat akun.");
+      } finally {
+          setLoadingSimpan(false);
       }
-    };
+  };
 
-    const handleHapus = async (id) => {
-        if (dataAdmin.length <= 1) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Akses Ditolak!',
-                text: 'Harus ada minimal 1 akun Master Admin yang tersisa agar sistem tidak terkunci.',
-                confirmButtonColor: '#3C50E0'
-            });
-            return; 
-        }
+  const handleHapus = async (id) => {
+      if (dataAdmin.length <= 1) {
+          Swal.fire({
+              icon: 'error',
+              title: 'Akses Ditolak!',
+              text: 'Harus ada minimal 1 akun Master Admin yang tersisa agar sistem tidak terkunci.',
+              confirmButtonColor: '#3C50E0'
+          });
+          return; 
+      }
 
-        Swal.fire({
-            title: 'Cabut Akses Staf?',
-            text: "Yakin ingin mencabut akses akun staf ini secara permanen?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#64748b',
-            confirmButtonText: 'Ya, Cabut Akses!',
-            cancelButtonText: 'Batal'
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const resultApi = await hapusAdmin(id);
-                    if (resultApi.status === 'sukses') {
-                        Swal.fire({ title: 'Terhapus!', text: resultApi.pesan, icon: 'success', confirmButtonColor: '#3C50E0' });
-                        fetchAdmin(); 
-                    } else {
-                        Swal.fire({ title: 'Gagal!', text: resultApi.pesan, icon: 'error' });
-                    }
-                } catch (error) {
-                    Swal.fire({ title: 'Error', text: "Terjadi kesalahan sistem saat menghapus akun.", icon: 'error' });
-                }
-            }
-        });
-    };
+      Swal.fire({
+          title: 'Cabut Akses Staf?',
+          text: "Yakin ingin mencabut akses akun staf ini secara permanen?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#ef4444',
+          cancelButtonColor: '#64748b',
+          confirmButtonText: 'Ya, Cabut Akses!',
+          cancelButtonText: 'Batal'
+      }).then(async (result) => {
+          if (result.isConfirmed) {
+              try {
+                  const resultApi = await hapusAdmin(id);
+                  if (resultApi.status === 'sukses') {
+                      Swal.fire({ title: 'Terhapus!', text: resultApi.pesan, icon: 'success', confirmButtonColor: '#3C50E0' });
+                      fetchAdmin(); 
+                  } else {
+                      Swal.fire({ title: 'Gagal!', text: resultApi.pesan, icon: 'error' });
+                  }
+              } catch {
+                  Swal.fire({ title: 'Error', text: "Terjadi kesalahan sistem saat menghapus akun.", icon: 'error' });
+              }
+          }
+      });
+  };
 
   return (
     <div className="admin-container">
-      
-      {/* JUDUL DASBOR KINI BERDIRI SENDIRI TANPA TOMBOL LOGOUT */}
       <div className="header-admin">
         <h2>Dasbor Utama & Manajemen Akun</h2>
       </div>
@@ -156,10 +137,6 @@ export default function DaftarAdmin() {
               ))}
           </div>
       )}
-    
-      <div className="statistik-container" style={{display: 'none'}}>
-          {/* Stats dipindah ke Dashboard Utama */}
-      </div>
       
       <div className="admin-form-card">
         <h3 style={{marginTop: '0'}}>Buat Akun Staf Baru</h3>
@@ -201,7 +178,7 @@ export default function DaftarAdmin() {
             <tbody>
                 {dataAdmin.map((data, index) => (
                 <tr key={data.id}>
-                    <td>{index +1}</td>
+                    <td>{index + 1}</td>
                     <td>{data.nik || '-'}</td>
                     <td>{data.nama_lengkap}</td> 
                     <td>{data.username}</td>
@@ -217,7 +194,6 @@ export default function DaftarAdmin() {
             </table>
         </div>
       </div>
-
     </div>
   );
 }

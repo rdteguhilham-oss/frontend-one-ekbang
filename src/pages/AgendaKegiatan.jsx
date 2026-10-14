@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar'; 
 import 'react-calendar/dist/Calendar.css'; 
 import Swal from 'sweetalert2';
@@ -11,13 +11,14 @@ export default function AgendaKegiatan() {
 
     const [agendaList, setAgendaList] = useState([]);
     
-    // State baru untuk Kalender
+    // State Kalender
     const [tanggalPilih, setTanggalPilih] = useState(new Date());
-    const [modeLihatSemua, setModeLihatSemua] = useState(true); 
+    const [modeTampilan, setModeTampilan] = useState('mendatang'); // 'mendatang' | 'riwayat' | 'kalender' 
 
     const [judul, setJudul] = useState('');
     const [kategori, setKategori] = useState('');
     const [tanggalWaktu, setTanggalWaktu] = useState('');
+    const [waktuSelesai, setWaktuSelesai] = useState('');
     const [lokasi, setLokasi] = useState('');
     const [catatan, setCatatan] = useState('');
     const [foto, setFoto] = useState(null);
@@ -26,8 +27,7 @@ export default function AgendaKegiatan() {
         try {
             const data = await getKegiatanAgenda();
             setAgendaList(data);
-        } catch (error) {
-            console.error("Gagal menarik data agenda:", error);
+        } catch {
             setAgendaList([]);
             Swal.fire({ title: 'Gagal Memuat Agenda', text: 'Koneksi ke server terputus.', icon: 'error' });
         }
@@ -39,11 +39,15 @@ export default function AgendaKegiatan() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoadingSimpan(true);
         
         const formData = new FormData();
         formData.append('judul_agenda', judul);
         formData.append('kategori_agenda', kategori);
         formData.append('tanggal_waktu', tanggalWaktu);
+        if (waktuSelesai) {
+            formData.append('waktu_selesai', waktuSelesai);
+        }
         formData.append('lokasi', lokasi);
         formData.append('catatan_reminder', catatan);
         
@@ -57,16 +61,19 @@ export default function AgendaKegiatan() {
                 Swal.fire(result.pesan);
                 fetchAgenda(); 
                 
-                setJudul(''); setKategori(''); setTanggalWaktu(''); 
+                setJudul(''); setKategori(''); setTanggalWaktu(''); setWaktuSelesai('');
                 setLokasi(''); setCatatan(''); setFoto(null);
-                document.getElementById('inputFotoAgenda').value = '';
+                const inputFoto = document.getElementById('inputFotoAgenda');
+                if (inputFoto) inputFoto.value = '';
 
                 setIsModalOpen(false);
             } else {
                 Swal.fire("Gagal: " + result.pesan);
             }
-        } catch (error) {
+        } catch {
             Swal.fire("Terjadi kesalahan saat menyimpan agenda (Server mati)!");
+        } finally {
+            setLoadingSimpan(false);
         }
     };
 
@@ -95,7 +102,7 @@ export default function AgendaKegiatan() {
                     } else {
                         Swal.fire({ title: 'Gagal!', text: resultApi.pesan, icon: 'error' });
                     }
-                } catch (error) {
+                } catch {
                     Swal.fire({ title: 'Error', text: "Terjadi kesalahan saat mengunggah foto!", icon: 'error' });
                 }
             }
@@ -122,18 +129,26 @@ export default function AgendaKegiatan() {
                     } else {
                         Swal.fire({ title: 'Gagal!', text: resultApi.pesan, icon: 'error' });
                     }
-                } catch (error) {
+                } catch {
                     Swal.fire({ title: 'Error', text: "Terjadi kesalahan saat menghapus data.", icon: 'error' });
                 }
             }
         });
     };
 
+    // Helper parsing tanggal aman dari format MySQL atau ISO
+    const parseTanggal = (str) => {
+        if (!str) return null;
+        const normalized = typeof str === 'string' && !str.includes('T') ? str.replace(' ', 'T') : str;
+        return new Date(normalized);
+    };
+
     // LOGIKA KALENDER: Memberi Titik Merah pada tanggal yg ada jadwal
     const berikanTandaKalender = ({ date, view }) => {
         if (view === 'month') {
             const adaAgenda = agendaList.find(item => {
-                const tglAgenda = new Date(item.tanggal_waktu);
+                const tglAgenda = parseTanggal(item.tanggal_waktu);
+                if (!tglAgenda || isNaN(tglAgenda.getTime())) return false;
                 return tglAgenda.getDate() === date.getDate() &&
                        tglAgenda.getMonth() === date.getMonth() &&
                        tglAgenda.getFullYear() === date.getFullYear();
@@ -148,16 +163,38 @@ export default function AgendaKegiatan() {
     // Aksi saat tanggal di kalender di klik
     const klikTanggal = (value) => {
         setTanggalPilih(value);
-        setModeLihatSemua(false); 
+        setModeTampilan('kalender'); 
     };
 
-    // Filter data tabel berdasarkan klik kalender
-    const dataDitampilkan = modeLihatSemua ? agendaList : agendaList.filter(item => {
-            const tglAgenda = new Date(item.tanggal_waktu);
+    // ── LOGIKA FILTER AGENDA (OPSI 1: HARI INI & MENDATANG SECARA DEFAULT) ──
+    const startHariIni = new Date();
+    startHariIni.setHours(0, 0, 0, 0);
+
+    const isMendatang = (item) => {
+        const tglMulai = parseTanggal(item.tanggal_waktu);
+        if (!tglMulai || isNaN(tglMulai.getTime())) return false;
+        const tglSelesai = parseTanggal(item.waktu_selesai);
+        const tglAkhir = tglSelesai && !isNaN(tglSelesai.getTime()) ? tglSelesai : tglMulai;
+        return tglAkhir >= startHariIni;
+    };
+
+    let dataDitampilkan;
+    if (modeTampilan === 'kalender') {
+        dataDitampilkan = agendaList.filter(item => {
+            const tglAgenda = parseTanggal(item.tanggal_waktu);
+            if (!tglAgenda || isNaN(tglAgenda.getTime())) return false;
             return tglAgenda.getDate() === tanggalPilih.getDate() &&
                    tglAgenda.getMonth() === tanggalPilih.getMonth() &&
                    tglAgenda.getFullYear() === tanggalPilih.getFullYear();
-        });
+        }).sort((a, b) => parseTanggal(a.tanggal_waktu) - parseTanggal(b.tanggal_waktu));
+    } else if (modeTampilan === 'riwayat') {
+        dataDitampilkan = agendaList.filter(item => !isMendatang(item))
+            .sort((a, b) => parseTanggal(b.tanggal_waktu) - parseTanggal(a.tanggal_waktu)); // Riwayat: urut dari yang paling baru
+    } else {
+        // Mode 'mendatang' (default): hanya hari ini dan masa depan
+        dataDitampilkan = agendaList.filter(item => isMendatang(item))
+            .sort((a, b) => parseTanggal(a.tanggal_waktu) - parseTanggal(b.tanggal_waktu));
+    }
 
     return (
         <div className="agenda-container">
@@ -188,17 +225,35 @@ export default function AgendaKegiatan() {
                 {/* BAGIAN KANAN: TABEL JADWAL */}
                 <div className="agenda-card">
                     <div className="header-tabel-agenda">
-                        <h3>
-                            {modeLihatSemua 
-                                ? "Semua Jadwal Mendatang" 
-                                : `Jadwal Tanggal: ${tanggalPilih.toLocaleDateString('id-ID')}`
-                            }
-                        </h3>
-                        {!modeLihatSemua && (
-                            <button className="btn-lihat-semua" onClick={() => setModeLihatSemua(true)}>
-                                Tampilkan Semua
+                        <div className="header-agenda-left">
+                            <h3>
+                                {modeTampilan === 'kalender' 
+                                    ? `Jadwal Tanggal: ${tanggalPilih.toLocaleDateString('id-ID')}`
+                                    : modeTampilan === 'riwayat'
+                                        ? "Riwayat Kegiatan (Selesai)"
+                                        : "Semua Jadwal Mendatang"
+                                }
+                            </h3>
+                            <span className="badge-total-agenda">
+                                {dataDitampilkan.length} kegiatan
+                            </span>
+                        </div>
+                        <div className="filter-agenda-tabs">
+                            <button 
+                                type="button"
+                                className={`btn-filter-agenda ${modeTampilan === 'mendatang' ? 'active' : ''}`}
+                                onClick={() => setModeTampilan('mendatang')}
+                            >
+                                📅 Jadwal Mendatang
                             </button>
-                        )}
+                            <button 
+                                type="button"
+                                className={`btn-filter-agenda ${modeTampilan === 'riwayat' ? 'active' : ''}`}
+                                onClick={() => setModeTampilan('riwayat')}
+                            >
+                                📋 Riwayat Selesai
+                            </button>
+                        </div>
                     </div>
 
                     <div className="table-responsive">
@@ -206,8 +261,7 @@ export default function AgendaKegiatan() {
                             <thead>
                                 <tr>
                                     <th>Waktu</th>
-                                    <th>Kategori</th>
-                                    <th>Judul & Lokasi</th>
+                                    <th>Agenda Kegiatan</th>
                                     <th>Catatan</th>
                                     <th>Dokumentasi</th>
                                     <th>Aksi</th>
@@ -215,44 +269,66 @@ export default function AgendaKegiatan() {
                             </thead>
                             <tbody>
                                 {dataDitampilkan.length > 0 ? (
-                                    dataDitampilkan.map((item) => (
-                                        <tr key={item.id}>
-                                            <td>
-                                                <strong>{new Date(item.tanggal_waktu).toLocaleDateString('id-ID')}</strong><br/>
-                                                <small style={{color: 'var(--text-redup)'}}>{new Date(item.tanggal_waktu).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})} WIB</small>
-                                            </td>
-                                            <td><span className="badge-kategori">{item.kategori_agenda}</span></td>
-                                            <td>
-                                                <strong>{item.judul_agenda}</strong><br/>
-                                                <small style={{color: 'var(--text-redup)'}}>📍 {item.lokasi}</small>
-                                            </td>
-                                            <td>{item.catatan_reminder || '-'}</td>
-                                            <td>
-                                                {item.foto_dokumentasi ? (
-                                                    <a href={item.foto_dokumentasi.startsWith('http') ? item.foto_dokumentasi : `${BASE_URL}/uploads/${item.foto_dokumentasi}`} target="_blank" rel="noreferrer" className="link-foto">Lihat Foto</a>
-                                                ) : (
-                                                    <label className="btn-upload-susulan">
-                                                        📷 Upload Bukti
-                                                        <input 
-                                                            type="file" 
-                                                            accept="image/*" 
-                                                            style={{ display: 'none' }} 
-                                                            onChange={(e) => handleUploadSusulan(item.id, e.target.files[0])} 
-                                                        />
-                                                    </label>
-                                                )}
-                                            </td>
-                                            <td>
-                                                <button className="btn-hapus-agenda" onClick={() => hapusAgenda(item.id)}>
-                                                    Hapus
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))
+                                    dataDitampilkan.map((item) => {
+                                        const tglMulai = parseTanggal(item.tanggal_waktu);
+                                        const tglSelesai = item.waktu_selesai ? parseTanggal(item.waktu_selesai) : null;
+                                        const bedaHari = tglSelesai && (tglMulai.toDateString() !== tglSelesai.toDateString());
+
+                                        let rentangWaktu = `${tglMulai.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})} WIB`;
+                                        if (tglSelesai) {
+                                            if (bedaHari) {
+                                                rentangWaktu = `${tglMulai.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})} s/d ${tglSelesai.toLocaleDateString('id-ID')} ${tglSelesai.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})} WIB`;
+                                            } else {
+                                                rentangWaktu = `${tglMulai.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})} – ${tglSelesai.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})} WIB`;
+                                            }
+                                        }
+
+                                        return (
+                                            <tr key={item.id}>
+                                                <td>
+                                                    <strong>{tglMulai.toLocaleDateString('id-ID')}</strong><br/>
+                                                    <small style={{color: 'var(--text-redup)'}}>{rentangWaktu}</small>
+                                                </td>
+                                                <td>
+                                                    <div className="agenda-info-cell">
+                                                        <span className="badge-kategori">{item.kategori_agenda}</span>
+                                                        <strong className="agenda-judul">{item.judul_agenda}</strong>
+                                                        <small className="agenda-lokasi">📍 {item.lokasi}</small>
+                                                    </div>
+                                                </td>
+                                                <td>{item.catatan_reminder || '-'}</td>
+                                                <td>
+                                                    {item.foto_dokumentasi ? (
+                                                        <a href={item.foto_dokumentasi.startsWith('http') ? item.foto_dokumentasi : `${BASE_URL}/uploads/${item.foto_dokumentasi}`} target="_blank" rel="noreferrer" className="link-foto">Lihat Foto</a>
+                                                    ) : (
+                                                        <label className="btn-upload-susulan">
+                                                            📷 Upload Bukti
+                                                            <input 
+                                                                type="file" 
+                                                                accept="image/*" 
+                                                                style={{ display: 'none' }} 
+                                                                onChange={(e) => handleUploadSusulan(item.id, e.target.files[0])} 
+                                                            />
+                                                        </label>
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    <button className="btn-hapus-agenda" onClick={() => hapusAgenda(item.id)}>
+                                                        Hapus
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
                                 ) : (
                                     <tr>
-                                        <td colSpan="5" style={{textAlign: 'center', padding: '30px 0'}}>
-                                            Tidak ada jadwal kegiatan pada tanggal ini.
+                                        <td colSpan="5" style={{textAlign: 'center', padding: '35px 15px', color: 'var(--text-redup)'}}>
+                                            {modeTampilan === 'kalender' 
+                                                ? `Tidak ada jadwal kegiatan pada tanggal ${tanggalPilih.toLocaleDateString('id-ID')}.`
+                                                : modeTampilan === 'riwayat'
+                                                    ? 'Belum ada riwayat agenda yang selesai.'
+                                                    : 'Tidak ada jadwal kegiatan mendatang.'
+                                            }
                                         </td>
                                     </tr>
                                 )}
@@ -263,7 +339,7 @@ export default function AgendaKegiatan() {
 
             </div>
 
-            {/* MODAL INPUT TETAP SAMA */}
+            {/* MODAL INPUT */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -289,11 +365,16 @@ export default function AgendaKegiatan() {
                             </div>
 
                             <div className="form-group">
-                                <label>Tanggal & Waktu</label>
+                                <label>Waktu Mulai</label>
                                 <input type="datetime-local" value={tanggalWaktu} onChange={(e) => setTanggalWaktu(e.target.value)} required />
                             </div>
 
                             <div className="form-group">
+                                <label>Waktu Selesai (Opsional)</label>
+                                <input type="datetime-local" value={waktuSelesai} onChange={(e) => setWaktuSelesai(e.target.value)} />
+                            </div>
+
+                            <div className="form-group catatan-full">
                                 <label>Lokasi Kegiatan</label>
                                 <input type="text" placeholder="Contoh: Aula Kelurahan" value={lokasi} onChange={(e) => setLokasi(e.target.value)} required />
                             </div>

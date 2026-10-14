@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { getTitikPeta, hapusTitikPeta, tambahTitikPeta, updateStatusPeta, BASE_URL } from '../services/api'; 
-import Swal from 'sweetalert2'; // <-- SWAL MASUK!
+import Swal from 'sweetalert2';
 import 'leaflet/dist/leaflet.css'; 
 import './PetaGis.css'; 
 
@@ -33,7 +33,7 @@ export default function PetaGIS() {
         try {
             const hasil = await getTitikPeta();
             setDataTitik(hasil);
-        } catch (error) {
+        } catch {
             Swal.fire({ title: 'Gagal Memuat Peta', text: 'Koneksi ke server terputus.', icon: 'error' });
         }
     };
@@ -44,6 +44,7 @@ export default function PetaGIS() {
 
     const handleSimpan = async (e) => {
         e.preventDefault();
+        setLoadingSimpan(true);
         
         const formData = new FormData();
         const kategoriFinal = kategori === 'PENGOLAHAN SAMPAH ORGANIK' 
@@ -76,12 +77,15 @@ export default function PetaGIS() {
                 setLatitude(''); setLongitude(''); setFoto(null);
                 setKetua(''); setLuasLahan(''); setDataRw('');
                 setStatusProgres(''); setJenisOrganik('');
-                document.getElementById('inputFotoPeta').value = '';
+                const inputFoto = document.getElementById('inputFotoPeta');
+                if (inputFoto) inputFoto.value = '';
             } else {
                 Swal.fire({ title: 'Gagal!', text: result.pesan, icon: 'error' });
             }
-        } catch (error) {
+        } catch {
             Swal.fire({ title: 'Error!', text: 'Kesalahan server saat menyimpan titik!', icon: 'error' });
+        } finally {
+            setLoadingSimpan(false);
         }
     };
 
@@ -105,7 +109,7 @@ export default function PetaGIS() {
                     } else {
                         Swal.fire({ title: 'Gagal!', text: resultApi.pesan, icon: 'error' });
                     }
-                } catch (error) {
+                } catch {
                     Swal.fire({ title: 'Error', text: 'Kesalahan saat menghapus titik pada peta!', icon: 'error' });
                 }
             }
@@ -128,7 +132,7 @@ export default function PetaGIS() {
                     await updateStatusPeta(idTitik, statusBaru);
                     Swal.fire({ title: 'Berhasil!', text: 'Status lokasi berhasil diperbarui!', icon: 'success', confirmButtonColor: '#3C50E0' });
                     fetchDataPeta(); 
-                } catch (error) {
+                } catch {
                     Swal.fire({ title: 'Gagal', text: "Gagal mengubah status peta.", icon: 'error' });
                 }
             }

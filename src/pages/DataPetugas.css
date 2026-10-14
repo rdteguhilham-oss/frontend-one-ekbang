@@ -12,11 +12,11 @@
 /* Kartu Pembungkus Tabel */
 .petugas-table-card {
     background-color: var(--bg-card);
-    padding: 25px;
+    padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--border-halus);
     box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -60,15 +60,16 @@
 
 /* Tombol Lihat SK */
 .btn-lihat {
-    background-color: #10b981; /* Hijau cerah Tailwind */
+    background-color: #10b981;
     color: white;
-    padding: 6px 12px;
+    padding: 5px 10px;
     text-decoration: none;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    transition: 0.3s;
+    transition: 0.2s;
     display: inline-block;
+    white-space: nowrap;
 }
 
 .btn-lihat:hover {

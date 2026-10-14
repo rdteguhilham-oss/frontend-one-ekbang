@@ -1,16 +1,15 @@
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { 
     getPetugas, 
     tambahKegiatanGober, 
     getKegiatanGober, 
-    getKegiatanSampah,
-    tambahKegiatanSampah,
-    BASE_URL
-}
-from '../services/api';
+    getKegiatanSampah, 
+    tambahKegiatanSampah, 
+    BASE_URL 
+} from '../services/api';
 import './KegiatanHarian.css';
 
 export default function KegiatanHarian() {
@@ -45,8 +44,7 @@ export default function KegiatanHarian() {
 
             const resSampah = await getKegiatanSampah();
             setDataSampah(resSampah);
-        } catch (error) {
-            console.error("Gagal menarik data kegiatan:", error);
+        } catch {
             setPetugasList([]);
             setDataGober([]);
             setDataSampah([]);
@@ -58,11 +56,6 @@ export default function KegiatanHarian() {
         fetchData();
     }, []);
 
-    const getNamaPetugas = (id) => {
-        const petugas = petugasList.find(p => p.id === parseInt(id));
-        return petugas ? petugas.nama_petugas : '';
-    };
-
     const submitGober = async (e) => {
         e.preventDefault();
         if (!fotoGober) {
@@ -70,10 +63,22 @@ export default function KegiatanHarian() {
             return;
         }
 
+        // Sanitasi nilai panjang_meter (menjamin format angka utuh walau user mengetik '30m')
+        const nilaiAngka = parseInt(String(panjangMeter).replace(/[^0-9]/g, ''), 10);
+        if (isNaN(nilaiAngka) || nilaiAngka <= 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Format Ukuran Belum Benar',
+                text: 'Harap masukkan angka meter yang valid (contoh: 30).'
+            });
+            return;
+        }
+
+        setLoadingGober(true);
         const formData = new FormData();
         formData.append('petugas_id', idPetugasGober);
         formData.append('lokasi', lokasi);
-        formData.append('panjang_meter', panjangMeter);
+        formData.append('panjang_meter', nilaiAngka);
         formData.append('foto', fotoGober);
 
         try {
@@ -86,8 +91,10 @@ export default function KegiatanHarian() {
             } else {
                 Swal.fire("Gagal: " + result.pesan);
             }
-        } catch (error) {
+        } catch {
             Swal.fire("Koneksi gagal saat menyimpan laporan Gober!");
+        } finally {
+            setLoadingGober(false);
         }
     };
 
@@ -99,6 +106,7 @@ export default function KegiatanHarian() {
             return;
         }
 
+        setLoadingSampah(true);
         const formData = new FormData();
         formData.append('petugas_id', idPetugasSampah);
         formData.append('kategori_tugas', kategoriTugas);
@@ -116,8 +124,10 @@ export default function KegiatanHarian() {
             } else {
                 Swal.fire("Gagal: " + result.pesan);
             }
-        } catch (error) {
+        } catch {
             Swal.fire("Koneksi gagal saat menyimpan laporan Sampah!");
+        } finally {
+            setLoadingSampah(false);
         }
     };
 
@@ -153,7 +163,6 @@ export default function KegiatanHarian() {
         for (let i = 0; i < dataDiproses.length; i++) {
             const item = dataDiproses[i];
 
-            // 1. Tambahkan baris teks TERLEBIH DAHULU agar tidak ada baris kosong yang melompat
             const row = worksheet.addRow({
                 no: i + 1,
                 tanggal: new Date(item.tanggal_kegiatan).toLocaleDateString('id-ID'),
@@ -163,11 +172,9 @@ export default function KegiatanHarian() {
                 foto: '' 
             });
 
-            // 2. Atur tinggi pada baris yang baru saja dibuat
             row.height = 130; 
             row.alignment = { vertical: 'middle' };
 
-            // 3. Masukkan gambar dengan titik koordinat yang sejajar (Zero-based index)
             if (item.foto) {
                 try {
                     const urlFoto = item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`;
@@ -181,11 +188,10 @@ export default function KegiatanHarian() {
                     });
 
                     worksheet.addImage(imageId, {
-                        // i + 1 berarti mulai dari baris ke-2 (karena baris 1 adalah header)
                         tl: { col: 5.1, row: i + 1 + 0.1 }, 
                         ext: { width: 150, height: 150 } 
                     });
-                } catch (error) {
+                } catch {
                     row.getCell('foto').value = "Gagal Dimuat";
                 }
             } else {
@@ -228,7 +234,6 @@ export default function KegiatanHarian() {
 
             {tabAktif === 'Gober' && (
                 <div className="kegiatan-card">
-                    {/* HEADER TABEL GOBER DENGAN PENCARIAN */}
                     <div className="header-tabel-kegiatan">
                         <h3>Riwayat Lapangan</h3>
                         <div className="search-kegiatan-group">
@@ -259,9 +264,11 @@ export default function KegiatanHarian() {
                                         <td>{new Date(item.tanggal_kegiatan).toLocaleDateString('id-ID')}</td>
                                         <td>{item.nama_petugas}</td>
                                         <td>{item.lokasi}</td>
-                                        <td>{item.panjang_meter}</td>
+                                        <td>{item.panjang_meter} m</td>
                                         <td>
-                                            <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Foto</a>
+                                            {item.foto ? (
+                                                <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Foto</a>
+                                            ) : '-'}
                                         </td>
                                     </tr>
                                 ))}
@@ -332,7 +339,6 @@ export default function KegiatanHarian() {
                                         <label>Pilih Petugas Lapangan</label>
                                         <select value={idPetugasGober} onChange={(e) => setIdPetugasGober(e.target.value)} required>
                                             <option value="">-- Pilih Petugas --</option>
-                                            {/* MENAMPILKAN GOBER, GORONG-GORONG, TAMAN */}
                                             {petugasList.filter(p => ['Gober', 'Gorong-gorong', 'Taman'].includes(p.kategori_petugas)).map(p => (
                                                 <option key={p.id} value={p.id}>{p.nama_petugas} ({p.kategori_petugas})</option>
                                             ))}
@@ -343,8 +349,15 @@ export default function KegiatanHarian() {
                                         <input type="text" placeholder='Contoh: Jl. Anyelir 2' value={lokasi} onChange={(e) => setLokasi(e.target.value)} required />
                                     </div>
                                     <div className="form-group">
-                                        <label>Ukuran Panjang/Luas</label>
-                                        <input type="text" placeholder='Contoh: 30 = 30m' value={panjangMeter} onChange={(e) => setPanjangMeter(e.target.value)} required />
+                                        <label>Ukuran Panjang / Luas (Meter)</label>
+                                        <input 
+                                            type="number" 
+                                            min="1" 
+                                            placeholder='Masukkan angka meter (contoh: 30)' 
+                                            value={panjangMeter} 
+                                            onChange={(e) => setPanjangMeter(e.target.value)} 
+                                            required 
+                                        />
                                     </div>
                                     <div className="form-group">
                                         <label>Foto Kegiatan</label>
@@ -382,7 +395,6 @@ export default function KegiatanHarian() {
                                         <input type="number" placeholder='Contoh: 30' step="0.01" value={beratKiloan} onChange={(e) => setBeratKiloan(e.target.value)} required />
                                     </div>
                                     
-                                    {/* INPUT FOTO UNTUK SAMPAH */}
                                     <div className="form-group">
                                         <label>Foto Bukti Timbangan</label>
                                         <input type="file" accept="image/*" onChange={(e) => setFotoSampah(e.target.files[0])} required />

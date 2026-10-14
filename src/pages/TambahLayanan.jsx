@@ -113,7 +113,7 @@ export default function TambahLayanan() {
                 Swal.fire(data?.pesan || 'Gagal menyimpan pengajuan.');
                 setIsSubmitting(false);
             }
-        } catch (error) {
+        } catch {
             Swal.fire("Terjadi kesalahan sistem/server mati saat mengirim data!");
             setIsSubmitting(false);
         }

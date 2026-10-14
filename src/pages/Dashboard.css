@@ -1,272 +1,1145 @@
-.dashboard-container {
+/* =====================================================
+   DASHBOARD ONE EKBANG – KELURAHAN PASTEUR
+   Prefix: db-  | Zero-scroll Desktop | Fully Responsive Mobile
+   ===================================================== */
+
+/* ── WRAPPER (DESKTOP: ZERO SCROLL) ──────────────── */
+.db-wrapper {
+    height: 100vh;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 0;
-}
-
-/* BANNER HEADER */
-.dashboard-header-banner {
-    position: relative;
-    width: 100%;
-    height: 180px;
-    background-size: cover;
-    background-position: center;
-    border-radius: 12px;
+    padding: 5px 10px 6px 10px;
+    gap: 4px;
+    background: #F0F4F8;
     overflow: hidden;
-    margin-bottom: 10px;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.banner-overlay {
+body.dark-mode .db-wrapper { background: #0F172A; }
+
+/* ── HEADER ──────────────────────────────────────── */
+.db-header {
+    position: relative;
+    flex-shrink: 0;
+    height: 84px;
+    border-radius: 11px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* Latar foto kota */
+.db-header-bg {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(to right, rgba(255,255,255,0.95) 30%, rgba(255,255,255,0.5) 100%);
+    inset: 0;
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    border-radius: 11px;
+    overflow: hidden;
+}
+
+/* Overlay gradient agar teks terbaca jelas */
+.db-header-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to right,
+        rgba(255,255,255,0.88) 0%,
+        rgba(255,255,255,0.18) 42%,
+        rgba(255,255,255,0.82) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+body.dark-mode .db-header-overlay {
+    background: linear-gradient(
+        to right,
+        rgba(15,23,42,0.92) 0%,
+        rgba(15,23,42,0.30) 42%,
+        rgba(15,23,42,0.94) 100%
+    );
+}
+
+/* Lambang Kota Bandung – tengah atas */
+.db-emblem {
+    position: absolute;
+    left: 50%;
+    top: 6px;
+    transform: translateX(-50%);
+    height: 58px;
+    width: auto;
+    object-fit: contain;
+    z-index: 3;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.22));
+}
+
+/* Slogan – tepat di tengah-tengah antara logo dan notifikasi */
+.db-slogan {
+    position: absolute;
+    left: 63%;
+    top: 12px;
+    transform: translateX(-50%);
+    z-index: 3;
+    pointer-events: none;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 0 40px;
+    align-items: center;
+    text-align: center;
 }
 
-.banner-overlay h1 {
-    font-size: 24px;
-    color: #0b3b2c;
-    margin: 0 0 8px 0;
+.db-slogan em {
+    font-size: 10.5px;
+    font-style: italic;
+    font-weight: 700;
+    color: #1E3A8A;
+    font-family: Georgia, serif;
+    line-height: 1.2;
+    text-shadow: none;
+}
+
+.db-slogan span {
+    font-size: 10.5px;
+    font-style: italic;
+    font-weight: 700;
+    color: #065F46;
+    font-family: Georgia, serif;
+    line-height: 1.2;
+    text-shadow: none;
+}
+
+.db-slogan-line {
+    width: 140px;
+    height: 12px;
+    margin-top: 1px;
+}
+
+body.dark-mode .db-slogan em {
+    color: #93C5FD;
+    text-shadow: none;
+}
+
+body.dark-mode .db-slogan span {
+    color: #34D399;
+    text-shadow: none;
+}
+
+body.dark-mode .db-slogan-line path {
+    stroke: #60A5FA;
+}
+
+/* Ombak SVG bawah header */
+.db-wave {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 36px;
+    pointer-events: none;
+    z-index: 2;
+    width: 100%;
+    display: block;
+}
+
+.db-wave-fill { fill: #F0F4F8; transition: fill 0.3s; }
+body.dark-mode .db-wave-fill { fill: #0F172A; }
+
+/* Judul sistem – kiri bawah */
+.db-title-area {
+    position: absolute;
+    bottom: 6px;
+    left: 14px;
+    z-index: 3;
+}
+
+.db-title-area h1 {
+    font-size: 12.5px;
     font-weight: 800;
-}
-
-.banner-overlay p {
-    font-size: 16px;
-    color: #475569;
+    color: #064E3B;
     margin: 0;
-    font-weight: 500;
+    letter-spacing: -0.2px;
+    line-height: 1.15;
+    text-shadow: none;
 }
 
-/* SUMMARY CARDS PETUGAS */
-.summary-petugas-grid {
+body.dark-mode .db-title-area h1 {
+    color: #34D399;
+    text-shadow: none;
+}
+
+.db-title-area p {
+    font-size: 9px;
+    font-weight: 600;
+    color: #475569;
+    margin: 1px 0 0;
+    text-shadow: none;
+}
+
+body.dark-mode .db-title-area p {
+    color: #94A3B8;
+    text-shadow: none;
+}
+
+/* ── TOP CONTROLS (notif + profil) ───────────────── */
+.db-top-controls {
+    position: absolute;
+    top: 7px;
+    right: 12px;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Notif wrapper */
+.db-notif-wrap {
+    position: relative;
+}
+
+.db-bell {
+    position: relative;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid #E2E8F0;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #1E3A8A;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: all 0.2s;
+}
+
+.db-bell:hover, .db-bell.db-bell-active {
+    background: #fff;
+    color: #0284C7;
+    border-color: #0284C7;
+    transform: scale(1.07);
+}
+
+body.dark-mode .db-bell {
+    background: rgba(30,41,59,0.92);
+    border-color: #475569;
+    color: #93C5FD;
+}
+
+.db-bell-badge {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    background: #EF4444;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 8px;
+    font-weight: 800;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+}
+
+/* Notif dropdown */
+.db-notif-card {
+    position: absolute;
+    top: calc(100% + 7px);
+    right: 0;
+    width: 270px;
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+    z-index: 9999;
+    overflow: hidden;
+    animation: dbSlide 0.18s ease;
+}
+
+body.dark-mode .db-notif-card {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+@keyframes dbSlide {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.db-notif-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 11px;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+body.dark-mode .db-notif-head {
+    background: #0F172A;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+.db-notif-pill {
+    background: #FEE2E2;
+    color: #DC2626;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 10px;
+}
+
+.db-notif-body {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.db-notif-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #F1F5F9;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.db-notif-item:hover { background: #F8FAFC; }
+body.dark-mode .db-notif-item { border-color: #334155; }
+body.dark-mode .db-notif-item:hover { background: #0F172A; }
+
+.db-notif-emoji { font-size: 14px; margin-top: 1px; }
+
+.db-notif-item > div { flex: 1; min-width: 0; }
+.db-notif-item strong { display: block; font-size: 10.5px; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.db-notif-item p { font-size: 9.5px; color: #0284C7; margin: 1px 0; font-weight: 600; }
+.db-notif-item small { font-size: 8.5px; color: #64748B; }
+body.dark-mode .db-notif-item strong { color: #F8FAFC; }
+
+.db-notif-empty {
+    padding: 18px;
+    text-align: center;
+    color: #64748B;
+    font-size: 10.5px;
+}
+
+.db-notif-btn {
+    width: 100%;
+    padding: 7px;
+    background: #0284C7;
+    color: #fff;
+    border: none;
+    font-size: 10.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.db-notif-btn:hover { background: #0369A1; }
+
+/* Profil admin */
+.db-profile {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.92);
+    border: 1px solid #E2E8F0;
+    border-radius: 20px;
+    padding: 3px 7px 3px 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+body.dark-mode .db-profile {
+    background: rgba(30,41,59,0.92);
+    border-color: #475569;
+}
+
+.db-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0284C7, #0369A1);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.db-profile-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.db-profile-info strong {
+    font-size: 10.5px;
+    color: #0F172A;
+    font-weight: 700;
+}
+
+.db-profile-info small {
+    font-size: 8px;
+    color: #64748B;
+}
+
+body.dark-mode .db-profile-info strong { color: #F8FAFC; }
+
+.db-logout {
+    background: transparent;
+    border: none;
+    color: #EF4444;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 3px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.db-logout:hover { transform: scale(1.15); }
+
+/* ── ROW 1: STATISTIK ────────────────────────────── */
+.db-stat-row {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 15px;
+    gap: 5px;
+    flex-shrink: 0;
 }
 
-.card-petugas {
+.db-stat-card {
     display: flex;
     align-items: center;
-    padding: 15px;
-    border-radius: 12px;
-    color: white;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-}
-
-.card-petugas.gober { background: #10B981; }
-.card-petugas.taman { background: #3B82F6; }
-.card-petugas.gorong { background: #F59E0B; }
-.card-petugas.gaslah { background: #8B5CF6; }
-.card-petugas.magot { background: #6B7280; }
-.card-petugas.admin { background: #ef4444; }
-
-.ikon-petugas {
-    font-size: 30px;
-    margin-right: 15px;
-    opacity: 0.8;
-}
-
-.teks-petugas h4 {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 600;
-    opacity: 0.9;
-}
-
-.teks-petugas h2 {
-    margin: 0;
-    font-size: 24px;
-    font-weight: 800;
-    line-height: 1;
-}
-
-.teks-petugas h2 span {
-    font-size: 12px;
-    font-weight: 500;
-    opacity: 0.8;
-}
-
-/* WIDGET GRIDS */
-.dashboard-grid-utama {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 20px;
-}
-
-.dashboard-grid-bawah {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-}
-
-.widget-card {
-    background: var(--bg-card);
-    border-radius: 12px;
-    border: 1px solid var(--border-halus);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.widget-card.span-2 {
-    grid-column: span 1;
-}
-
-.widget-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--border-halus);
-    background: var(--bg-hover);
-}
-
-.widget-header h3 {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-utama);
-}
-
-.widget-header a {
-    font-size: 13px;
-    color: var(--primary-btn);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.widget-body {
-    padding: 20px;
-    flex: 1;
-    color: var(--text-utama);
-}
-
-.widget-body.p-0 {
-    padding: 0;
-}
-
-/* AGENDA */
-.agenda-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-.agenda-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px dashed var(--border-halus);
-}
-.agenda-item:last-child { border-bottom: none; padding-bottom: 0; }
-.agenda-waktu {
-    font-weight: 700;
-    color: var(--text-utama);
-    font-size: 14px;
-    min-width: 50px;
-}
-.agenda-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-.agenda-info strong { font-size: 14px; color: var(--text-utama); }
-.agenda-info span { font-size: 12px; color: var(--text-redup); }
-.agenda-status {
-    font-size: 11px;
-    padding: 4px 8px;
-    border-radius: 20px;
-    font-weight: 600;
-}
-.agenda-status.berlangsung { background: #dcfce7; color: #166534; }
-
-/* GRID PENGAJUAN */
-.grid-pengajuan {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-.item-pengajuan {
-    text-align: center;
-    padding: 15px 10px;
+    gap: 7px;
+    padding: 5px 8px;
     border-radius: 8px;
-    background: var(--bg-hover);
-    border: 1px solid var(--border-halus);
-}
-.item-pengajuan h2 { margin: 0; font-size: 24px; color: var(--text-utama); }
-.item-pengajuan p { margin: 0; font-size: 11px; color: var(--text-redup); font-weight: 600; }
-.item-pengajuan span { 
-    display: inline-block;
-    margin-top: 5px;
-    font-size: 11px; 
-    font-weight: 700;
-    color: #10B981; 
-    background: rgba(16, 185, 129, 0.1);
-    padding: 3px 8px;
-    border-radius: 12px;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+    transition: transform 0.15s;
 }
 
-/* MINI MAP */
-.mini-map {
-    width: 100%;
-    height: 300px;
-}
+.db-stat-card:hover { transform: translateY(-1px); }
 
-/* BERITA */
-.berita-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-.berita-item {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-.berita-item img {
-    width: 80px;
-    height: 60px;
-    border-radius: 6px;
-    object-fit: cover;
-}
-.berita-placeholder {
-    width: 80px;
-    height: 60px;
-    border-radius: 6px;
-    background: var(--border-halus);
+.db-stat-icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10px;
-    color: var(--text-redup);
-}
-.berita-info {
-    display: flex;
-    flex-direction: column;
-}
-.berita-info strong {
     font-size: 13px;
-    color: var(--text-utama);
-    line-height: 1.4;
-    margin-bottom: 4px;
-}
-.berita-info span {
-    font-size: 11px;
-    color: var(--text-redup);
+    flex-shrink: 0;
 }
 
-@media (max-width: 1200px) {
-    .summary-petugas-grid { grid-template-columns: repeat(3, 1fr); }
-    .dashboard-grid-utama { grid-template-columns: 1fr; }
-    .dashboard-grid-bawah { grid-template-columns: 1fr; }
+.db-stat-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
 }
-@media (max-width: 768px) {
-    .summary-petugas-grid { grid-template-columns: 1fr 1fr; }
-    .banner-overlay { padding: 0 20px; }
+
+.db-stat-text span {
+    font-size: 9px;
+    font-weight: 600;
+    opacity: 0.95;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.db-stat-text strong {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.db-stat-text strong em {
+    font-style: normal;
+    font-size: 8px;
+    font-weight: 500;
+    opacity: 0.85;
+    margin-left: 2px;
+}
+
+/* ── ROW 2: 3 KOLOM ──────────────────────────────── */
+.db-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5px;
+    flex: 1.1;
+    min-height: 0;
+}
+
+/* ── ROW 3: 3 KOLOM ──────────────────────────────── */
+.db-row-3 {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 0.8fr;
+    gap: 5px;
+    flex: 1;
+    min-height: 0;
+}
+
+/* ── BOX (kartu putih) ───────────────────────────── */
+.db-box {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 9px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+
+body.dark-mode .db-box {
+    background: #1E293B;
+    border-color: #334155;
+}
+
+.db-box-head {
+    height: 28px;
+    flex-shrink: 0;
+    padding: 0 9px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #F1F5F9;
+    background: #FAFAFA;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+body.dark-mode .db-box-head {
+    background: #0F172A;
+    border-color: #334155;
+    color: #F8FAFC;
+}
+
+.db-hdr-icon {
+    color: #0284C7;
+    margin-right: 4px;
+    font-size: 11px;
+}
+
+.db-link-more {
+    font-size: 9.5px;
+    color: #0284C7;
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s;
+}
+.db-link-more:hover { opacity: 0.75; }
+
+.db-year-pill {
+    font-size: 9px;
+    background: #E0F2FE;
+    color: #0369A1;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.db-box-body {
+    flex: 1;
+    min-height: 0;
+    padding: 5px 8px;
+    overflow: hidden;
+}
+
+/* ── AGENDA LIST (ADAPTIF & ANTI-JEBOL) ───────────── */
+.db-agenda-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 3px;
+}
+
+/* Slim scrollbar halus jika agenda banyak */
+.db-agenda-list::-webkit-scrollbar {
+    width: 4px;
+}
+.db-agenda-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.db-agenda-list::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+body.dark-mode .db-agenda-list::-webkit-scrollbar-thumb {
+    background: #475569;
+}
+
+.db-agenda-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px dashed #F1F5F9;
+    flex-shrink: 0;
+}
+.db-agenda-item:last-child { border-bottom: none; }
+body.dark-mode .db-agenda-item { border-color: #334155; }
+
+.db-agenda-time {
+    font-weight: 700;
+    color: #0F172A;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+body.dark-mode .db-agenda-time { color: #E2E8F0; }
+
+.db-agenda-dot {
+    border-radius: 50%;
+    background: #CBD5E1;
+    flex-shrink: 0;
+}
+.db-agenda-dot.dot-active { background: #10B981; }
+
+.db-agenda-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.db-agenda-content strong {
+    color: #1E293B;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+body.dark-mode .db-agenda-content strong { color: #F8FAFC; }
+
+.db-agenda-content small {
+    color: #64748B;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.db-badge {
+    font-weight: 600;
+    border-radius: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.db-badge.badge-on   { background: #DCFCE7; color: #166534; }
+.db-badge.badge-sch  { background: #E0F2FE; color: #0369A1; }
+.db-badge.badge-done { background: #F1F5F9; color: #64748B; }
+body.dark-mode .db-badge.badge-done { background: #334155; color: #94A3B8; }
+
+/* ── TINGKAT KEPADATAN / ADAPTIVE SIZING ── */
+
+/* 1 - 2 Agenda: Font Lebih Besar & Nyaman Dibaca */
+.db-agenda-list.db-density-few .db-agenda-item {
+    padding: 8px 2px;
+    gap: 9px;
+}
+.db-agenda-list.db-density-few .db-agenda-time {
+    font-size: 13.5px;
+    min-width: 44px;
+}
+.db-agenda-list.db-density-few .db-agenda-dot {
+    width: 8px;
+    height: 8px;
+}
+.db-agenda-list.db-density-few .db-agenda-content {
+    line-height: 1.25;
+}
+.db-agenda-list.db-density-few .db-agenda-content strong {
+    font-size: 13.5px;
+}
+.db-agenda-list.db-density-few .db-agenda-content small {
+    font-size: 11px;
+    margin-top: 2px;
+}
+.db-agenda-list.db-density-few .db-badge {
+    font-size: 9.5px;
+    padding: 2.5px 7px;
+}
+
+/* 3 - 4 Agenda: Font Sedang & Seimbang */
+.db-agenda-list.db-density-medium .db-agenda-item {
+    padding: 5px 2px;
+    gap: 7px;
+}
+.db-agenda-list.db-density-medium .db-agenda-time {
+    font-size: 11.5px;
+    min-width: 38px;
+}
+.db-agenda-list.db-density-medium .db-agenda-dot {
+    width: 6px;
+    height: 6px;
+}
+.db-agenda-list.db-density-medium .db-agenda-content {
+    line-height: 1.2;
+}
+.db-agenda-list.db-density-medium .db-agenda-content strong {
+    font-size: 11.5px;
+}
+.db-agenda-list.db-density-medium .db-agenda-content small {
+    font-size: 9.5px;
+}
+.db-agenda-list.db-density-medium .db-badge {
+    font-size: 8.5px;
+    padding: 2px 6px;
+}
+
+/* 5+ Agenda: Font Ramping & Kompak */
+.db-agenda-list.db-density-many .db-agenda-item {
+    padding: 3px 2px;
+    gap: 5px;
+}
+.db-agenda-list.db-density-many .db-agenda-time {
+    font-size: 10px;
+    min-width: 32px;
+}
+.db-agenda-list.db-density-many .db-agenda-dot {
+    width: 5px;
+    height: 5px;
+}
+.db-agenda-list.db-density-many .db-agenda-content {
+    line-height: 1.15;
+}
+.db-agenda-list.db-density-many .db-agenda-content strong {
+    font-size: 10px;
+}
+.db-agenda-list.db-density-many .db-agenda-content small {
+    font-size: 8px;
+}
+.db-agenda-list.db-density-many .db-badge {
+    font-size: 7.5px;
+    padding: 1px 5px;
+}
+
+/* ── PENGAJUAN GRID ──────────────────────────────── */
+.db-pengajuan-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 3px;
+    height: 100%;
+    align-items: center;
+}
+
+.db-pengajuan-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 2px;
+    border-radius: 6px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    text-align: center;
+    height: 100%;
+}
+body.dark-mode .db-pengajuan-tile { background: #0F172A; border-color: #334155; }
+
+.db-ptile-icon { font-size: 13px; margin-bottom: 2px; }
+
+.db-ptile-name {
+    font-size: 7.5px;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+body.dark-mode .db-ptile-name { color: #94A3B8; }
+
+.db-ptile-num {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1;
+    margin: 2px 0;
+}
+body.dark-mode .db-ptile-num { color: #F8FAFC; }
+
+.db-pengajuan-tile small { font-size: 7px; color: #94A3B8; }
+
+.db-ptile-bar {
+    width: 60%;
+    height: 2px;
+    border-radius: 2px;
+    margin-top: 3px;
+}
+
+/* ── PETA ────────────────────────────────────────── */
+.db-peta-wrap {
+    display: flex;
+    height: 100%;
+    padding: 2px;
+}
+
+.db-map-canvas {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+}
+
+.db-leaflet {
+    width: 100%;
+    height: 100% !important;
+}
+
+/* ── GRAFIK ──────────────────────────────────────── */
+.db-chart-body {
+    height: 100%;
+    padding: 2px 2px;
+}
+
+/* ── BERITA LIST ─────────────────────────────────── */
+.db-berita-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 3px 2px;
+}
+
+.db-berita-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 2px;
+    border-bottom: 1px dashed #F1F5F9;
+    flex: 1;
+    min-height: 0;
+}
+.db-berita-item:last-child { border-bottom: none; }
+body.dark-mode .db-berita-item { border-color: #334155; }
+
+.db-berita-thumb {
+    width: 66px;
+    height: 46px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    background: #E2E8F0;
+}
+.db-berita-thumb img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    display: block;
+}
+
+.db-berita-no-img {
+    width: 66px;
+    height: 46px;
+    border-radius: 6px;
+    background: #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #94A3B8;
+    flex-shrink: 0;
+}
+body.dark-mode .db-berita-no-img { background: #334155; }
+
+.db-berita-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    gap: 3px;
+    line-height: 1.25;
+}
+
+.db-berita-text strong {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1E293B;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+}
+body.dark-mode .db-berita-text strong { color: #F8FAFC; }
+
+.db-berita-text small { 
+    font-size: 10.5px; 
+    color: #64748B; 
+    font-weight: 500;
+}
+
+/* ── UNDUH LAPORAN ───────────────────────────────── */
+.db-unduh-grid {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 6px;
+    height: 100%;
+}
+
+.db-unduh-tile {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border-radius: 8px;
+    padding: 6px 4px;
+    color: #fff;
+    transition: transform 0.15s, opacity 0.15s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+.db-unduh-tile:hover { transform: translateY(-1px); opacity: 0.92; }
+
+.db-unduh-ico { font-size: 22px; }
+
+.db-unduh-tile strong {
+    font-size: 9px;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+}
+
+.db-unduh-tile span {
+    font-size: 8px;
+    font-weight: 600;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* ── EMPTY STATE ─────────────────────────────────── */
+.db-empty {
+    font-size: 9px;
+    color: #94A3B8;
+    text-align: center;
+    padding: 8px;
+}
+
+.db-empty-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 4px;
+}
+
+.db-empty-icon {
+    font-size: 22px;
+    color: #CBD5E1;
+}
+
+/* ── ROW 4: MENU UTAMA ───────────────────────────── */
+.db-row-4 {
+    flex-shrink: 0;
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 4px 8px 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+body.dark-mode .db-row-4 { background: #1E293B; border-color: #334155; }
+
+.db-menu-header {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 3px;
+}
+body.dark-mode .db-menu-header { color: #F8FAFC; }
+
+.db-menu-tiles {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+}
+
+.db-menu-tile {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: transform 0.15s;
+}
+.db-menu-tile:hover { transform: translateY(-1px); }
+
+.db-menu-thumb {
+    width: 100%;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 14px;
+}
+
+.db-menu-ico { font-size: 14px; }
+
+.db-menu-ico-row { display: none; }
+
+.db-menu-tile span {
+    font-size: 8px;
+    font-weight: 600;
+    color: #334155;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+body.dark-mode .db-menu-tile span { color: #CBD5E1; }
+
+/* ── RESPONSIVE MOBILE & TABLET (POIN 3) ──────────── */
+@media screen and (max-width: 1024px) {
+    .db-slogan {
+        display: none; /* di tablet/layar kecil disembunyikan agar tidak menabrak kontrol */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .db-wrapper {
+        height: auto !important;
+        min-height: 100vh;
+        overflow-y: auto !important;
+        padding: 8px 10px 24px 10px;
+        gap: 10px;
+    }
+
+    .db-header {
+        height: 100px;
+    }
+
+    .db-header-bg {
+        background-position: center 20%;
+    }
+
+    .db-emblem {
+        height: 38px;
+        left: 55px;
+        top: 8px;
+        transform: none;
+    }
+
+    .db-slogan {
+        display: none;
+    }
+
+    .db-title-area {
+        left: 10px;
+        bottom: 8px;
+        right: 10px;
+    }
+
+    .db-title-area h1 {
+        font-size: 11px;
+        line-height: 1.25;
+    }
+
+    .db-title-area p {
+        font-size: 8px;
+    }
+
+    .db-top-controls {
+        top: 8px;
+        right: 8px;
+        gap: 5px;
+    }
+
+    .db-profile-info {
+        display: none; /* hemat ruang di HP */
+    }
+
+    /* 6 Kartu Petugas: 2 kolom di HP */
+    .db-stat-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+
+    /* Row 2: Agenda, Pengajuan, Peta jadi 1 kolom bertingkat */
+    .db-row-2 {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        flex: none;
+    }
+
+    .db-box {
+        min-height: 200px;
+    }
+
+    .db-pengajuan-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+    }
+
+    .db-peta-wrap {
+        height: 240px;
+    }
+
+    .db-map-canvas {
+        height: 100%;
+    }
+
+    /* Row 3: Grafik, Berita, Unduh jadi 1 kolom bertingkat */
+    .db-row-3 {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        flex: none;
+    }
+
+    .db-chart-body {
+        height: 180px;
+    }
+
+    .db-unduh-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr;
+        height: 80px;
+    }
+
+    /* Row 4: Menu Utama jadi 3 kolom (2 baris x 3 menu) */
+    .db-menu-tiles {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+
+    .db-menu-thumb {
+        height: 38px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .db-stat-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .db-pengajuan-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .db-menu-tiles {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }

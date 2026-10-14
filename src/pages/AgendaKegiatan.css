@@ -12,19 +12,32 @@
 /* GRID LAYOUT: KALENDER KIRI, TABEL KANAN*/
 .kalender-layout {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* Proporsi: Kalender 1 bagian, Tabel 2 bagian */
-    gap: 20px;
+    grid-template-columns: 290px 1fr; /* Kalender pas 290px, sisa ruang maksimal untuk tabel */
+    gap: 16px;
+    align-items: start;
 }
 
 /* Kartu Pembungkus Tabel & Kalender */
-.kalender-card, .agenda-card {
+.kalender-card {
     background-color: var(--bg-card);
-    padding: 25px;
+    padding: 18px;
     border-radius: 12px;
     border: 1px solid var(--border-halus);
     box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.agenda-card {
+    background-color: var(--bg-card);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .kalender-card h3, .agenda-card h3 {
@@ -38,6 +51,63 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.header-agenda-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-agenda-left h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-utama);
+}
+
+.badge-total-agenda {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    background-color: var(--bg-hover);
+    color: var(--text-redup);
+    border-radius: 12px;
+    border: 1px solid var(--border-halus);
+}
+
+.filter-agenda-tabs {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-filter-agenda {
+    background-color: transparent;
+    color: var(--text-redup);
+    border: 1px solid var(--border-halus);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-filter-agenda:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-utama);
+}
+
+.btn-filter-agenda.active {
+    background-color: var(--primary-btn);
+    color: white;
+    border-color: var(--primary-btn);
+    box-shadow: 0 2px 4px rgba(60, 80, 224, 0.25);
 }
 
 .btn-lihat-semua {
@@ -185,30 +255,112 @@
     background-color: #2563eb;
 }
 
+/* Container Tabel: Di desktop tidak perlu scroll kanan-kiri */
+.agenda-card .table-responsive {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.agenda-card .tabel-utama {
+    width: 100%;
+    table-layout: fixed;
+    margin-top: 10px;
+}
+
+.agenda-card .tabel-utama th {
+    padding: 10px 10px;
+    font-size: 11px;
+}
+
+.agenda-card .tabel-utama td {
+    padding: 10px 10px;
+    font-size: 12px;
+    vertical-align: middle;
+    word-break: break-word;
+}
+
+/* Kolom 1 - Waktu: 17% */
+.agenda-card .tabel-utama th:nth-child(1),
+.agenda-card .tabel-utama td:nth-child(1) {
+    width: 17%;
+    white-space: nowrap;
+}
+
+/* Kolom 2 - Agenda Kegiatan: 27% (Dekat dan pas dengan Catatan) */
+.agenda-card .tabel-utama th:nth-child(2),
+.agenda-card .tabel-utama td:nth-child(2) {
+    width: 27%;
+}
+
+/* Kolom 3 - Catatan: 24% */
+.agenda-card .tabel-utama th:nth-child(3),
+.agenda-card .tabel-utama td:nth-child(3) {
+    width: 24%;
+}
+
+/* Kolom 4 - Dokumentasi: 18% (Ruang lega, tidak mepet Aksi) */
+.agenda-card .tabel-utama th:nth-child(4),
+.agenda-card .tabel-utama td:nth-child(4) {
+    width: 18%;
+    white-space: nowrap;
+    text-align: center !important;
+}
+
+/* Kolom 5 - Aksi: 14% (Ruang lega dan rapi) */
+.agenda-card .tabel-utama th:nth-child(5),
+.agenda-card .tabel-utama td:nth-child(5) {
+    width: 14%;
+    white-space: nowrap;
+    text-align: center !important;
+}
+
+/* Blok Info Agenda (Badge Kategori + Judul + Lokasi) */
+.agenda-info-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.agenda-judul {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-utama);
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+.agenda-lokasi {
+    font-size: 11px;
+    color: var(--text-redup);
+    line-height: 1.2;
+}
+
 .badge-kategori {
     background-color: #f59e0b; 
     color: white;
-    padding: 6px 10px; /* Sedikit diperbesar agar lebih proporsional */
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: bold;
-    display: inline-block; /* Memaksa elemen menjadi balok utuh yang tidak bisa dipatahkan */
-    white-space: nowrap;   /* Mencegah teks terlipat ke baris bawah */
+    padding: 2.5px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    display: inline-block;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
 }
 
 .link-foto {
     background-color: #10b981;
     color: white;
-    padding: 8px 12px; /* Ruang dalam diperbesar agar lebih empuk */
+    padding: 4px 7px;
     text-decoration: none;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: bold;
-    display: inline-flex; /* Menggunakan flex agar rapi */
+    border-radius: 5px;
+    font-size: 10.5px;
+    font-weight: 600;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    white-space: nowrap; /* Mencegah tombol terlipat dua baris */
-    transition: background-color 0.3s;
+    white-space: nowrap;
+    transition: background-color 0.2s;
 }
 
 .link-foto:hover {
@@ -217,51 +369,49 @@
 
 /* Tombol Upload Bukti Susulan di Tabel Agenda */
 .btn-upload-susulan {
-    background-color: #10b981 !important; /* Hijau standar ONE EKBANG */
+    background-color: #10b981 !important;
     color: white !important;
     border: none !important;
-    padding: 8px 14px !important;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: bold;
+    padding: 4px 7px !important;
+    border-radius: 5px;
+    font-size: 10.5px;
+    font-weight: 600;
     cursor: pointer;
-    
-    /* KUNCI AGAR RAPI MEMANJANG KE SAMPING */
     display: inline-flex !important; 
     flex-direction: row !important;
     align-items: center;
     justify-content: center;
-    gap: 6px; 
-    white-space: nowrap !important; /* Melarang teks turun ke bawah */
-    min-width: max-content !important; /* Memaksa kotak membentang selebar isi teks */
-    
-    transition: all 0.3s ease;
+    gap: 3px; 
+    white-space: nowrap !important;
+    transition: all 0.2s ease;
 }
 
 .btn-upload-susulan:hover {
-    background-color: #059669 !important; /* Hijau lebih gelap saat disorot mouse */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+    background-color: #059669 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
 }
 
 .btn-hapus-agenda {
     background-color: #ef4444;
     color: white;
     border: none;
-    padding: 8px 16px; 
-    border-radius: 6px;
+    padding: 4px 10px; 
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 11px;
+    font-weight: 600;
     display: inline-flex; 
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    white-space: nowrap !important;
+    min-width: 52px;
+    transition: all 0.2s ease;
 }
 
 .btn-hapus-agenda:hover {
     background-color: #dc2626;
-    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
 }
 
 .modal-overlay {
@@ -317,11 +467,26 @@
     background-color: #dc2626;
 }
 
-/* RESPONSIVE HP: KALENDER DI ATAS, TABEL DI BAWAH */
-@media screen and (max-width: 768px) {
+/* RESPONSIVE: TABLET & HP */
+@media screen and (max-width: 1024px) {
     .kalender-layout {
         grid-template-columns: 1fr; 
     }
+}
+
+@media screen and (max-width: 850px) {
+    /* Pada HP / Layar kecil, aktifkan scroll horizontal agar tabel nyaman di-swipe */
+    .agenda-card .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .agenda-card .tabel-utama {
+        table-layout: auto;
+        min-width: 580px;
+    }
+}
+
+@media screen and (max-width: 768px) {
     .agenda-form {
         grid-template-columns: 1fr; 
     }
@@ -330,7 +495,16 @@
     }
     .header-tabel-agenda {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .filter-agenda-tabs {
+        width: 100%;
+    }
+    .btn-filter-agenda {
+        flex: 1;
+        justify-content: center;
+        padding: 8px 10px;
+        font-size: 12px;
     }
 }

@@ -4,14 +4,14 @@
   overflow: hidden;
 }
 
-/* 1. SIDEBAR */
+/* 1. SIDEBAR NAVY ELEGAN */
 .sidebar {
-  width: 260px;
-  background-color: #064e3b;
-  border-right: 1px solid #064e3b;
+  width: 250px;
+  background-color: #0b2a4a; /* Biru Navy Elegan sesuai mockup */
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
-  padding: 24px 20px 80px 20px;
+  padding: 14px 12px 14px 12px;
   transition: all 0.3s ease;
   z-index: 1000;
   flex-shrink: 0;
@@ -21,54 +21,72 @@
 
 .sidebar-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  flex-direction: column;
+  margin-bottom: 12px;
+  width: 100%;
 }
 
-.sidebar-header h2 {
-  color: white;
-  font-size: 21px;
-  font-weight: 800;
-  margin: 0;
-}
-
-.btn-hamburger-dalam {
+.sidebar-mobile-close-bar {
   display: none;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 22px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: color 0.3s;
 }
 
-.btn-hamburger-dalam:hover {
-  color: #10b981;
+.btn-sidebar-close {
+  display: none;
+}
+
+.sidebar-logo-card {
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.18);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sidebar-logo-img {
+  width: 100%;
+  max-height: 115px;
+  object-fit: contain;
+  display: block;
+}
+
+.sidebar-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
 }
 
 .nav-link {
-  color: #a7f3d0;
+  color: #CBD5E1;
   text-decoration: none;
-  padding: 14px 16px;
+  padding: 8px 12px;
   border-radius: 8px;
-  margin-bottom: 8px;
+  font-size: 12px;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .nav-link:hover {
-  background-color: #047857;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.nav-link.nav-active {
+  background-color: #10B981; /* Hijau cerah khas mockup */
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.32);
 }
 
 .nav-icon {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   flex-shrink: 0;
 }
 
@@ -81,39 +99,90 @@
 .nav-kiri {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .badge-notif {
   background-color: #ef4444;
   color: white;
   border-radius: 50%;
-  padding: 2px 8px;
-  font-size: 12px;
+  padding: 1px 7px;
+  font-size: 11px;
   font-weight: bold;
 }
 
-.btn-tema {
+/* FOOTER SIDEBAR (WATERMARK & LOGO KELURAHAN) */
+.sidebar-footer {
   margin-top: auto;
-  padding: 12px;
-  background-color: var(--bg-hover);
-  color: var(--text-utama);
-  border: 1px solid var(--border-halus);
-  border-radius: 8px;
+  padding-top: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gedung-sate-siluet {
+  width: 100%;
+  height: 30px;
+  color: #ffffff;
+  opacity: 0.15;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: -6px;
+  margin-bottom: 6px;
+}
+
+.sidebar-footer-logo {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+}
+
+.sidebar-footer-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.sidebar-footer-text strong {
+  font-size: 10.5px;
+  color: #ffffff;
+}
+
+.sidebar-footer-text span {
+  font-size: 9px;
+  color: #94A3B8;
+}
+
+.btn-tema {
+  padding: 8px;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #CBD5E1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 7px;
   cursor: pointer;
+  font-size: 11.5px;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  width: 100%;
 }
 
 .btn-tema:hover {
-  border-color: var(--primary-btn);
-  color: var(--primary-btn);
+  border-color: #10B981;
+  color: #ffffff;
+  background-color: rgba(16, 185, 129, 0.15);
 }
 
 /* 2. KONTEN UTAMA & HEADER (HAMBURGER & LOGOUT)*/
 .main-content {
   flex: 1;
-  padding: 30px;
+  padding: 16px 24px;
   background-color: transparent;
   width: 100%;
   height: 100vh;
@@ -121,13 +190,19 @@
   box-sizing: border-box;
 }
 
+.main-content.main-dashboard {
+  padding: 0 !important;
+  overflow: hidden !important;
+  height: 100vh;
+}
+
 /* PEMBUNGKUS HEADER AGAR TOMBOL SEJAJAR KIRI KANAN */
 .header-top {
   display: flex;
   align-items: center;
   justify-content: space-between; /* Menjauhkan Hamburger & Logout */
-  margin-bottom: 25px;
-  min-height: 40px;
+  margin-bottom: 12px;
+  min-height: 36px;
   width: 100%;
 }
 
@@ -135,22 +210,79 @@
   display: none;
 }
 
-/* DESAIN TOMBOL LOGOUT GLOBAL */
-.btn-logout-global {
-  background-color: #ef4444;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-left: auto; /* Memastikan tombol selalu memojok ke kanan */
+/* PROFIL ADMIN HEADER GLOBAL */
+.header-top .db-profile {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 20px;
+  padding: 3px 8px 3px 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
 }
 
-.btn-logout-global:hover {
-  background-color: #dc2626;
+body.dark-mode .header-top .db-profile {
+  background: #1E293B;
+  border-color: #475569;
+}
+
+.db-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0284C7, #0369A1);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.db-profile-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.db-profile-info strong {
+  font-size: 10.5px;
+  color: #0F172A;
+  font-weight: 700;
+}
+
+.db-profile-info small {
+  font-size: 8px;
+  color: #64748B;
+}
+
+body.dark-mode .db-profile-info strong {
+  color: #F8FAFC;
+}
+
+body.dark-mode .db-profile-info small {
+  color: #94A3B8;
+}
+
+.db-logout {
+  background: transparent;
+  border: none;
+  color: #EF4444;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.db-logout:hover {
+  transform: scale(1.18);
+  color: #DC2626;
 }
 
 .sidebar-overlay {
@@ -165,40 +297,135 @@
 }
 
 /* 3. ATURAN KHUSUS LAYAR HP & TABLET*/
+.header-top-dashboard-mobile {
+  display: none;
+}
+
 @media screen and (max-width: 768px) {
   .app-container {
     flex-direction: row;
+    height: auto;
+    min-height: 100vh;
   }
   .sidebar {
     position: fixed;
     height: 100%;
     left: 0;
     top: 0;
+    z-index: 1005;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
   }
   .sidebar.sembunyi {
     left: -300px;
   }
   .sidebar-overlay.tampil {
     display: block !important;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
-  .btn-hamburger-dalam {
-    display: block;
+
+  /* BAR TUTUP KHUSUS MOBILE DALAM SIDEBAR */
+  .sidebar-mobile-close-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .sidebar-mobile-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    text-transform: uppercase;
+  }
+
+  .btn-sidebar-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-sidebar-close:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #ffffff;
+    transform: scale(1.05);
+  }
+
+  .btn-sidebar-close:active {
+    transform: scale(0.95);
   }
 
   /* MUNCULKAN HAMBURGER DI HP */
   .btn-hamburger-luar {
     display: flex;
-    background-color: var(--bg-card);
-    color: var(--text-utama);
-    border: 1px solid var(--border-halus);
-    padding: 8px 15px;
-    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    color: #0b2a4a;
+    border: 1px solid #CBD5E1;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 18px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transition: all 0.2s ease;
+  }
+
+  .btn-hamburger-luar:hover {
+    background-color: #f8fafc;
+    transform: scale(1.05);
+  }
+
+  .btn-hamburger-luar:active {
+    transform: scale(0.95);
+  }
+
+  body.dark-mode .btn-hamburger-luar {
+    background-color: #1E293B;
+    color: #F8FAFC;
+    border-color: #475569;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  body.dark-mode .btn-hamburger-luar:hover {
+    background-color: #334155;
+  }
+
+  .header-top-dashboard-mobile {
+    display: flex;
+    position: fixed;
+    top: 14px;
+    left: 12px;
+    z-index: 1001;
+    margin-bottom: 0;
+    min-height: unset;
+    width: auto;
   }
 
   .main-content {
     padding: 15px;
+  }
+
+  .main-content.main-dashboard {
+    height: auto !important;
+    min-height: 100vh;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
   }
 }

@@ -63,38 +63,45 @@ input[type="file"] {
   color: var(--text-redup);
 }
 
-/* 5. KONSISTENSI KARTU & TABEL (GAYA TAILADMIN)             */
+/* 5. KONSISTENSI KARTU & TABEL (GAYA TAILADMIN - COMPACT & RESPONSIF) */
 .kartu-global {
   background-color: var(--bg-card);
   border: 1px solid var(--border-halus);
   border-radius: 12px;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-  padding: 25px;
+  padding: 20px;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .tabel-utama {
   width: 100%; 
   border-collapse: collapse; 
-  margin-top: 20px; 
+  margin-top: 15px; 
+  table-layout: auto;
 }
 
 .tabel-utama th {
   background-color: var(--bg-hover); 
   color: var(--text-redup); 
   text-align: left; 
-  padding: 15px; 
+  padding: 10px 12px; 
   font-weight: 600; 
-  font-size: 13px;
+  font-size: 12px;
   text-transform: uppercase;
+  letter-spacing: 0.3px;
   border-bottom: 1px solid var(--border-halus);
+  white-space: nowrap;
 }
 
 .tabel-utama td {
-  padding: 15px; 
+  padding: 10px 12px; 
   border-bottom: 1px solid var(--border-halus); 
   color: var(--text-utama); 
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.4;
+  vertical-align: middle;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .tabel-utama tbody tr {
@@ -105,11 +112,17 @@ input[type="file"] {
   background-color: var(--bg-hover); 
 }
 
-/* WADAH AGAR TABEL BISA DI-SWIPE (DIGESER KANAN-KIRI) DI LAYAR HP */
+/* WADAH TABEL: TAMPIL PENUH DI KOMPUTER/LAPTOP, BISA DI-SWIPE DI LAYAR HP */
 .table-responsive {
     width: 100%;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Membuat usapan di HP Apple/Android sangat mulus */
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 1024px) {
+  .table-responsive {
+    scrollbar-width: thin;
+  }
 }
 
 /* 2. TAMBAHKAN INI DI BARIS PALING BAWAH (ATURAN MUTLAK TOMBOL TAMBAH) */
@@ -129,4 +142,22 @@ input[type="file"] {
 
 .btn-tambah-utama:hover {
     background-color: #2563eb !important;
+}
+
+/* TOMBOL AKSI LIHAT BUKTI / FOTO PADA TABEL */
+.btn-lihat {
+    background-color: #10b981;
+    color: white !important;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.btn-lihat:hover {
+    background-color: #059669;
 }

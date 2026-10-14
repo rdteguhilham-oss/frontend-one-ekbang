@@ -23,7 +23,7 @@ export default function PengajuanLayanan() {
         try {
             const hasil = await getDataLayanan();
             setDataLayanan(hasil); 
-        } catch (error) {
+        } catch {
             setDataLayanan([]); 
             Swal.fire({ title: 'Gagal Memuat Data', text: 'Koneksi ke server terputus.', icon: 'error' });
         }
@@ -53,7 +53,7 @@ export default function PengajuanLayanan() {
                     } else {
                         Swal.fire({ title: 'Gagal!', text: 'Gagal mengubah status.', icon: 'error' });
                     }
-                } catch (error) {
+                } catch {
                     Swal.fire({ title: 'Error', text: "Gagal terhubung ke server! Cek koneksi Anda.", icon: 'error' });
                 }
             }
@@ -190,8 +190,8 @@ export default function PengajuanLayanan() {
                                 <th>Nama Pemohon</th>
                                 <th>No. Telepon</th>
                                 <th>Status</th>
-                                <th>Aksi Cepat</th> 
-                                <th>Verifikasi Status</th>
+                                <th>Dokumen</th> 
+                                <th>Verifikasi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -203,11 +203,15 @@ export default function PengajuanLayanan() {
                                 hasilFilter.map((data, index) => (
                                     <tr key={data.id}>
                                         <td>{index +1}</td>
-                                        <td>{new Date(data.tanggal_pengajuan).toLocaleDateString('id-ID')}</td>
+                                        <td>{data.tanggal_pengajuan ? new Date(data.tanggal_pengajuan).toLocaleDateString('id-ID') : '-'}</td>
                                         <td>{data.jenis_layanan}</td>
                                         <td>{data.nama_pemohon}</td>
                                         <td>{data.no_telepon || '-'}</td>
-                                        <td><b>{data.status || 'Baru'}</b></td>
+                                        <td>
+                                            <span className={`badge-status badge-status-${(data.status || 'Baru').toLowerCase()}`}>
+                                                {data.status || 'Baru'}
+                                            </span>
+                                        </td>
                                         
                                         {/* KOLOM AKSI CEPAT */}
                                         <td style={{ verticalAlign: 'middle' }}>

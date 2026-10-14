@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './DataPetugas.css';
 import Swal from 'sweetalert2';
 import { getPetugas, tambahPetugas, BASE_URL } from '../services/api';
@@ -7,7 +7,7 @@ export default function DataPetugas () {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [petugasList, setPetugasList] = useState([]);
-  const [kataKunci,setKataKunci] = useState('');
+  const [kataKunci, setKataKunci] = useState('');
   const [namaPetugas, setNamaPetugas] = useState('');
   const [kategoriPetugas, setKategoriPetugas] = useState('');
   const [wilayah, setWilayah] = useState('');
@@ -19,8 +19,7 @@ export default function DataPetugas () {
     try {
       const data = await getPetugas();
       setPetugasList(data);
-    } catch (error) {
-      console.error("Error dari server:", error);
+    } catch {
       Swal.fire({ title: 'Gagal Memuat Petugas', text: 'Koneksi ke server terputus.', icon: 'error' });
     }
   };
@@ -31,6 +30,7 @@ export default function DataPetugas () {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingSimpan(true);
 
     const formData = new FormData();
     formData.append('nama_petugas', namaPetugas);
@@ -49,21 +49,22 @@ export default function DataPetugas () {
         setWilayah('');
         setNoSk('');
         setFileSk(null);
-        document.getElementById('fileInput').value = '';
+        const inputElem = document.getElementById('fileInput');
+        if (inputElem) inputElem.value = '';
         
         setIsModalOpen(false);
       } else {
         Swal.fire('Gagal: ' + result.pesan);
       }
-
-    } catch (error) {
-      console.error("Error submit:", error);
+    } catch {
       Swal.fire("Terjadi kesalahan sistem saat menyimpan data.");
+    } finally {
+      setLoadingSimpan(false);
     }
   };
 
   const hasilFilter = petugasList.filter((petugas) => {
-    const teksCari = kataKunci.toLocaleLowerCase();
+    const teksCari = kataKunci.toLowerCase();
     return petugas.nama_petugas && petugas.nama_petugas.toLowerCase().includes(teksCari);
   });
 
@@ -109,11 +110,13 @@ export default function DataPetugas () {
                     <td>{petugas.nama_petugas}</td>
                     <td>{petugas.kategori_petugas}</td>
                     <td>{petugas.wilayah}</td>
-                    <td>{petugas.no_sk}</td>
+                    <td>{petugas.no_sk || '-'}</td>
                     <td>
-                        <a href={petugas.file_sk.startsWith('http') ? petugas.file_sk : `${BASE_URL}/uploads/${petugas.file_sk}`} target="_blank" rel="noreferrer" className="btn-lihat">
-                        lihat SK
-                        </a>
+                        {petugas.file_sk ? (
+                          <a href={petugas.file_sk.startsWith('http') ? petugas.file_sk : `${BASE_URL}/uploads/${petugas.file_sk}`} target="_blank" rel="noreferrer" className="btn-lihat">
+                            Lihat SK
+                          </a>
+                        ) : '-'}
                     </td>
                     </tr>
                 ))
@@ -132,7 +135,6 @@ export default function DataPetugas () {
           <div className="modal-content">
             <button className="btn-tutup-modal" onClick={() => setIsModalOpen(false)}>X</button>
             
-            {/* Judul Modal Tidak Dikunci Warnanya Lagi Agar Ikut Dark Mode */}
             <h3 style={{ marginTop: '0', marginBottom: '20px' }}>Tambah Petugas Baru</h3>
             
             <form onSubmit={handleSubmit} className="petugas-form">
@@ -157,12 +159,11 @@ export default function DataPetugas () {
               </div>
               <div className="form-group">
                 <label>Nomor SK</label>
-                <input type="text" placeholder='Masukan No. Sk'value={noSk} onChange={(e) => setNoSk(e.target.value)} required />
+                <input type="text" placeholder='Masukan No. Sk' value={noSk} onChange={(e) => setNoSk(e.target.value)} required />
               </div>
               <div className="form-group">
                 <label>Upload SK (PDF/Gambar)</label>
                 <input id="fileInput" type="file" accept=".pdf, image/*" onChange={(e) => setFileSk(e.target.files[0])} required />
-                {/* TEKS PERINGATAN 5MB DITAMBAHKAN DI SINI */}
                 <small style={{ color: '#ef4444', marginTop: '6px', display: 'block', fontWeight: 'bold' }}>
                     *Ukuran file maksimal 5 MB
                 </small>
@@ -175,4 +176,4 @@ export default function DataPetugas () {
 
     </div>
   );
-};
+}

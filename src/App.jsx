@@ -9,8 +9,8 @@ import PetaGIS from './pages/PetaGis';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { FaUserShield, FaClipboardList, FaUsers, FaClipboardCheck, FaCalendarAlt, FaMapMarkedAlt } from "react-icons/fa";
-import React, { useState, useEffect } from 'react';
+import { FaUserShield, FaClipboardList, FaUsers, FaClipboardCheck, FaCalendarAlt, FaMapMarkedAlt, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
+import { useState, useEffect } from 'react';
 import { getDataLayanan } from './services/api'; 
 import './App.css';
 
@@ -20,6 +20,39 @@ export default function App() {
   const isHalamanPublik = location.pathname === '/tambah_layanan' || location.pathname === '/login';
 
   const [jumlahNotif, setJumlahNotif] = useState(0);
+
+  // DATA NAMA ADMIN DINAMIS
+  const [namaAdmin, setNamaAdmin] = useState(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('dataAdmin'));
+      if (stored && (stored.nama_lengkap || stored.username)) {
+        return stored.nama_lengkap || stored.username;
+      }
+    } catch { /* ignore */ }
+    return 'Admin';
+  });
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem('dataAdmin'));
+      if (stored && (stored.nama_lengkap || stored.username)) {
+        setNamaAdmin(stored.nama_lengkap || stored.username);
+        return;
+      }
+      const token = localStorage.getItem('token');
+      if (token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+        );
+        const parsed = JSON.parse(jsonPayload);
+        if (parsed.username) {
+          setNamaAdmin(parsed.username);
+        }
+      }
+    } catch { /* ignore */ }
+  }, [location.pathname]);
   
   const [isDarkMode, setIsDarkMode] = useState(() => {
       return localStorage.getItem('tema_gelap') === 'true';
@@ -61,8 +94,12 @@ export default function App() {
 
   const handleLogout = () => {
       localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("token");
+      localStorage.removeItem("dataAdmin");
       navigate("/login");
   };
+
+  const isHalamanDashboard = location.pathname === '/dashboard';
 
   return (
     <div className="app-container">
@@ -76,44 +113,73 @@ export default function App() {
 
             <nav className={`sidebar ${isSidebarOpen ? '' : 'sembunyi'}`}>
               <div className="sidebar-header">
-                  <img src="/logo-one-ekbang.jpg" alt="Logo Kelurahan" style={{width: '100%', borderRadius: '12px', background: 'white'}} />
-                  <button className="btn-hamburger-dalam" onClick={() => setIsSidebarOpen(false)}>
-                      ☰
-                  </button>
+                  <div className="sidebar-mobile-close-bar">
+                      <span className="sidebar-mobile-label">Navigasi Menu</span>
+                      <button 
+                          type="button"
+                          className="btn-sidebar-close" 
+                          onClick={() => setIsSidebarOpen(false)}
+                          aria-label="Tutup Menu"
+                          title="Tutup Menu"
+                      >
+                          <FaTimes />
+                      </button>
+                  </div>
+                  <div className="sidebar-logo-card">
+                      <img src="/rb-logo-oneEkbang.png" alt="Logo ONE EKBANG" className="sidebar-logo-img" />
+                  </div>
               </div>
 
-              <Link to="/dashboard" className="nav-link">
-                  <FaUserShield className="nav-icon" /> Dashboard Utama
-              </Link>
+              <div className="sidebar-menu-list">
+                  <Link to="/dashboard" className={`nav-link ${location.pathname === '/dashboard' ? 'nav-active' : ''}`}>
+                      <FaUserShield className="nav-icon" /> Dashboard Utama
+                  </Link>
 
-              <Link to="/admin" className="nav-link">
-                  <FaUserShield className="nav-icon" /> Data Admin
-              </Link> 
-              
-              <Link to="/pengajuan_layanan" className="nav-link menu-pengajuan">
-                  <div className="nav-kiri">
-                      <FaClipboardList className="nav-icon" /> Pengajuan Layanan
+                  <Link to="/admin" className={`nav-link ${location.pathname === '/admin' ? 'nav-active' : ''}`}>
+                      <FaUserShield className="nav-icon" /> Data Admin
+                  </Link> 
+                  
+                  <Link to="/pengajuan_layanan" className={`nav-link menu-pengajuan ${location.pathname === '/pengajuan_layanan' ? 'nav-active' : ''}`}>
+                      <div className="nav-kiri">
+                          <FaClipboardList className="nav-icon" /> Pengajuan Layanan
+                      </div>
+                      {jumlahNotif > 0 && (
+                          <span className="badge-notif">{jumlahNotif}</span>
+                      )}
+                  </Link>
+                  
+                  <Link to="/data_petugas" className={`nav-link ${location.pathname === '/data_petugas' ? 'nav-active' : ''}`}>
+                      <FaUsers className="nav-icon" /> Data Petugas Ekbang
+                  </Link>
+                  
+                  <Link to="/kegiatan_harian" className={`nav-link ${location.pathname === '/kegiatan_harian' ? 'nav-active' : ''}`}>
+                      <FaClipboardCheck className="nav-icon" /> Kegiatan Harian Petugas
+                  </Link>
+                  
+                  <Link to="/agenda_kegiatan" className={`nav-link ${location.pathname === '/agenda_kegiatan' ? 'nav-active' : ''}`}>
+                      <FaCalendarAlt className="nav-icon" /> Agenda Kegiatan
+                  </Link>
+                  
+                  <Link to="/peta_gis" className={`nav-link ${location.pathname === '/peta_gis' ? 'nav-active' : ''}`}>
+                      <FaMapMarkedAlt className="nav-icon" /> Peta Interaktif GIS
+                  </Link>
+              </div>
+
+              {/* FOOTER SIDEBAR: SILUET GEDUNG SATE & LOGO KOTA BANDUNG */}
+              <div className="sidebar-footer">
+                  <div className="gedung-sate-siluet">
+                      <svg viewBox="0 0 200 60" fill="currentColor">
+                          <path d="M100 2 L100 12 M96 12 L104 12 M98 12 L98 22 L93 22 L93 26 L80 26 L80 34 L60 34 L60 45 L20 45 L20 58 L180 58 L180 45 L140 45 L140 34 L120 34 L120 26 L107 26 L107 22 L102 22 L102 12 Z M98 2 L102 2 L100 0 Z" opacity="0.35"/>
+                      </svg>
                   </div>
-                  {jumlahNotif > 0 && (
-                      <span className="badge-notif">{jumlahNotif}</span>
-                  )}
-              </Link>
-              
-              <Link to="/data_petugas" className="nav-link">
-                  <FaUsers className="nav-icon" /> Data Petugas Ekbang
-              </Link>
-              
-              <Link to="/kegiatan_harian" className="nav-link">
-                  <FaClipboardCheck className="nav-icon" /> Kegiatan Harian Petugas
-              </Link>
-              
-              <Link to="/agenda_kegiatan" className="nav-link">
-                  <FaCalendarAlt className="nav-icon" /> Agenda Kegiatan
-              </Link>
-              
-              <Link to="/peta_gis" className="nav-link">
-                  <FaMapMarkedAlt className="nav-icon" /> Peta Interaktif GIS
-              </Link>
+                  <div className="sidebar-footer-brand">
+                      <img src="/rb-logo-bdg.png" alt="Logo Pemkot Bandung" className="sidebar-footer-logo" />
+                      <div className="sidebar-footer-text">
+                          <strong>Kelurahan Pasteur</strong>
+                          <span>Kota Bandung</span>
+                      </div>
+                  </div>
+              </div>
 
               <button className="btn-tema" onClick={() => setIsDarkMode(!isDarkMode)}>
                   {isDarkMode ? '☀️ Mode Terang' : '🌙 Mode Gelap'}
@@ -122,22 +188,37 @@ export default function App() {
         </>
       )}
 
-      <main className="main-content" style={{ 
+      <main className={`main-content ${isHalamanDashboard ? 'main-dashboard' : ''}`} style={{ 
             width: isHalamanPublik ? '100%' : 'auto',
-            padding: isHalamanPublik ? 0 : '' 
+            padding: isHalamanPublik ? 0 : (isHalamanDashboard ? '0' : '') 
         }}>
         
         {!isHalamanPublik && (
-            <div className="header-top">
+            <div className={`header-top ${isHalamanDashboard ? 'header-top-dashboard-mobile' : ''}`}>
                 {!isSidebarOpen && (
-                    <button className="btn-hamburger-luar" onClick={() => setIsSidebarOpen(true)}>
-                        ☰
+                    <button 
+                        type="button"
+                        className="btn-hamburger-luar" 
+                        onClick={() => setIsSidebarOpen(true)}
+                        aria-label="Buka Menu"
+                        title="Buka Menu"
+                    >
+                        <FaBars />
                     </button>
                 )}
                 
-                <button className="btn-logout-global" onClick={handleLogout}>
-                    Keluar
-                </button>
+                {!isHalamanDashboard && (
+                    <div className="db-profile">
+                        <div className="db-avatar">{namaAdmin.charAt(0).toUpperCase()}</div>
+                        <div className="db-profile-info">
+                            <strong>{namaAdmin}</strong>
+                            <small>Kelurahan Pasteur</small>
+                        </div>
+                        <button className="db-logout" onClick={handleLogout} title="Keluar">
+                            <FaSignOutAlt />
+                        </button>
+                    </div>
+                )}
             </div>
         )}
 
