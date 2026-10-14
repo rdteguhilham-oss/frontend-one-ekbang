@@ -874,6 +874,7 @@ body.dark-mode .db-berita-no-img { background: #334155; }
     color: #1E293B;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
