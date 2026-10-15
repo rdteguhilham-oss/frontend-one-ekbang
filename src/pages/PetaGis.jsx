@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { getTitikPeta, hapusTitikPeta, tambahTitikPeta, updateStatusPeta, BASE_URL } from '../services/api'; 
 import Swal from 'sweetalert2';
@@ -18,6 +18,7 @@ export default function PetaGIS() {
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
     const [foto, setFoto] = useState(null);
+    const inputFotoRef = useRef(null);
 
     // State Tambahan Dinamis
     const [ketua, setKetua] = useState('');
@@ -77,8 +78,7 @@ export default function PetaGIS() {
                 setLatitude(''); setLongitude(''); setFoto(null);
                 setKetua(''); setLuasLahan(''); setDataRw('');
                 setStatusProgres(''); setJenisOrganik('');
-                const inputFoto = document.getElementById('inputFotoPeta');
-                if (inputFoto) inputFoto.value = '';
+                if (inputFotoRef.current) inputFotoRef.current.value = '';
             } else {
                 Swal.fire({ title: 'Gagal!', text: result.pesan, icon: 'error' });
             }
@@ -230,7 +230,7 @@ export default function PetaGIS() {
                         <div className="form-group-peta">
                             <label>Foto Lokasi / Dokumentasi</label>
                             <small className="teks-peringatan-peta">*Ukuran file maksimal 5 MB</small>
-                            <input id="inputFotoPeta" type="file" accept="image/*" onChange={(e) => setFoto(e.target.files[0])} required />
+                            <input ref={inputFotoRef} type="file" accept="image/*" onChange={(e) => setFoto(e.target.files[0])} required />
                         </div>
                         <button type="submit" className="btn-simpan-titik" disabled={loadingSimpan} style={loadingSimpan ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingSimpan ? '⏳ Menanam Pin...' : 'Tanam Pin di Peta'}</button>
                     </form>

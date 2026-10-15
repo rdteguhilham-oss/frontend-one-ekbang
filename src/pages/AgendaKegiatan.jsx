@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Calendar from 'react-calendar'; 
 import 'react-calendar/dist/Calendar.css'; 
 import Swal from 'sweetalert2';
@@ -22,6 +22,7 @@ export default function AgendaKegiatan() {
     const [lokasi, setLokasi] = useState('');
     const [catatan, setCatatan] = useState('');
     const [foto, setFoto] = useState(null);
+    const inputFotoRef = useRef(null);
 
     const fetchAgenda = async () => {
         try {
@@ -63,8 +64,7 @@ export default function AgendaKegiatan() {
                 
                 setJudul(''); setKategori(''); setTanggalWaktu(''); setWaktuSelesai('');
                 setLokasi(''); setCatatan(''); setFoto(null);
-                const inputFoto = document.getElementById('inputFotoAgenda');
-                if (inputFoto) inputFoto.value = '';
+                if (inputFotoRef.current) inputFotoRef.current.value = '';
 
                 setIsModalOpen(false);
             } else {
@@ -389,7 +389,7 @@ export default function AgendaKegiatan() {
                                 <small style={{ color: '#ef4444', marginTop: '6px', display: 'block', fontWeight: 'bold' }}>
                                     *Ukuran file maksimal 5 MB
                                 </small>
-                                <input id="inputFotoAgenda" type="file" accept="image/*" onChange={(e) => setFoto(e.target.files[0])} />
+                                <input ref={inputFotoRef} type="file" accept="image/*" onChange={(e) => setFoto(e.target.files[0])} />
                             </div>
 
                             <button type="submit" className="btn-simpan-agenda" disabled={loadingSimpan} style={loadingSimpan ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingSimpan ? '⏳ Menyimpan Jadwal...' : 'Simpan Jadwal Kegiatan'}</button>

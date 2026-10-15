@@ -84,8 +84,12 @@ export default function PengajuanLayanan() {
 
     const hasilFilter = dataLayanan.filter((item) => {
         const cocokKategori = filterKategori === "Semua" || item.jenis_layanan === filterKategori;
-        const teksCari = kataKunci.toLowerCase();
-        const cocokNama = item.nama_pemohon && item.nama_pemohon.toLowerCase().includes(teksCari);
+        const teksCari = kataKunci.toLowerCase().trim();
+        const cocokCari = !teksCari || (
+            (item.nama_pemohon && item.nama_pemohon.toLowerCase().includes(teksCari)) ||
+            (item.nik_pemohon && String(item.nik_pemohon).toLowerCase().includes(teksCari)) ||
+            (item.no_telepon && String(item.no_telepon).toLowerCase().includes(teksCari))
+        );
         
         let cocokTanggal = true;
         if (tanggalMulai && tanggalSelesai) {
@@ -98,7 +102,7 @@ export default function PengajuanLayanan() {
             }
         }
         
-        return cocokKategori && cocokNama && cocokTanggal;
+        return cocokKategori && cocokCari && cocokTanggal;
     });
 
     const unduhExcel = async () => {
@@ -151,8 +155,8 @@ export default function PengajuanLayanan() {
             
             <div className="filter-layanan-area">
                 <div className="filter-group">
-                    <label>Pencarian Nama:</label>
-                    <input type="text" placeholder="Ketik nama pemohon..." value={kataKunci} onChange={(e) => setKataKunci(e.target.value)} />
+                    <label>Pencarian Data:</label>
+                    <input type="text" placeholder="Ketik nama, NIK, atau no. telepon..." value={kataKunci} onChange={(e) => setKataKunci(e.target.value)} />
                 </div>
                 
                 <div className="filter-group">

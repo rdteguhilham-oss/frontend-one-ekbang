@@ -132,13 +132,22 @@ export default function KegiatanHarian() {
     };
 
     const hasilFilterGober = dataGober.filter((item) => {
-        const teksCari = kataKunci.toLowerCase();
-        return item.nama_petugas && item.nama_petugas.toLowerCase().includes(teksCari);
+        const teksCari = kataKunci.toLowerCase().trim();
+        if (!teksCari) return true;
+        return (
+            (item.nama_petugas && item.nama_petugas.toLowerCase().includes(teksCari)) ||
+            (item.lokasi && item.lokasi.toLowerCase().includes(teksCari))
+        );
     });
 
     const hasilFilterSampah = dataSampah.filter((item) => {
-        const teksCari = kataKunci.toLowerCase();
-        return item.nama_petugas && item.nama_petugas.toLowerCase().includes(teksCari);
+        const teksCari = kataKunci.toLowerCase().trim();
+        if (!teksCari) return true;
+        return (
+            (item.nama_petugas && item.nama_petugas.toLowerCase().includes(teksCari)) ||
+            (item.kategori_tugas && item.kategori_tugas.toLowerCase().includes(teksCari)) ||
+            (item.data_rw && item.data_rw.toLowerCase().includes(teksCari))
+        );
     });
 
     // FUNGSI MENCETAK EXCEL PINTAR (DENGAN INJEKSI GAMBAR)
@@ -237,10 +246,10 @@ export default function KegiatanHarian() {
                     <div className="header-tabel-kegiatan">
                         <h3>Riwayat Lapangan</h3>
                         <div className="search-kegiatan-group">
-                            <label>Cari Nama Petugas:</label>
+                            <label>Cari Kegiatan Lapangan:</label>
                             <input 
                                 type="text" 
-                                placeholder="Ketik nama petugas..." 
+                                placeholder="Ketik nama petugas atau lokasi..." 
                                 value={kataKunci}
                                 onChange={(e) => setKataKunci(e.target.value)}
                             />
@@ -283,10 +292,10 @@ export default function KegiatanHarian() {
                     <div className="header-tabel-kegiatan">
                         <h3>Riwayat Timbangan</h3>
                         <div className="search-kegiatan-group">
-                            <label>Cari Nama Petugas:</label>
+                            <label>Cari Data Timbangan:</label>
                             <input 
                                 type="text" 
-                                placeholder="Ketik nama petugas..." 
+                                placeholder="Ketik nama petugas, tugas, atau RW..." 
                                 value={kataKunci}
                                 onChange={(e) => setKataKunci(e.target.value)}
                             />

@@ -35,7 +35,28 @@ const tanganiRespons = async (respons) => {
         
         return Promise.reject("Sesi Habis"); 
     }
-    return await respons.json();
+
+    const text = await respons.text();
+    try {
+        return JSON.parse(text);
+    } catch {
+        if (!respons.ok) {
+            throw new Error(text || `Permintaan gagal dengan status ${respons.status}`);
+        }
+        return text;
+    }
+};
+
+const parsePublicJson = async (response) => {
+    const text = await response.text();
+    try {
+        return JSON.parse(text);
+    } catch {
+        return { 
+            status: "error", 
+            pesan: text || `Terjadi kesalahan pada server (Status ${response.status})` 
+        };
+    }
 };
 
 export const getDataAdmin = async () => {
@@ -109,7 +130,7 @@ export const tambahLayanan = async (dataPaket) => {
         }
 
         const response = await fetch(`${BASE_URL}/layanan`, pengaturanFetch);
-        return await response.json();
+        return await parsePublicJson(response);
     } catch (error) {
         console.error("Gagal mengirim data:", error);
         throw error; 
@@ -141,7 +162,7 @@ export const loginAdmin = async (username, password) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: username, password: password })
         });
-        return await response.json(); 
+        return await parsePublicJson(response); 
     } catch (error) {
         console.error("Gagal melakukan login (Koneksi Mati):", error);
         throw error; 
@@ -347,7 +368,7 @@ export const kirimLupaPassword = async (username) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username })
         });
-        return await response.json();
+        return await parsePublicJson(response);
     } catch (error) {
         throw error;
     }

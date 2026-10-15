@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './DataPetugas.css';
 import Swal from 'sweetalert2';
 import { getPetugas, tambahPetugas, BASE_URL } from '../services/api';
@@ -13,6 +13,7 @@ export default function DataPetugas () {
   const [wilayah, setWilayah] = useState('');
   const [noSk, setNoSk] = useState('');
   const [fileSk, setFileSk] = useState(null);
+  const fileInputRef = useRef(null);
   const [loadingSimpan, setLoadingSimpan] = useState(false);
 
   const fetchPetugas = async () => {
@@ -49,8 +50,7 @@ export default function DataPetugas () {
         setWilayah('');
         setNoSk('');
         setFileSk(null);
-        const inputElem = document.getElementById('fileInput');
-        if (inputElem) inputElem.value = '';
+        if (fileInputRef.current) fileInputRef.current.value = '';
         
         setIsModalOpen(false);
       } else {
@@ -64,8 +64,14 @@ export default function DataPetugas () {
   };
 
   const hasilFilter = petugasList.filter((petugas) => {
-    const teksCari = kataKunci.toLowerCase();
-    return petugas.nama_petugas && petugas.nama_petugas.toLowerCase().includes(teksCari);
+    const teksCari = kataKunci.toLowerCase().trim();
+    if (!teksCari) return true;
+    return (
+      (petugas.nama_petugas && petugas.nama_petugas.toLowerCase().includes(teksCari)) ||
+      (petugas.kategori_petugas && petugas.kategori_petugas.toLowerCase().includes(teksCari)) ||
+      (petugas.wilayah && petugas.wilayah.toLowerCase().includes(teksCari)) ||
+      (petugas.no_sk && String(petugas.no_sk).toLowerCase().includes(teksCari))
+    );
   });
 
   return (
@@ -81,10 +87,10 @@ export default function DataPetugas () {
         <div className="header-tabel-petugas">
             <h3>Daftar Petugas Aktif</h3>
             <div className="search-petugas-group">
-                <label>Cari Nama Petugas:</label>
+                <label>Cari Data Petugas:</label>
                 <input 
                     type="text" 
-                    placeholder="Ketik nama petugas..." 
+                    placeholder="Ketik nama, kategori, wilayah, atau no SK..." 
                     value={kataKunci}
                     onChange={(e) => setKataKunci(e.target.value)}
                 />
@@ -163,7 +169,7 @@ export default function DataPetugas () {
               </div>
               <div className="form-group">
                 <label>Upload SK (PDF/Gambar)</label>
-                <input id="fileInput" type="file" accept=".pdf, image/*" onChange={(e) => setFileSk(e.target.files[0])} required />
+                <input ref={fileInputRef} type="file" accept=".pdf, image/*" onChange={(e) => setFileSk(e.target.files[0])} required />
                 <small style={{ color: '#ef4444', marginTop: '6px', display: 'block', fontWeight: 'bold' }}>
                     *Ukuran file maksimal 5 MB
                 </small>
