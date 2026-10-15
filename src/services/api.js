@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 
-// Kunci API Dinamis: Localhost saat "npm run dev", Railway saat production
-export const BASE_URL = import.meta.env.DEV ? "http://localhost:5000" : "https://backend-one-ekbang-production.up.railway.app";
+// URL Backend API: Prioritaskan VITE_API_BASE_URL dari .env jika ada, default ke http://localhost:5000
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const getAuthHeader = () => {
     const token = localStorage.getItem("token");
