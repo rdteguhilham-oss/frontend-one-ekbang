@@ -217,3 +217,98 @@
         box-sizing: border-box;
     }
 }
+
+/* GRUP AKSI KEGIATAN (EDIT & HAPUS) */
+.grup-aksi-kegiatan {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+
+.btn-edit-kegiatan {
+    background-color: #0284c7;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-edit-kegiatan:hover {
+    background-color: #0369a1;
+    transform: translateY(-1px);
+}
+
+.btn-hapus-kegiatan {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.btn-hapus-kegiatan:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+}
+
+.modal-edit-kegiatan-actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.btn-batal-kegiatan {
+    padding: 10px 18px;
+    background-color: #64748b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-batal-kegiatan:hover {
+    background-color: #475569;
+}
+
+.btn-simpan-edit-kegiatan {
+    padding: 10px 18px;
+    background-color: var(--primary-btn);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.btn-simpan-edit-kegiatan:hover {
+    background-color: #2563eb;
+}
+
+@media screen and (max-width: 768px) {
+    .modal-edit-kegiatan-actions {
+        grid-column: span 1;
+        flex-direction: column;
+    }
+}

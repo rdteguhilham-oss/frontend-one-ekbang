@@ -130,8 +130,9 @@ export default function DaftarAdmin() {
                       <button 
                           onClick={() => handleTandaiDibaca(notif.id)}
                           className="btn-tandai-selesai"
+                          title="Tandai Selesai & Hapus Notifikasi"
                       >
-                          Tandai Selesai (Hapus Notif)
+                          🗑️ Hapus Notif
                       </button>
                   </div>
               ))}
@@ -184,8 +185,8 @@ export default function DaftarAdmin() {
                     <td>{data.username}</td>
                     <td><span className="teks-aktif">Aktif</span></td>
                     <td>
-                        <button className="btn-hapus-admin" onClick={() => handleHapus(data.id)}>
-                            Hapus Akses
+                        <button className="btn-hapus-admin" onClick={() => handleHapus(data.id)} title="Hapus Akses Admin">
+                            🗑️ Hapus
                         </button>
                     </td>
                 </tr>

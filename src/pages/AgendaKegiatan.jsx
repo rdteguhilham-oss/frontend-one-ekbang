@@ -2,7 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import Calendar from 'react-calendar'; 
 import 'react-calendar/dist/Calendar.css'; 
 import Swal from 'sweetalert2';
-import { getKegiatanAgenda, tambahKegiatanAgenda, uploadFotoAgenda, hapusKegiatanAgenda, BASE_URL } from '../services/api';
+import { 
+    getKegiatanAgenda, 
+    tambahKegiatanAgenda, 
+    updateKegiatanAgenda,
+    uploadFotoAgenda, 
+    hapusKegiatanAgenda, 
+    BASE_URL 
+} from '../services/api';
 import './AgendaKegiatan.css';
 
 export default function AgendaKegiatan() {
@@ -23,6 +30,21 @@ export default function AgendaKegiatan() {
     const [catatan, setCatatan] = useState('');
     const [foto, setFoto] = useState(null);
     const inputFotoRef = useRef(null);
+
+    // State untuk Modal Edit Agenda
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editAgendaData, setEditAgendaData] = useState({
+        id: '',
+        judul_agenda: '',
+        kategori_agenda: '',
+        tanggal_waktu: '',
+        waktu_selesai: '',
+        lokasi: '',
+        catatan_reminder: '',
+        foto_dokumentasi: ''
+    });
+    const [editFoto, setEditFoto] = useState(null);
+    const [loadingEdit, setLoadingEdit] = useState(false);
 
     const fetchAgenda = async () => {
         try {
@@ -134,6 +156,68 @@ export default function AgendaKegiatan() {
                 }
             }
         });
+    };
+
+    // Helper konversi datetime string ke format input datetime-local (YYYY-MM-DDTHH:mm)
+    const formatForDateTimeInput = (dateStr) => {
+        if (!dateStr) return '';
+        const d = new Date(typeof dateStr === 'string' && !dateStr.includes('T') ? dateStr.replace(' ', 'T') : dateStr);
+        if (isNaN(d.getTime())) return '';
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    };
+
+    const bukaModalEdit = (item) => {
+        setEditAgendaData({
+            id: item.id,
+            judul_agenda: item.judul_agenda || '',
+            kategori_agenda: item.kategori_agenda || '',
+            tanggal_waktu: formatForDateTimeInput(item.tanggal_waktu),
+            waktu_selesai: formatForDateTimeInput(item.waktu_selesai),
+            lokasi: item.lokasi || '',
+            catatan_reminder: item.catatan_reminder || '',
+            foto_dokumentasi: item.foto_dokumentasi || ''
+        });
+        setEditFoto(null);
+        setIsEditModalOpen(true);
+    };
+
+    const handleSimpanEdit = async (e) => {
+        e.preventDefault();
+        setLoadingEdit(true);
+
+        const formData = new FormData();
+        formData.append('judul_agenda', editAgendaData.judul_agenda);
+        formData.append('kategori_agenda', editAgendaData.kategori_agenda);
+        formData.append('tanggal_waktu', editAgendaData.tanggal_waktu);
+        if (editAgendaData.waktu_selesai) {
+            formData.append('waktu_selesai', editAgendaData.waktu_selesai);
+        }
+        formData.append('lokasi', editAgendaData.lokasi);
+        formData.append('catatan_reminder', editAgendaData.catatan_reminder || '');
+        if (editFoto) {
+            formData.append('foto_dokumentasi', editFoto);
+        }
+
+        try {
+            const result = await updateKegiatanAgenda(editAgendaData.id, formData);
+            if (result.status === 'sukses') {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: result.pesan || 'Agenda kegiatan berhasil diperbarui.',
+                    icon: 'success',
+                    confirmButtonColor: '#3C50E0'
+                });
+                fetchAgenda();
+                setIsEditModalOpen(false);
+            } else {
+                Swal.fire({ title: 'Gagal', text: result.pesan || 'Gagal memperbarui agenda.', icon: 'error' });
+            }
+        } catch {
+            Swal.fire({ title: 'Error', text: 'Terjadi kesalahan saat memperbarui agenda kegiatan.', icon: 'error' });
+        } finally {
+            setLoadingEdit(false);
+        }
     };
 
     // Helper parsing tanggal aman dari format MySQL atau ISO
@@ -312,10 +396,15 @@ export default function AgendaKegiatan() {
                                                         </label>
                                                     )}
                                                 </td>
-                                                <td>
-                                                    <button className="btn-hapus-agenda" onClick={() => hapusAgenda(item.id)}>
-                                                        Hapus
-                                                    </button>
+                                                <td style={{ verticalAlign: 'middle' }}>
+                                                    <div className="grup-aksi-agenda">
+                                                        <button className="btn-edit-agenda" onClick={() => bukaModalEdit(item)} title="Edit Agenda">
+                                                            ✏️ Edit
+                                                        </button>
+                                                        <button className="btn-hapus-agenda" onClick={() => hapusAgenda(item.id)} title="Hapus Agenda">
+                                                            🗑️ Hapus
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         );
@@ -339,7 +428,7 @@ export default function AgendaKegiatan() {
 
             </div>
 
-            {/* MODAL INPUT */}
+            {/* MODAL INPUT AGENDA BARU */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -393,6 +482,106 @@ export default function AgendaKegiatan() {
                             </div>
 
                             <button type="submit" className="btn-simpan-agenda" disabled={loadingSimpan} style={loadingSimpan ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingSimpan ? '⏳ Menyimpan Jadwal...' : 'Simpan Jadwal Kegiatan'}</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL EDIT AGENDA */}
+            {isEditModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <button className="btn-tutup-modal" onClick={() => setIsEditModalOpen(false)}>X</button>
+                        
+                        <h3 style={{ marginTop: '0', marginBottom: '20px' }}>Edit Agenda Kegiatan</h3>
+                        
+                        <form onSubmit={handleSimpanEdit} className="agenda-form">
+                            <div className="form-group">
+                                <label>Judul Agenda</label>
+                                <input 
+                                    type="text" 
+                                    value={editAgendaData.judul_agenda} 
+                                    onChange={(e) => setEditAgendaData({ ...editAgendaData, judul_agenda: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+                            
+                            <div className="form-group">
+                                <label>Kategori Agenda</label>
+                                <select 
+                                    value={editAgendaData.kategori_agenda} 
+                                    onChange={(e) => setEditAgendaData({ ...editAgendaData, kategori_agenda: e.target.value })} 
+                                    required
+                                >
+                                    <option value="">-- Pilih Kategori --</option>
+                                    <option value="Jadwal Monitoring">Jadwal Monitoring</option>
+                                    <option value="Jadwal Rapat">Jadwal Rapat</option>
+                                    <option value="Jadwal Musrenbang">Jadwal Musrenbang</option>
+                                    <option value="Agenda Lapangan">Agenda Lapangan</option>
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label>Waktu Mulai</label>
+                                <input 
+                                    type="datetime-local" 
+                                    value={editAgendaData.tanggal_waktu} 
+                                    onChange={(e) => setEditAgendaData({ ...editAgendaData, tanggal_waktu: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label>Waktu Selesai (Opsional)</label>
+                                <input 
+                                    type="datetime-local" 
+                                    value={editAgendaData.waktu_selesai} 
+                                    onChange={(e) => setEditAgendaData({ ...editAgendaData, waktu_selesai: e.target.value })} 
+                                />
+                            </div>
+
+                            <div className="form-group catatan-full">
+                                <label>Lokasi Kegiatan</label>
+                                <input 
+                                    type="text" 
+                                    value={editAgendaData.lokasi} 
+                                    onChange={(e) => setEditAgendaData({ ...editAgendaData, lokasi: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+
+                            <div className="form-group catatan-full">
+                                <label>Catatan / Reminder Kegiatan</label>
+                                <textarea 
+                                    rows="3" 
+                                    value={editAgendaData.catatan_reminder} 
+                                    onChange={(e) => setEditAgendaData({ ...editAgendaData, catatan_reminder: e.target.value })}
+                                ></textarea>
+                            </div>
+
+                            <div className="form-group catatan-full">
+                                <label>Ganti Bukti Dokumentasi (Opsional)</label>
+                                <input type="file" accept="image/*" onChange={(e) => setEditFoto(e.target.files[0])} />
+                                {editAgendaData.foto_dokumentasi && (
+                                    <small style={{ marginTop: '5px', color: 'var(--text-redup)', fontSize: '12px' }}>
+                                        Foto dokumentasi tersimpan di server. Pilih file baru jika ingin mengganti.
+                                    </small>
+                                )}
+                            </div>
+
+                            <div className="modal-edit-agenda-actions">
+                                <button type="button" className="btn-batal-agenda" onClick={() => setIsEditModalOpen(false)}>
+                                    Batal
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="btn-simpan-edit-agenda" 
+                                    disabled={loadingEdit}
+                                    style={loadingEdit ? { opacity: 0.7, cursor: 'not-allowed' } : {}}
+                                >
+                                    {loadingEdit ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

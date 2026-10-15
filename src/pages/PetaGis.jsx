@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { getTitikPeta, hapusTitikPeta, tambahTitikPeta, updateStatusPeta, BASE_URL } from '../services/api'; 
+import { getTitikPeta, hapusTitikPeta, tambahTitikPeta, updateTitikPeta, updateStatusPeta, BASE_URL } from '../services/api'; 
 import Swal from 'sweetalert2';
 import 'leaflet/dist/leaflet.css'; 
 import './PetaGis.css'; 
@@ -26,6 +26,25 @@ export default function PetaGIS() {
     const [dataRw, setDataRw] = useState('');
     const [statusProgres, setStatusProgres] = useState('');
     const [jenisOrganik, setJenisOrganik] = useState('');
+
+    // State untuk Modal Edit Titik
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editTitikData, setEditTitikData] = useState({
+        id: '',
+        kategori: '',
+        namaLokasi: '',
+        alamat: '',
+        latitude: '',
+        longitude: '',
+        ketua: '',
+        luasLahan: '',
+        dataRw: '',
+        statusProgres: '',
+        jenisOrganik: '',
+        foto_url: ''
+    });
+    const [editFoto, setEditFoto] = useState(null);
+    const [loadingEdit, setLoadingEdit] = useState(false);
 
     // Array kategori yang diizinkan untuk di-update statusnya
     const kategoriBisaUpdate = ['RUTILAHU', 'POHON TUMBANG', 'INFRASTRUKTUR UMUM'];
@@ -137,6 +156,73 @@ export default function PetaGIS() {
                 }
             }
         });
+    };
+
+    const bukaModalEdit = (titik) => {
+        let katUtama = titik.kategori_lokasi || '';
+        let subOrganik = '';
+        if (katUtama.startsWith('SAMPAH ORGANIK (')) {
+            subOrganik = katUtama.replace('SAMPAH ORGANIK (', '').replace(')', '');
+            katUtama = 'PENGOLAHAN SAMPAH ORGANIK';
+        }
+
+        setEditTitikData({
+            id: titik.id,
+            kategori: katUtama,
+            namaLokasi: titik.nama_lokasi || '',
+            alamat: titik.alamat || '',
+            latitude: titik.latitude || '',
+            longitude: titik.longitude || '',
+            ketua: titik.ketua || '',
+            luasLahan: titik.luas_lahan || '',
+            dataRw: titik.data_rw || '',
+            statusProgres: titik.status || '',
+            jenisOrganik: subOrganik,
+            foto_url: titik.foto_url || ''
+        });
+        setEditFoto(null);
+        setIsEditModalOpen(true);
+    };
+
+    const handleSimpanEdit = async (e) => {
+        e.preventDefault();
+        setLoadingEdit(true);
+
+        const formData = new FormData();
+        const kategoriFinal = editTitikData.kategori === 'PENGOLAHAN SAMPAH ORGANIK' 
+            ? `SAMPAH ORGANIK (${editTitikData.jenisOrganik || 'Komposter'})` 
+            : editTitikData.kategori;
+
+        formData.append('kategori_lokasi', kategoriFinal);
+        formData.append('nama_lokasi', editTitikData.namaLokasi);
+        formData.append('alamat', editTitikData.alamat);
+        formData.append('latitude', editTitikData.latitude);
+        formData.append('longitude', editTitikData.longitude);
+        if (editFoto) formData.append('foto_url', editFoto);
+
+        if (editTitikData.kategori === 'BURUAN SAE') {
+            formData.append('ketua', editTitikData.ketua || '');
+            formData.append('luas_lahan', editTitikData.luasLahan || '');
+        } else if (editTitikData.kategori === 'KBS') {
+            formData.append('data_rw', editTitikData.dataRw || '');
+        } else if (kategoriBisaUpdate.includes(editTitikData.kategori)) {
+            formData.append('status', editTitikData.statusProgres || '');
+        }
+
+        try {
+            const result = await updateTitikPeta(editTitikData.id, formData);
+            if (result.status === 'sukses') {
+                Swal.fire({ title: 'Berhasil!', text: result.pesan || 'Data titik peta berhasil diperbarui.', icon: 'success', confirmButtonColor: '#3C50E0' });
+                fetchDataPeta();
+                setIsEditModalOpen(false);
+            } else {
+                Swal.fire({ title: 'Gagal!', text: result.pesan || 'Gagal memperbarui titik peta.', icon: 'error' });
+            }
+        } catch {
+            Swal.fire({ title: 'Error!', text: 'Kesalahan server saat memperbarui titik peta!', icon: 'error' });
+        } finally {
+            setLoadingEdit(false);
+        }
     };
 
     return (
@@ -287,9 +373,14 @@ export default function PetaGIS() {
                                             Lihat Foto Lokasi
                                         </a>
                                     )}
-                                    <button className="btn-hapus-peta" onClick={() => handleHapusId(titik.id)}>
-                                        Hapus Titik
-                                    </button>
+                                    <div className="aksi-popup-peta">
+                                        <button className="btn-edit-peta" onClick={() => bukaModalEdit(titik)}>
+                                            ✏️ Edit
+                                        </button>
+                                        <button className="btn-hapus-peta" onClick={() => handleHapusId(titik.id)} title="Hapus Titik Lokasi">
+                                            🗑️ Hapus
+                                        </button>
+                                    </div>
                                 </Popup>
                             </Marker>
                         ))}
@@ -297,6 +388,169 @@ export default function PetaGIS() {
                 </div>
 
             </div>
+
+            {/* MODAL EDIT TITIK PETA */}
+            {isEditModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
+                        <button className="btn-tutup-modal" onClick={() => setIsEditModalOpen(false)}>X</button>
+                        <h3 style={{ marginTop: '0', marginBottom: '20px' }}>Edit Titik Lokasi Peta</h3>
+                        
+                        <form onSubmit={handleSimpanEdit} className="peta-edit-form">
+                            <div className="form-group-peta">
+                                <label>Kategori Lokasi</label>
+                                <select 
+                                    value={editTitikData.kategori} 
+                                    onChange={(e) => setEditTitikData({ ...editTitikData, kategori: e.target.value })} 
+                                    required
+                                >
+                                    <option value="">-- Pilih Kategori Peta --</option>
+                                    <option value="RUTILAHU">RUTILAHU</option>
+                                    <option value="BURUAN SAE">BURUAN SAE</option>
+                                    <option value="KBS">KBS (Kawasan Bebas Sampah)</option>
+                                    <option value="POHON TUMBANG">Titik Pohon Tumbang</option>
+                                    <option value="PENGOLAHAN SAMPAH ORGANIK">Pengolahan Sampah Organik</option>
+                                    <option value="INFRASTRUKTUR UMUM">Infrastruktur Umum Lainnya</option>
+                                </select>
+                            </div>
+
+                            {editTitikData.kategori === 'PENGOLAHAN SAMPAH ORGANIK' && (
+                                <div className="form-group-peta form-dinamis-animasi">
+                                    <label>Pilih Jenis Pengolahan Organik</label>
+                                    <select 
+                                        value={editTitikData.jenisOrganik} 
+                                        onChange={(e) => setEditTitikData({ ...editTitikData, jenisOrganik: e.target.value })} 
+                                        required
+                                    >
+                                        <option value="">-- Pilih Jenis --</option>
+                                        <option value="Komposter">Komposter</option>
+                                        <option value="Biopori">Biopori</option>
+                                        <option value="Losida">Losida</option>
+                                        <option value="Loseda">Loseda</option>
+                                        <option value="Bakti">Bakti</option>
+                                    </select>
+                                </div>
+                            )}
+
+                            <div className="form-group-peta">
+                                <label>Nama Lokasi / Program</label>
+                                <input 
+                                    type="text" 
+                                    value={editTitikData.namaLokasi} 
+                                    onChange={(e) => setEditTitikData({ ...editTitikData, namaLokasi: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+
+                            <div className="form-group-peta">
+                                <label>Alamat Lengkap</label>
+                                <input 
+                                    type="text" 
+                                    value={editTitikData.alamat} 
+                                    onChange={(e) => setEditTitikData({ ...editTitikData, alamat: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+
+                            <div className="grid-koordinat-peta">
+                                <div className="form-group-peta">
+                                    <label>Latitude</label>
+                                    <input 
+                                        type="text" 
+                                        value={editTitikData.latitude} 
+                                        onChange={(e) => setEditTitikData({ ...editTitikData, latitude: e.target.value })} 
+                                        required 
+                                    />
+                                </div>
+                                <div className="form-group-peta">
+                                    <label>Longitude</label>
+                                    <input 
+                                        type="text" 
+                                        value={editTitikData.longitude} 
+                                        onChange={(e) => setEditTitikData({ ...editTitikData, longitude: e.target.value })} 
+                                        required 
+                                    />
+                                </div>
+                            </div>
+
+                            {editTitikData.kategori === 'BURUAN SAE' && (
+                                <div className="grid-koordinat-peta form-dinamis-animasi">
+                                    <div className="form-group-peta">
+                                        <label>Nama Ketua Kelompok</label>
+                                        <input 
+                                            type="text" 
+                                            value={editTitikData.ketua} 
+                                            onChange={(e) => setEditTitikData({ ...editTitikData, ketua: e.target.value })} 
+                                            required 
+                                        />
+                                    </div>
+                                    <div className="form-group-peta">
+                                        <label>Luas Lahan</label>
+                                        <input 
+                                            type="text" 
+                                            value={editTitikData.luasLahan} 
+                                            onChange={(e) => setEditTitikData({ ...editTitikData, luasLahan: e.target.value })} 
+                                            required 
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {editTitikData.kategori === 'KBS' && (
+                                <div className="form-group-peta form-dinamis-animasi">
+                                    <label>Data RW Pelaksana KBS</label>
+                                    <input 
+                                        type="text" 
+                                        value={editTitikData.dataRw} 
+                                        onChange={(e) => setEditTitikData({ ...editTitikData, dataRw: e.target.value })} 
+                                        required 
+                                    />
+                                </div>
+                            )}
+
+                            {kategoriBisaUpdate.includes(editTitikData.kategori) && (
+                                <div className="form-group-peta form-dinamis-animasi">
+                                    <label>Status Penanganan / Progres</label>
+                                    <select 
+                                        value={editTitikData.statusProgres} 
+                                        onChange={(e) => setEditTitikData({ ...editTitikData, statusProgres: e.target.value })} 
+                                        required
+                                    >
+                                        <option value="">-- Pilih Status Progres --</option>
+                                        <option value="Pengajuan">Pengajuan Baru</option>
+                                        <option value="Sedang Diproses">Sedang Diproses</option>
+                                        <option value="Selesai Ditangani">Selesai Ditangani</option>
+                                    </select>
+                                </div>
+                            )}
+
+                            <div className="form-group-peta">
+                                <label>Ganti Foto Lokasi (Opsional)</label>
+                                <input type="file" accept="image/*" onChange={(e) => setEditFoto(e.target.files[0])} />
+                                {editTitikData.foto_url && (
+                                    <small style={{ marginTop: '5px', color: 'var(--text-redup)', fontSize: '12px' }}>
+                                        Foto saat ini tersimpan di server. Pilih foto baru jika ingin mengganti.
+                                    </small>
+                                )}
+                            </div>
+
+                            <div className="modal-edit-peta-actions">
+                                <button type="button" className="btn-batal-peta" onClick={() => setIsEditModalOpen(false)}>
+                                    Batal
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="btn-simpan-edit-peta" 
+                                    disabled={loadingEdit}
+                                    style={loadingEdit ? { opacity: 0.7, cursor: 'not-allowed' } : {}}
+                                >
+                                    {loadingEdit ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

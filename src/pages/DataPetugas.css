@@ -215,3 +215,117 @@
         grid-column: span 1;
     }
 }
+
+/* GRUP AKSI PETUGAS (EDIT & HAPUS) */
+.grup-aksi-petugas {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+
+.btn-edit-petugas {
+    background-color: #0284c7;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-edit-petugas:hover {
+    background-color: #0369a1;
+    transform: translateY(-1px);
+}
+
+.btn-hapus-petugas {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-hapus-petugas:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+}
+
+.modal-edit-petugas-actions {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* BADGE STATUS PETUGAS */
+.badge-petugas-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.badge-aktif {
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+}
+
+.badge-nonaktif {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+}
+
+/* TOGGLE STATUS BUTTON */
+.btn-status-toggle {
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-aktifkan {
+    background-color: #10b981;
+    color: white;
+}
+
+.btn-aktifkan:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+}
+
+.btn-nonaktifkan {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.btn-nonaktifkan:hover {
+    background-color: #d97706;
+    transform: translateY(-1px);
+}
+
+@media screen and (max-width: 768px) {
+    .modal-edit-petugas-actions {
+        grid-column: span 1;
+        flex-direction: column;
+    }
+}

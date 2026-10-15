@@ -154,6 +154,25 @@ export const updateStatusLayanan = async (id, status) => {
     }
 };
 
+export const updateDataLayanan = async (id, dataEdit) => {
+    try {
+        const isFormData = dataEdit instanceof FormData;
+        const config = {
+            method: 'PUT',
+            headers: { ...getAuthHeader() },
+            body: isFormData ? dataEdit : JSON.stringify(dataEdit)
+        };
+        if (!isFormData) {
+            config.headers['Content-Type'] = 'application/json';
+        }
+        const response = await fetch(`${BASE_URL}/layanan/${id}`, config);
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal memperbarui data layanan:", error);
+        throw error; 
+    }
+};
+
 // Login (Jalur Publik - Tidak pakai tanganiRespons)
 export const loginAdmin = async (username, password) => {
     try {
@@ -196,6 +215,50 @@ export const tambahPetugas = async (formData) => {
     }
 };
 
+export const updatePetugas = async (id, formData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/petugas/${id}`, {
+            method: 'PUT',
+            headers: { ...getAuthHeader() },
+            body: formData, 
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal memperbarui data petugas:", error);
+        throw error;
+    }
+};
+
+export const hapusPetugas = async (id) => {
+    try {
+        const response = await fetch(`${BASE_URL}/petugas/${id}`, {
+            method: 'DELETE',
+            headers: { ...getAuthHeader() }
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal menghapus data petugas:", error);
+        throw error;
+    }
+};
+
+export const updateStatusPetugas = async (id, status) => {
+    try {
+        const response = await fetch(`${BASE_URL}/petugas/${id}/status`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                ...getAuthHeader() 
+            },
+            body: JSON.stringify({ status })
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal mengubah status petugas:", error);
+        throw error;
+    }
+};
+
 export const getKegiatanGober = async () => {
     try {
         const response = await fetch(`${BASE_URL}/kegiatan-gober`, {
@@ -223,6 +286,33 @@ export const tambahKegiatanGober = async (formData) => {
     }
 };
 
+export const updateKegiatanGober = async (id, formData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/kegiatan-gober/${id}`, {
+            method: 'PUT',
+            headers: { ...getAuthHeader() },
+            body: formData, 
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal memperbarui data Gober:", error);
+        throw error;
+    }
+};
+
+export const hapusKegiatanGober = async (id) => {
+    try {
+        const response = await fetch(`${BASE_URL}/kegiatan-gober/${id}`, {
+            method: 'DELETE',
+            headers: { ...getAuthHeader() }
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal menghapus data Gober:", error);
+        throw error;
+    }
+};
+
 export const getKegiatanSampah = async () => {
     try {
         const response = await fetch(`${BASE_URL}/kegiatan-sampah`, {
@@ -246,6 +336,33 @@ export const tambahKegiatanSampah = async (formData) => {
         return await tanganiRespons(response);
     } catch (error) {
         console.error("Gagal menyimpan data Sampah:", error);
+        throw error;
+    }
+};
+
+export const updateKegiatanSampah = async (id, formData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/kegiatan-sampah/${id}`, {
+            method: 'PUT',
+            headers: { ...getAuthHeader() }, 
+            body: formData, 
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal memperbarui data Sampah:", error);
+        throw error;
+    }
+};
+
+export const hapusKegiatanSampah = async (id) => {
+    try {
+        const response = await fetch(`${BASE_URL}/kegiatan-sampah/${id}`, {
+            method: 'DELETE',
+            headers: { ...getAuthHeader() }
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal menghapus data Sampah:", error);
         throw error;
     }
 };
@@ -291,6 +408,20 @@ export const uploadFotoAgenda = async (id, formData) => {
     }
 };
 
+export const updateKegiatanAgenda = async (id, formData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/kegiatan-agenda/${id}`, {
+            method: 'PUT',
+            headers: { ...getAuthHeader() },
+            body: formData,
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal memperbarui agenda kegiatan:", error);
+        throw error;
+    }
+};
+
 export const hapusKegiatanAgenda = async (id) => {
     try {
         const response = await fetch(`${BASE_URL}/kegiatan-agenda/${id}`, {
@@ -327,6 +458,20 @@ export const tambahTitikPeta = async (formData) => {
         return await tanganiRespons(response);
     } catch (error) {
         console.error("Gagal menyimpan titik peta:", error);
+        throw error;
+    }
+};
+
+export const updateTitikPeta = async (id, formData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/peta-gis/${id}`, {
+            method: 'PUT',
+            headers: { ...getAuthHeader() },
+            body: formData, 
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal memperbarui titik peta:", error);
         throw error;
     }
 };

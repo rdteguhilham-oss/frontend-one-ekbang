@@ -5,9 +5,13 @@ import Swal from 'sweetalert2';
 import { 
     getPetugas, 
     tambahKegiatanGober, 
+    updateKegiatanGober,
+    hapusKegiatanGober,
     getKegiatanGober, 
     getKegiatanSampah, 
     tambahKegiatanSampah, 
+    updateKegiatanSampah,
+    hapusKegiatanSampah,
     BASE_URL 
 } from '../services/api';
 import './KegiatanHarian.css';
@@ -33,6 +37,18 @@ export default function KegiatanHarian() {
     const [kataKunci, setKataKunci] = useState('');
     const [loadingGober, setLoadingGober] = useState(false);
     const [loadingSampah, setLoadingSampah] = useState(false);
+
+    // State untuk Modal Edit Gober
+    const [isEditGoberOpen, setIsEditGoberOpen] = useState(false);
+    const [editGoberData, setEditGoberData] = useState({ id: '', petugas_id: '', lokasi: '', panjang_meter: '', foto: '' });
+    const [editFotoGober, setEditFotoGober] = useState(null);
+    const [loadingEditGober, setLoadingEditGober] = useState(false);
+
+    // State untuk Modal Edit Sampah
+    const [isEditSampahOpen, setIsEditSampahOpen] = useState(false);
+    const [editSampahData, setEditSampahData] = useState({ id: '', petugas_id: '', kategori_tugas: 'Gaslah', data_rw: '', berat_kiloan: '', foto: '' });
+    const [editFotoSampah, setEditFotoSampah] = useState(null);
+    const [loadingEditSampah, setLoadingEditSampah] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -129,6 +145,186 @@ export default function KegiatanHarian() {
         } finally {
             setLoadingSampah(false);
         }
+    };
+
+    // ==========================================
+    // HANDLER UPDATE & DELETE GOBER
+    // ==========================================
+    const bukaModalEditGober = (item) => {
+        setEditGoberData({
+            id: item.id,
+            petugas_id: item.petugas_id,
+            lokasi: item.lokasi,
+            panjang_meter: item.panjang_meter,
+            foto: item.foto
+        });
+        setEditFotoGober(null);
+        setIsEditGoberOpen(true);
+    };
+
+    const handleSimpanEditGober = async (e) => {
+        e.preventDefault();
+        const nilaiAngka = parseInt(String(editGoberData.panjang_meter).replace(/[^0-9]/g, ''), 10);
+        if (isNaN(nilaiAngka) || nilaiAngka <= 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Format Ukuran Belum Benar',
+                text: 'Harap masukkan angka meter yang valid (contoh: 30).'
+            });
+            return;
+        }
+
+        setLoadingEditGober(true);
+        const formData = new FormData();
+        formData.append('petugas_id', editGoberData.petugas_id);
+        formData.append('lokasi', editGoberData.lokasi);
+        formData.append('panjang_meter', nilaiAngka);
+        if (editFotoGober) {
+            formData.append('foto', editFotoGober);
+        }
+
+        try {
+            const result = await updateKegiatanGober(editGoberData.id, formData);
+            if (result.status === 'sukses') {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: result.pesan || 'Laporan kegiatan Gober berhasil diperbarui.',
+                    icon: 'success',
+                    confirmButtonColor: '#3C50E0'
+                });
+                setIsEditGoberOpen(false);
+                fetchData();
+            } else {
+                Swal.fire({ title: 'Gagal', text: result.pesan || 'Gagal memperbarui data.', icon: 'error' });
+            }
+        } catch {
+            Swal.fire({ title: 'Error', text: 'Terjadi kesalahan saat memperbarui kegiatan Gober.', icon: 'error' });
+        } finally {
+            setLoadingEditGober(false);
+        }
+    };
+
+    const handleHapusGober = (id, namaPetugas, lokasiKegiatan) => {
+        Swal.fire({
+            title: 'Hapus Laporan Gober?',
+            text: `Apakah Anda yakin ingin menghapus laporan "${namaPetugas}" di lokasi "${lokasiKegiatan}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await hapusKegiatanGober(id);
+                    if (res.status === 'sukses') {
+                        Swal.fire({
+                            title: 'Terhapus!',
+                            text: res.pesan || 'Laporan berhasil dihapus.',
+                            icon: 'success',
+                            confirmButtonColor: '#3C50E0'
+                        });
+                        fetchData();
+                    } else {
+                        Swal.fire({ title: 'Gagal', text: res.pesan || 'Gagal menghapus data.', icon: 'error' });
+                    }
+                } catch {
+                    Swal.fire({ title: 'Error', text: 'Terjadi kesalahan koneksi saat menghapus.', icon: 'error' });
+                }
+            }
+        });
+    };
+
+    // ==========================================
+    // HANDLER UPDATE & DELETE SAMPAH
+    // ==========================================
+    const bukaModalEditSampah = (item) => {
+        setEditSampahData({
+            id: item.id,
+            petugas_id: item.petugas_id,
+            kategori_tugas: item.kategori_tugas || 'Gaslah',
+            data_rw: item.data_rw,
+            berat_kiloan: item.berat_kiloan,
+            foto: item.foto
+        });
+        setEditFotoSampah(null);
+        setIsEditSampahOpen(true);
+    };
+
+    const handleSimpanEditSampah = async (e) => {
+        e.preventDefault();
+        const cleanedBerat = parseFloat(String(editSampahData.berat_kiloan).replace(',', '.'));
+        if (isNaN(cleanedBerat) || cleanedBerat <= 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Format Berat Belum Benar',
+                text: 'Harap masukkan angka berat (Kg) yang valid.'
+            });
+            return;
+        }
+
+        setLoadingEditSampah(true);
+        const formData = new FormData();
+        formData.append('petugas_id', editSampahData.petugas_id);
+        formData.append('kategori_tugas', editSampahData.kategori_tugas);
+        formData.append('data_rw', editSampahData.data_rw);
+        formData.append('berat_kiloan', cleanedBerat);
+        if (editFotoSampah) {
+            formData.append('foto', editFotoSampah);
+        }
+
+        try {
+            const result = await updateKegiatanSampah(editSampahData.id, formData);
+            if (result.status === 'sukses') {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: result.pesan || 'Laporan kegiatan Sampah berhasil diperbarui.',
+                    icon: 'success',
+                    confirmButtonColor: '#3C50E0'
+                });
+                setIsEditSampahOpen(false);
+                fetchData();
+            } else {
+                Swal.fire({ title: 'Gagal', text: result.pesan || 'Gagal memperbarui data.', icon: 'error' });
+            }
+        } catch {
+            Swal.fire({ title: 'Error', text: 'Terjadi kesalahan saat memperbarui kegiatan Sampah.', icon: 'error' });
+        } finally {
+            setLoadingEditSampah(false);
+        }
+    };
+
+    const handleHapusSampah = (id, namaPetugas, tugas, rw) => {
+        Swal.fire({
+            title: 'Hapus Laporan Timbangan?',
+            text: `Apakah Anda yakin ingin menghapus laporan "${tugas} - RW ${rw}" oleh "${namaPetugas}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await hapusKegiatanSampah(id);
+                    if (res.status === 'sukses') {
+                        Swal.fire({
+                            title: 'Terhapus!',
+                            text: res.pesan || 'Laporan timbangan berhasil dihapus.',
+                            icon: 'success',
+                            confirmButtonColor: '#3C50E0'
+                        });
+                        fetchData();
+                    } else {
+                        Swal.fire({ title: 'Gagal', text: res.pesan || 'Gagal menghapus data.', icon: 'error' });
+                    }
+                } catch {
+                    Swal.fire({ title: 'Error', text: 'Terjadi kesalahan koneksi saat menghapus.', icon: 'error' });
+                }
+            }
+        });
     };
 
     const hasilFilterGober = dataGober.filter((item) => {
@@ -265,22 +461,39 @@ export default function KegiatanHarian() {
                                     <th>Lokasi</th>
                                     <th>Ukuran (P/L)</th>
                                     <th>Bukti Foto</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {hasilFilterGober.map((item) => (
-                                    <tr key={item.id}>
-                                        <td>{new Date(item.tanggal_kegiatan).toLocaleDateString('id-ID')}</td>
-                                        <td>{item.nama_petugas}</td>
-                                        <td>{item.lokasi}</td>
-                                        <td>{item.panjang_meter} m</td>
-                                        <td>
-                                            {item.foto ? (
-                                                <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Foto</a>
-                                            ) : '-'}
-                                        </td>
+                                {hasilFilterGober.length > 0 ? (
+                                    hasilFilterGober.map((item) => (
+                                        <tr key={item.id}>
+                                            <td>{new Date(item.tanggal_kegiatan).toLocaleDateString('id-ID')}</td>
+                                            <td>{item.nama_petugas}</td>
+                                            <td>{item.lokasi}</td>
+                                            <td>{item.panjang_meter} m</td>
+                                            <td>
+                                                {item.foto ? (
+                                                    <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Foto</a>
+                                                ) : '-'}
+                                            </td>
+                                            <td style={{ verticalAlign: 'middle' }}>
+                                                <div className="grup-aksi-kegiatan">
+                                                    <button className="btn-edit-kegiatan" onClick={() => bukaModalEditGober(item)} title="Edit Laporan Gober">
+                                                        ✏️ Edit
+                                                    </button>
+                                                    <button className="btn-hapus-kegiatan" onClick={() => handleHapusGober(item.id, item.nama_petugas, item.lokasi)} title="Hapus Laporan Gober">
+                                                        🗑️ Hapus
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="6" className="text-center">Belum ada riwayat kegiatan lapangan.</td>
                                     </tr>
-                                ))}
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -312,29 +525,47 @@ export default function KegiatanHarian() {
                                     <th>RW</th>
                                     <th>Berat</th>
                                     <th>Bukti Timbangan</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {hasilFilterSampah.map((item) => (
-                                    <tr key={item.id}>
-                                        <td>{new Date(item.tanggal_kegiatan).toLocaleDateString('id-ID')}</td>
-                                        <td>{item.nama_petugas}</td>
-                                        <td>{item.kategori_tugas}</td>
-                                        <td>{item.data_rw}</td>
-                                        <td>{item.berat_kiloan} Kg</td>
-                                        <td>
-                                            {item.foto ? (
-                                                <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Bukti</a>
-                                            ) : '-'}
-                                        </td>
+                                {hasilFilterSampah.length > 0 ? (
+                                    hasilFilterSampah.map((item) => (
+                                        <tr key={item.id}>
+                                            <td>{new Date(item.tanggal_kegiatan).toLocaleDateString('id-ID')}</td>
+                                            <td>{item.nama_petugas}</td>
+                                            <td>{item.kategori_tugas}</td>
+                                            <td>{item.data_rw}</td>
+                                            <td>{item.berat_kiloan} Kg</td>
+                                            <td>
+                                                {item.foto ? (
+                                                    <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Bukti</a>
+                                                ) : '-'}
+                                            </td>
+                                            <td style={{ verticalAlign: 'middle' }}>
+                                                <div className="grup-aksi-kegiatan">
+                                                    <button className="btn-edit-kegiatan" onClick={() => bukaModalEditSampah(item)} title="Edit Laporan Sampah">
+                                                        ✏️ Edit
+                                                    </button>
+                                                    <button className="btn-hapus-kegiatan" onClick={() => handleHapusSampah(item.id, item.nama_petugas, item.kategori_tugas, item.data_rw)} title="Hapus Laporan Sampah">
+                                                        🗑️ Hapus
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="7" className="text-center">Belum ada riwayat timbangan sampah.</td>
                                     </tr>
-                                ))}
+                                )}
                             </tbody>
                         </table>
                     </div>
                 </div>
             )}
 
+            {/* MODAL TAMBAH LAPORAN */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -348,9 +579,12 @@ export default function KegiatanHarian() {
                                         <label>Pilih Petugas Lapangan</label>
                                         <select value={idPetugasGober} onChange={(e) => setIdPetugasGober(e.target.value)} required>
                                             <option value="">-- Pilih Petugas --</option>
-                                            {petugasList.filter(p => ['Gober', 'Gorong-gorong', 'Taman'].includes(p.kategori_petugas)).map(p => (
-                                                <option key={p.id} value={p.id}>{p.nama_petugas} ({p.kategori_petugas})</option>
-                                            ))}
+                                            {petugasList
+                                                .filter(p => ['Gober', 'Gorong-gorong', 'Taman'].includes(p.kategori_petugas) && p.status !== 'Non-Aktif')
+                                                .map(p => (
+                                                    <option key={p.id} value={p.id}>{p.nama_petugas} ({p.kategori_petugas})</option>
+                                                ))
+                                            }
                                         </select>
                                     </div>
                                     <div className="form-group">
@@ -383,9 +617,12 @@ export default function KegiatanHarian() {
                                         <label>Pilih Petugas</label>
                                         <select value={idPetugasSampah} onChange={(e) => setIdPetugasSampah(e.target.value)} required>
                                             <option value="">-- Pilih Petugas --</option>
-                                            {petugasList.filter(p => ['Gaslah', 'Petugas Magot'].includes(p.kategori_petugas)).map(p => (
-                                                <option key={p.id} value={p.id}>{p.nama_petugas}</option>
-                                            ))}
+                                            {petugasList
+                                                .filter(p => ['Gaslah', 'Petugas Magot'].includes(p.kategori_petugas) && p.status !== 'Non-Aktif')
+                                                .map(p => (
+                                                    <option key={p.id} value={p.id}>{p.nama_petugas}</option>
+                                                ))
+                                            }
                                         </select>
                                     </div>
                                     <div className="form-group">
@@ -413,6 +650,159 @@ export default function KegiatanHarian() {
                                 </form>
                             </>
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL EDIT GOBER */}
+            {isEditGoberOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <button className="btn-tutup-modal" onClick={() => setIsEditGoberOpen(false)}>X</button>
+                        <h3 style={{ marginTop: '0', marginBottom: '20px' }}>Edit Laporan Lapangan</h3>
+                        <form onSubmit={handleSimpanEditGober} className="kegiatan-form">
+                            <div className="form-group">
+                                <label>Pilih Petugas Lapangan</label>
+                                <select 
+                                    value={editGoberData.petugas_id} 
+                                    onChange={(e) => setEditGoberData({ ...editGoberData, petugas_id: e.target.value })} 
+                                    required
+                                >
+                                    <option value="">-- Pilih Petugas --</option>
+                                    {petugasList
+                                        .filter(p => ['Gober', 'Gorong-gorong', 'Taman'].includes(p.kategori_petugas) && (p.status !== 'Non-Aktif' || p.id === editGoberData.petugas_id))
+                                        .map(p => (
+                                            <option key={p.id} value={p.id}>
+                                                {p.nama_petugas} ({p.kategori_petugas}) {p.status === 'Non-Aktif' ? '(Non-Aktif)' : ''}
+                                            </option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Lokasi Pengerjaan</label>
+                                <input 
+                                    type="text" 
+                                    value={editGoberData.lokasi} 
+                                    onChange={(e) => setEditGoberData({ ...editGoberData, lokasi: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Ukuran Panjang / Luas (Meter)</label>
+                                <input 
+                                    type="number" 
+                                    min="1" 
+                                    value={editGoberData.panjang_meter} 
+                                    onChange={(e) => setEditGoberData({ ...editGoberData, panjang_meter: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Ganti Bukti Foto (Opsional)</label>
+                                <input type="file" accept="image/*" onChange={(e) => setEditFotoGober(e.target.files[0])} />
+                                {editGoberData.foto && (
+                                    <small style={{ marginTop: '5px', color: 'var(--text-redup)', fontSize: '12px' }}>
+                                        Foto lama tersimpan di server. Pilih foto baru hanya jika ingin menggantinya.
+                                    </small>
+                                )}
+                            </div>
+                            <div className="modal-edit-kegiatan-actions">
+                                <button type="button" className="btn-batal-kegiatan" onClick={() => setIsEditGoberOpen(false)}>
+                                    Batal
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="btn-simpan-edit-kegiatan" 
+                                    disabled={loadingEditGober}
+                                    style={loadingEditGober ? { opacity: 0.7, cursor: 'not-allowed' } : {}}
+                                >
+                                    {loadingEditGober ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* MODAL EDIT SAMPAH */}
+            {isEditSampahOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <button className="btn-tutup-modal" onClick={() => setIsEditSampahOpen(false)}>X</button>
+                        <h3 style={{ marginTop: '0', marginBottom: '20px' }}>Edit Hasil Timbangan</h3>
+                        <form onSubmit={handleSimpanEditSampah} className="kegiatan-form">
+                            <div className="form-group">
+                                <label>Pilih Petugas</label>
+                                <select 
+                                    value={editSampahData.petugas_id} 
+                                    onChange={(e) => setEditSampahData({ ...editSampahData, petugas_id: e.target.value })} 
+                                    required
+                                >
+                                    <option value="">-- Pilih Petugas --</option>
+                                    {petugasList
+                                        .filter(p => ['Gaslah', 'Petugas Magot'].includes(p.kategori_petugas) && (p.status !== 'Non-Aktif' || p.id === editSampahData.petugas_id))
+                                        .map(p => (
+                                            <option key={p.id} value={p.id}>
+                                                {p.nama_petugas} {p.status === 'Non-Aktif' ? '(Non-Aktif)' : ''}
+                                            </option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Tugas Spesifik</label>
+                                <select 
+                                    value={editSampahData.kategori_tugas} 
+                                    onChange={(e) => setEditSampahData({ ...editSampahData, kategori_tugas: e.target.value })} 
+                                    required
+                                >
+                                    <option value="Gaslah">Tim Gaslah</option>
+                                    <option value="Magot">Tim Magot</option>
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>Data RW</label>
+                                <input 
+                                    type="text" 
+                                    value={editSampahData.data_rw} 
+                                    onChange={(e) => setEditSampahData({ ...editSampahData, data_rw: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Berat Kiloan (Kg)</label>
+                                <input 
+                                    type="number" 
+                                    step="0.01" 
+                                    value={editSampahData.berat_kiloan} 
+                                    onChange={(e) => setEditSampahData({ ...editSampahData, berat_kiloan: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+                            <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                                <label>Ganti Bukti Timbangan (Opsional)</label>
+                                <input type="file" accept="image/*" onChange={(e) => setEditFotoSampah(e.target.files[0])} />
+                                {editSampahData.foto && (
+                                    <small style={{ marginTop: '5px', color: 'var(--text-redup)', fontSize: '12px' }}>
+                                        Foto lama tersimpan di server. Pilih foto baru hanya jika ingin menggantinya.
+                                    </small>
+                                )}
+                            </div>
+                            <div className="modal-edit-kegiatan-actions">
+                                <button type="button" className="btn-batal-kegiatan" onClick={() => setIsEditSampahOpen(false)}>
+                                    Batal
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="btn-simpan-edit-kegiatan" 
+                                    disabled={loadingEditSampah}
+                                    style={loadingEditSampah ? { opacity: 0.7, cursor: 'not-allowed' } : {}}
+                                >
+                                    {loadingEditSampah ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

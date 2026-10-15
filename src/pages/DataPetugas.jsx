@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import './DataPetugas.css';
 import Swal from 'sweetalert2';
-import { getPetugas, tambahPetugas, BASE_URL } from '../services/api';
+import { getPetugas, tambahPetugas, updatePetugas, updateStatusPetugas, hapusPetugas, BASE_URL } from '../services/api';
 
 export default function DataPetugas () {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +15,18 @@ export default function DataPetugas () {
   const [fileSk, setFileSk] = useState(null);
   const fileInputRef = useRef(null);
   const [loadingSimpan, setLoadingSimpan] = useState(false);
+  // STATE UNTUK EDIT PETUGAS
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editId, setEditId] = useState(null);
+  const [editNamaPetugas, setEditNamaPetugas] = useState('');
+  const [editKategoriPetugas, setEditKategoriPetugas] = useState('');
+  const [editWilayah, setEditWilayah] = useState('');
+  const [editNoSk, setEditNoSk] = useState('');
+  const [editFileSk, setEditFileSk] = useState(null);
+  const [existingFileSk, setExistingFileSk] = useState(null);
+  const editFileInputRef = useRef(null);
+  const [loadingEdit, setLoadingEdit] = useState(false);
+  const [editStatusPetugas, setEditStatusPetugas] = useState('Aktif');
 
   const fetchPetugas = async () => {
     try {
@@ -63,6 +75,139 @@ export default function DataPetugas () {
     }
   };
 
+  const bukaModalEdit = (petugas) => {
+    setEditId(petugas.id);
+    setEditNamaPetugas(petugas.nama_petugas || '');
+    setEditKategoriPetugas(petugas.kategori_petugas || '');
+    setEditWilayah(petugas.wilayah || '');
+    setEditNoSk(petugas.no_sk || '');
+    setEditStatusPetugas(petugas.status || 'Aktif');
+    setEditFileSk(null);
+    setExistingFileSk(petugas.file_sk || null);
+    if (editFileInputRef.current) editFileInputRef.current.value = '';
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setLoadingEdit(true);
+
+    const formData = new FormData();
+    formData.append('nama_petugas', editNamaPetugas);
+    formData.append('kategori_petugas', editKategoriPetugas);
+    formData.append('wilayah', editWilayah);
+    formData.append('no_sk', editNoSk);
+    formData.append('status', editStatusPetugas);
+    if (editFileSk) {
+      formData.append('file_sk', editFileSk);
+    }
+
+    try {
+      const result = await updatePetugas(editId, formData);
+      if (result.status === 'sukses') {
+        Swal.fire({
+          title: 'Berhasil!',
+          text: result.pesan || 'Data Petugas berhasil diperbarui!',
+          icon: 'success',
+          confirmButtonColor: '#3C50E0'
+        });
+        fetchPetugas();
+        setIsEditModalOpen(false);
+      } else {
+        Swal.fire({
+          title: 'Gagal!',
+          text: result.pesan || 'Gagal memperbarui data petugas.',
+          icon: 'error'
+        });
+      }
+    } catch {
+      Swal.fire({
+        title: 'Error',
+        text: 'Terjadi kesalahan sistem saat memperbarui data petugas.',
+        icon: 'error'
+      });
+    } finally {
+      setLoadingEdit(false);
+    }
+  };
+
+  const handleToggleStatus = async (id, statusBaru, nama) => {
+    try {
+      const res = await updateStatusPetugas(id, statusBaru);
+      if (res.status === 'sukses') {
+        Swal.fire({
+          title: 'Status Diperbarui!',
+          text: `Status petugas "${nama}" berhasil diubah menjadi ${statusBaru}.`,
+          icon: 'success',
+          confirmButtonColor: '#3C50E0'
+        });
+        fetchPetugas();
+      } else {
+        Swal.fire({
+          title: 'Gagal',
+          text: res.pesan || 'Gagal mengubah status petugas.',
+          icon: 'error'
+        });
+      }
+    } catch {
+      Swal.fire({
+        title: 'Error',
+        text: 'Terjadi kesalahan saat menghubungi server.',
+        icon: 'error'
+      });
+    }
+  };
+
+  const handleHapusPetugas = (id, nama) => {
+    Swal.fire({
+      title: 'Hapus Petugas?',
+      text: `Apakah Anda yakin ingin menghapus data petugas "${nama}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Ya, Hapus!',
+      cancelButtonText: 'Batal'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await hapusPetugas(id);
+          if (res.status === 'sukses') {
+            Swal.fire({
+              title: 'Terhapus!',
+              text: res.pesan || 'Data Petugas berhasil dihapus.',
+              icon: 'success',
+              confirmButtonColor: '#3C50E0'
+            });
+            fetchPetugas();
+          } else {
+            // Jika ada riwayat laporan harian -> beri opsi langsung nonaktifkan petugas!
+            Swal.fire({
+              title: 'Petugas Memiliki Riwayat Kerja',
+              text: res.pesan || 'Petugas ini tercatat pada laporan kegiatan harian. Anda dapat menonaktifkan statusnya agar tidak muncul di laporan baru tanpa menghilangkan riwayat kerjanya.',
+              icon: 'info',
+              showCancelButton: true,
+              confirmButtonColor: '#f59e0b',
+              cancelButtonColor: '#64748b',
+              confirmButtonText: 'Nonaktifkan Petugas Saja',
+              cancelButtonText: 'Tutup'
+            }).then(async (pilihan) => {
+              if (pilihan.isConfirmed) {
+                await handleToggleStatus(id, 'Non-Aktif', nama);
+              }
+            });
+          }
+        } catch {
+          Swal.fire({
+            title: 'Error',
+            text: 'Terjadi kesalahan saat menghubungi server.',
+            icon: 'error'
+          });
+        }
+      }
+    });
+  };
+
   const hasilFilter = petugasList.filter((petugas) => {
     const teksCari = kataKunci.toLowerCase().trim();
     if (!teksCari) return true;
@@ -106,6 +251,8 @@ export default function DataPetugas () {
                 <th>Wilayah</th>
                 <th>No. SK</th>
                 <th>File SK</th>
+                <th>Status</th>
+                <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -124,11 +271,43 @@ export default function DataPetugas () {
                           </a>
                         ) : '-'}
                     </td>
+                    <td style={{ verticalAlign: 'middle' }}>
+                      <span className={`badge-petugas-status ${petugas.status === 'Non-Aktif' ? 'badge-nonaktif' : 'badge-aktif'}`}>
+                        {petugas.status || 'Aktif'}
+                      </span>
+                    </td>
+                    <td style={{ verticalAlign: 'middle' }}>
+                      <div className="grup-aksi-petugas">
+                        <button className="btn-edit-petugas" onClick={() => bukaModalEdit(petugas)} title="Edit Data Petugas">
+                          ✏️ Edit
+                        </button>
+                        {petugas.status === 'Non-Aktif' ? (
+                          <button 
+                            className="btn-status-toggle btn-aktifkan" 
+                            onClick={() => handleToggleStatus(petugas.id, 'Aktif', petugas.nama_petugas)}
+                            title="Aktifkan Kembali Petugas"
+                          >
+                            ✅ Aktifkan
+                          </button>
+                        ) : (
+                          <button 
+                            className="btn-status-toggle btn-nonaktifkan" 
+                            onClick={() => handleToggleStatus(petugas.id, 'Non-Aktif', petugas.nama_petugas)}
+                            title="Nonaktifkan Petugas (Purna Tugas)"
+                          >
+                            ⛔ Nonaktifkan
+                          </button>
+                        )}
+                        <button className="btn-hapus-petugas" onClick={() => handleHapusPetugas(petugas.id, petugas.nama_petugas)} title="Hapus Petugas">
+                          🗑️ Hapus
+                        </button>
+                      </div>
+                    </td>
                     </tr>
                 ))
                 ) : (
                 <tr>
-                    <td colSpan="6" className="text-center">Belum ada data petugas.</td>
+                    <td colSpan="8" className="text-center">Belum ada data petugas.</td>
                 </tr>
                 )}
             </tbody>
@@ -175,6 +354,103 @@ export default function DataPetugas () {
                 </small>
               </div>
               <button type="submit" className="btn-simpan" disabled={loadingSimpan} style={loadingSimpan ? { opacity: 0.7, cursor: 'not-allowed' } : {}}>{loadingSimpan ? '⏳ Menyimpan Data...' : 'Simpan Data'}</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL EDIT PETUGAS */}
+      {isEditModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="btn-tutup-modal" onClick={() => setIsEditModalOpen(false)}>✕</button>
+            
+            <h3 style={{ marginTop: '0', marginBottom: '20px' }}>✏️ Edit Data Petugas</h3>
+            
+            <form onSubmit={handleEditSubmit} className="petugas-form">
+              <div className="form-group">
+                <label>Nama Petugas</label>
+                <input 
+                  type="text" 
+                  placeholder='Contoh: Bpk. Budi' 
+                  value={editNamaPetugas} 
+                  onChange={(e) => setEditNamaPetugas(e.target.value)} 
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label>Kategori Petugas</label>
+                <select value={editKategoriPetugas} onChange={(e) => setEditKategoriPetugas(e.target.value)} required>
+                  <option value="">-- Pilih Kategori --</option>
+                  <option value="Gober">Gober</option>
+                  <option value="Gorong-gorong">Gorong-gorong</option>
+                  <option value="Taman">Taman</option>
+                  <option value="Petugas Magot">Petugas Magot</option>
+                  <option value="Gaslah">Gaslah</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Wilayah / RW</label>
+                <input 
+                  type="text" 
+                  placeholder='Contoh: Jl. Anyelir 2 RT 02/RW 14' 
+                  value={editWilayah} 
+                  onChange={(e) => setEditWilayah(e.target.value)} 
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label>Nomor SK</label>
+                <input 
+                  type="text" 
+                  placeholder='Masukan No. Sk' 
+                  value={editNoSk} 
+                  onChange={(e) => setEditNoSk(e.target.value)} 
+                  required 
+                />
+              </div>
+              <div className="form-group">
+                <label>Status Petugas</label>
+                <select value={editStatusPetugas} onChange={(e) => setEditStatusPetugas(e.target.value)} required>
+                  <option value="Aktif">Aktif (Bertugas)</option>
+                  <option value="Non-Aktif">Non-Aktif (Purna Tugas)</option>
+                </select>
+              </div>
+              <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                <label>Ganti File SK (Opsional)</label>
+                {existingFileSk && (
+                  <div style={{ marginBottom: '8px' }}>
+                    <small style={{ color: 'var(--text-redup)', display: 'block', marginBottom: '4px' }}>SK Terdaftar Saat Ini:</small>
+                    <a 
+                      href={existingFileSk.startsWith('http') ? existingFileSk : `${BASE_URL}/uploads/${existingFileSk}`} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="btn-lihat"
+                      style={{ display: 'inline-block' }}
+                    >
+                      📄 Lihat SK Saat Ini
+                    </a>
+                  </div>
+                )}
+                <input 
+                  ref={editFileInputRef} 
+                  type="file" 
+                  accept=".pdf, image/*" 
+                  onChange={(e) => setEditFileSk(e.target.files[0])} 
+                />
+                <small style={{ color: 'var(--text-redup)', marginTop: '6px', display: 'block' }}>
+                  *Biarkan kosong jika tidak ingin mengubah file SK yang ada
+                </small>
+              </div>
+
+              <div className="modal-edit-petugas-actions">
+                <button type="button" className="btn-batal-modal" onClick={() => setIsEditModalOpen(false)}>
+                  Batal
+                </button>
+                <button type="submit" className="btn-simpan-modal" disabled={loadingEdit}>
+                  {loadingEdit ? '⏳ Menyimpan...' : '💾 Simpan Perubahan'}
+                </button>
+              </div>
             </form>
           </div>
         </div>

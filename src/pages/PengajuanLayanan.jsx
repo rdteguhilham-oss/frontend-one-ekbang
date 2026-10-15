@@ -2,10 +2,49 @@ import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
-import { getDataLayanan, updateStatusLayanan, BASE_URL } from "../services/api"; 
+import { getDataLayanan, updateStatusLayanan, updateDataLayanan, BASE_URL } from "../services/api"; 
 import { Link } from "react-router-dom";
 import './PengajuanLayanan.css';
 import CetakSuratModal from '../components/CetakSuratModal';
+
+const MAP_DOKUMEN_LAYANAN = {
+    'RUTILAHU': [
+        { field: 'foto_ktp', label: 'Foto KTP' },
+        { field: 'foto_kk', label: 'Kartu Keluarga (KK)' },
+        { field: 'surat_pengantar', label: 'Surat Pengantar RT/RW' },
+        { field: 'sertifikat_tanah', label: 'Sertifikat Tanah' },
+        { field: 'foto_kondisi_rumah', label: 'Foto Kondisi Rumah' }
+    ],
+    'POHON TUMBANG': [
+        { field: 'foto_ktp', label: 'Foto KTP' },
+        { field: 'foto_kk', label: 'Kartu Keluarga (KK)' },
+        { field: 'surat_pengantar', label: 'Surat Pengantar' },
+        { field: 'foto_lokasi', label: 'Foto Lokasi / Pohon' }
+    ],
+    'BURUAN SAE': [
+        { field: 'sk_buruan_sae', label: 'SK Buruan Sae' },
+        { field: 'foto_halaman', label: 'Foto Halaman / Lahan' },
+        { field: 'kebutuhan_tanaman', label: 'Kebutuhan Bibit / Tanaman' }
+    ],
+    'MUSRENBANG': [
+        { field: 'dokumen_a1', label: 'Dokumen Form A1' },
+        { field: 'dokumen_a2', label: 'Dokumen Form A2' },
+        { field: 'foto_rembuk', label: 'Foto Rembuk Warga' },
+        { field: 'daftar_hadir', label: 'Daftar Hadir Rembuk' }
+    ],
+    'DAU DAN PRAKARSA': [
+        { field: 'ba_muskel', label: 'Berita Acara (BA) Muskel' },
+        { field: 'foto_muskel', label: 'Foto Kegiatan Muskel' },
+        { field: 'dokumen_a1', label: 'Dokumen Form A1' },
+        { field: 'dokumen_a2', label: 'Dokumen Form A2' }
+    ],
+    'SARPRAS DLH': [
+        { field: 'foto_ktp', label: 'Foto KTP' },
+        { field: 'foto_kk', label: 'Kartu Keluarga (KK)' },
+        { field: 'proposal_sarpras', label: 'Proposal Permohonan Sarpras' },
+        { field: 'foto_sarpras', label: 'Foto Lokasi / Sasaran' }
+    ]
+};
 
 export default function PengajuanLayanan() {
     const [dataLayanan, setDataLayanan] = useState([]);
@@ -18,6 +57,19 @@ export default function PengajuanLayanan() {
     const [dataPilih, setDataPilih] = useState(null);
     // STATE UNTUK FITUR CETAK SURAT FISIK
     const [suratPilih, setSuratPilih] = useState(null);
+    // STATE UNTUK FITUR EDIT DATA PEMOHON
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editData, setEditData] = useState({
+        id: null,
+        nik_pemohon: '',
+        nama_pemohon: '',
+        no_telepon: '',
+        jenis_layanan: '',
+        status: ''
+    });
+    const [editDataOriginal, setEditDataOriginal] = useState(null);
+    const [editFiles, setEditFiles] = useState({});
+    const [loadingEdit, setLoadingEdit] = useState(false);
     
     const muatData = async () => {
         try {
@@ -67,6 +119,96 @@ export default function PengajuanLayanan() {
 
     const bukaModalSurat = (data) => {
         setSuratPilih(data);
+    };
+
+    const bukaModalEdit = (data) => {
+        setEditData({
+            id: data.id,
+            nik_pemohon: data.nik_pemohon || '',
+            nama_pemohon: data.nama_pemohon || '',
+            no_telepon: data.no_telepon || '',
+            jenis_layanan: data.jenis_layanan || 'RUTILAHU',
+            status: data.status || 'Baru'
+        });
+        setEditDataOriginal(data);
+        setEditFiles({});
+        setIsEditModalOpen(true);
+    };
+
+    const handleFileChange = (field, file) => {
+        setEditFiles((prev) => ({
+            ...prev,
+            [field]: file
+        }));
+    };
+
+    const handleBatalGantiFile = (field) => {
+        setEditFiles((prev) => {
+            const salinan = { ...prev };
+            delete salinan[field];
+            return salinan;
+        });
+    };
+
+    const handleSimpanEdit = async (e) => {
+        e.preventDefault();
+        if (loadingEdit) return;
+
+        if (editData.nik_pemohon && (editData.nik_pemohon.length !== 16 || isNaN(editData.nik_pemohon))) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Format NIK Salah',
+                text: 'NIK pemohon harus persis 16 digit angka!'
+            });
+            return;
+        }
+
+        setLoadingEdit(true);
+        try {
+            const formData = new FormData();
+            formData.append('nik_pemohon', editData.nik_pemohon);
+            formData.append('nama_pemohon', editData.nama_pemohon);
+            formData.append('no_telepon', editData.no_telepon);
+            formData.append('status', editData.status);
+
+            let adaFileBaru = false;
+            Object.entries(editFiles).forEach(([field, file]) => {
+                if (file) {
+                    formData.append(field, file);
+                    adaFileBaru = true;
+                }
+            });
+
+            const respons = await updateDataLayanan(editData.id, formData);
+            if (respons && respons.status === 'sukses') {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: adaFileBaru
+                        ? 'Data pemohon dan berkas dokumen berhasil diperbarui.'
+                        : (respons.pesan || 'Data pengajuan pemohon berhasil diperbarui.'),
+                    icon: 'success',
+                    confirmButtonColor: '#3C50E0'
+                });
+                setIsEditModalOpen(false);
+                setEditFiles({});
+                setEditDataOriginal(null);
+                muatData();
+            } else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: respons?.pesan || 'Gagal memperbarui data pengajuan.',
+                    icon: 'error'
+                });
+            }
+        } catch {
+            Swal.fire({
+                title: 'Error',
+                text: 'Koneksi ke server terputus saat menyimpan perubahan!',
+                icon: 'error'
+            });
+        } finally {
+            setLoadingEdit(false);
+        }
     };
 
     const renderLink = (namaFile, label) => {
@@ -195,7 +337,7 @@ export default function PengajuanLayanan() {
                                 <th>No. Telepon</th>
                                 <th>Status</th>
                                 <th>Dokumen</th> 
-                                <th>Verifikasi</th>
+                                <th>Tindakan & Verifikasi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -232,6 +374,9 @@ export default function PengajuanLayanan() {
                                         {/* KOLOM VERIFIKASI STATUS */}
                                         <td style={{ verticalAlign: 'middle' }}>
                                             <div className="grup-aksi-sejajar">
+                                                <button className="btn-edit-layanan" onClick={() => bukaModalEdit(data)} title="Edit Data Pemohon">
+                                                    ✏️ Edit
+                                                </button>
                                                 <button className="btn-proses" onClick={() => handleUbahStatus(data.id, 'Diproses')}>
                                                     Proses
                                                 </button>
@@ -282,6 +427,175 @@ export default function PengajuanLayanan() {
 
             {/* MODAL CETAK SURAT INTERAKTIF (SPLIT SCREEN) */}
             <CetakSuratModal suratPilih={suratPilih} onClose={() => setSuratPilih(null)} />
+
+            {/* MODAL EDIT DATA PEMOHON */}
+            {isEditModalOpen && (
+                <div className="modal-overlay">
+                    <div className="modal-content modal-edit-layanan-content">
+                        <button 
+                            className="btn-tutup-modal" 
+                            onClick={() => {
+                                setIsEditModalOpen(false);
+                                setEditFiles({});
+                                setEditDataOriginal(null);
+                            }}
+                        >
+                            ✕
+                        </button>
+                        <h3 className="modal-edit-title">✏️ Edit Data & Berkas Pengajuan</h3>
+                        <p className="modal-edit-sub">Perbarui identitas pemohon, status, atau ganti berkas dokumen yang salah/buram.</p>
+
+                        <form onSubmit={handleSimpanEdit} className="form-edit-layanan">
+                            <div className="form-group-edit">
+                                <label>NIK Pemohon (16 Digit)</label>
+                                <input 
+                                    type="text" 
+                                    maxLength={16}
+                                    placeholder="Contoh: 327301xxxxxxxxxx" 
+                                    value={editData.nik_pemohon} 
+                                    onChange={(e) => setEditData({ ...editData, nik_pemohon: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+
+                            <div className="form-group-edit">
+                                <label>Nama Lengkap Pemohon</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Nama sesuai KTP..." 
+                                    value={editData.nama_pemohon} 
+                                    onChange={(e) => setEditData({ ...editData, nama_pemohon: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+
+                            <div className="form-group-edit">
+                                <label>Nomor Telepon / WhatsApp</label>
+                                <input 
+                                    type="text" 
+                                    placeholder="Contoh: 0812xxxxxxxx" 
+                                    value={editData.no_telepon} 
+                                    onChange={(e) => setEditData({ ...editData, no_telepon: e.target.value })} 
+                                    required 
+                                />
+                            </div>
+
+                            {/* JENIS LAYANAN (TERKUNCI / READ ONLY) */}
+                            <div className="form-group-edit">
+                                <label>Jenis Layanan</label>
+                                <div className="badge-layanan-terkunci">
+                                    <span className="badge-layanan-icon">🔒</span>
+                                    <span className="badge-layanan-teks">{editData.jenis_layanan}</span>
+                                    <span className="badge-layanan-tag">Terkunci</span>
+                                </div>
+                                <span className="info-layanan-terkunci">
+                                    *Jenis layanan tidak dapat diubah agar keabsahan arsip pengajuan warga tetap terjaga.
+                                </span>
+                            </div>
+
+                            <div className="form-group-edit">
+                                <label>Status Pengajuan</label>
+                                <select 
+                                    value={editData.status} 
+                                    onChange={(e) => setEditData({ ...editData, status: e.target.value })} 
+                                    required
+                                >
+                                    <option value="Baru">Baru</option>
+                                    <option value="Diproses">Diproses</option>
+                                    <option value="Selesai">Selesai</option>
+                                    <option value="Ditolak">Ditolak</option>
+                                </select>
+                            </div>
+
+                            {/* BAGIAN GANTI BERKAS DOKUMEN (OPSIONAL) */}
+                            <div className="section-edit-berkas">
+                                <div className="section-berkas-header">
+                                    <label className="section-berkas-title">📁 Penggantian Berkas Dokumen (Opsional)</label>
+                                    <p className="section-berkas-sub">
+                                        Pilih file baru hanya jika berkas yang dikirimkan warga salah, buram, atau perlu diperbaiki (Maks. 5MB).
+                                    </p>
+                                </div>
+
+                                <div className="list-edit-berkas">
+                                    {(MAP_DOKUMEN_LAYANAN[editData.jenis_layanan] || []).map((dok) => {
+                                        const fileLama = editDataOriginal ? editDataOriginal[dok.field] : null;
+                                        const fileDipilih = editFiles[dok.field];
+                                        const linkFileLama = fileLama ? (fileLama.startsWith('http') ? fileLama : `${BASE_URL}/uploads/${fileLama}`) : null;
+
+                                        return (
+                                            <div key={dok.field} className={`item-edit-berkas ${fileDipilih ? 'ada-file-baru' : ''}`}>
+                                                <div className="berkas-info-kolom">
+                                                    <span className="label-nama-berkas">{dok.label}</span>
+                                                    <div className="berkas-status-bar">
+                                                        {linkFileLama ? (
+                                                            <a 
+                                                                href={linkFileLama} 
+                                                                target="_blank" 
+                                                                rel="noreferrer" 
+                                                                className="link-lihat-berkas-lama"
+                                                            >
+                                                                📄 Lihat Berkas Saat Ini
+                                                            </a>
+                                                        ) : (
+                                                            <span className="badge-berkas-kosong">Belum ada file</span>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="berkas-input-kolom">
+                                                    <input
+                                                        type="file"
+                                                        id={`file-input-${dok.field}`}
+                                                        className="input-file-native"
+                                                        onChange={(e) => {
+                                                            if (e.target.files && e.target.files[0]) {
+                                                                handleFileChange(dok.field, e.target.files[0]);
+                                                            }
+                                                        }}
+                                                    />
+                                                    <label 
+                                                        htmlFor={`file-input-${dok.field}`} 
+                                                        className={`btn-upload-ganti ${fileDipilih ? 'btn-upload-aktif' : ''}`}
+                                                    >
+                                                        {fileDipilih ? `✓ ${fileDipilih.name}` : (fileLama ? '🔄 Ganti File' : '➕ Unggah File')}
+                                                    </label>
+                                                    {fileDipilih && (
+                                                        <button
+                                                            type="button"
+                                                            className="btn-batal-ganti-berkas"
+                                                            onClick={() => handleBatalGantiFile(dok.field)}
+                                                            title="Batalkan perubahan file ini"
+                                                        >
+                                                            ✕
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className="modal-edit-actions">
+                                <button 
+                                    type="button" 
+                                    className="btn-batal-modal" 
+                                    onClick={() => {
+                                        setIsEditModalOpen(false);
+                                        setEditFiles({});
+                                        setEditDataOriginal(null);
+                                    }}
+                                >
+                                    Batal
+                                </button>
+                                <button type="submit" className="btn-simpan-modal" disabled={loadingEdit}>
+                                    {loadingEdit ? '⏳ Menyimpan...' : '💾 Simpan Perubahan'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
