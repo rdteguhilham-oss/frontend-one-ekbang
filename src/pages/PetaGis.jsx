@@ -47,7 +47,34 @@ export default function PetaGIS() {
     const [loadingEdit, setLoadingEdit] = useState(false);
 
     // Array kategori yang diizinkan untuk di-update statusnya
-    const kategoriBisaUpdate = ['RUTILAHU', 'POHON TUMBANG', 'INFRASTRUKTUR UMUM'];
+    const kategoriBisaUpdate = ['RUTILAHU', 'POHON TUMBANG', 'INFRASTRUKTUR UMUM', 'DRAINASE / KIRMIR', 'PERBAIKAN JALAN', 'SEBARAN UMKM'];
+
+    const getInfoLabelNamaLokasi = (kat) => {
+        switch (kat) {
+            case 'DRAINASE / KIRMIR':
+                return { label: 'Nama Titik Kirmir / Drainase', placeholder: 'Contoh: Kirmir Saluran Ambles Depan Pos RW 03' };
+            case 'PERBAIKAN JALAN':
+                return { label: 'Nama Ruas / Titik Jalan Rusak', placeholder: 'Contoh: Aspal Berlubang Depan Gang Sukagalih' };
+            case 'SEBARAN UMKM':
+                return { label: 'Nama Usaha / Toko UMKM', placeholder: 'Contoh: Warung Seblak Juara Bu Siti / Toko Kelontong Berkah' };
+            case 'RUTILAHU':
+                return { label: 'Nama Penerima Bantuan Rutilahu', placeholder: 'Contoh: Bpk. Asep Saepudin' };
+            case 'POHON TUMBANG':
+                return { label: 'Lokasi / Sasaran Pohon Rawan', placeholder: 'Contoh: Pohon Trembesi Rawan Tumbang' };
+            case 'BURUAN SAE':
+                return { label: 'Nama Kebun / Kelompok Buruan Sae', placeholder: 'Contoh: Kebun Sejahtera RW 04' };
+            case 'BANK SAMPAH':
+                return { label: 'Nama Unit Bank Sampah', placeholder: 'Contoh: Bank Sampah Berkah Mandiri RW 02' };
+            case 'PENGOLAHAN SAMPAH ORGANIK':
+                return { label: 'Nama Unit Pengolahan Sampah', placeholder: 'Contoh: Rumah Maggot / Loseda RW 06' };
+            case 'KBS':
+                return { label: 'Nama Kawasan Bebas Sampah (KBS)', placeholder: 'Contoh: KBS Kampung Bersih Asri RW 05' };
+            case 'INFRASTRUKTUR UMUM':
+                return { label: 'Nama Fasilitas / Titik Infrastruktur', placeholder: 'Contoh: Lampu PJU Mati / Pos RW 01' };
+            default:
+                return { label: 'Nama Penerima / Titik Lokasi', placeholder: 'Contoh: Bpk. Asep / Bank Sampah RW 02' };
+        }
+    };
 
     const fetchDataPeta = async () => {
         try {
@@ -247,7 +274,10 @@ export default function PetaGIS() {
                                 <option value="PENGOLAHAN SAMPAH ORGANIK">PENGOLAHAN SAMPAH ORGANIK</option>
                                 <option value="BANK SAMPAH">BANK SAMPAH (Anorganik)</option>
                                 <option value="POHON TUMBANG">POHON TUMBANG</option>
-                                <option value="INFRASTRUKTUR UMUM">INFRASTRUKTUR UMUM (Jalan/Gorong/Fasum)</option>
+                                <option value="DRAINASE / KIRMIR">DRAINASE / KIRMIR</option>
+                                <option value="PERBAIKAN JALAN">PERBAIKAN JALAN</option>
+                                <option value="SEBARAN UMKM">SEBARAN UMKM</option>
+                                <option value="INFRASTRUKTUR UMUM">INFRASTRUKTUR UMUM (Lainnya/Fasum)</option>
                             </select>
                         </div>
 
@@ -298,8 +328,8 @@ export default function PetaGIS() {
                         )}
 
                         <div className="form-group-peta">
-                            <label>Nama Penerima / Titik Lokasi</label>
-                            <input type="text" placeholder="Contoh: Bpk. Asep / Bank Sampah RW 02" value={namaLokasi} onChange={(e) => setNamaLokasi(e.target.value)} required />
+                            <label>{getInfoLabelNamaLokasi(kategori).label}</label>
+                            <input type="text" placeholder={getInfoLabelNamaLokasi(kategori).placeholder} value={namaLokasi} onChange={(e) => setNamaLokasi(e.target.value)} required />
                         </div>
                         <div className="form-group-peta">
                             <label>Alamat Lengkap</label>
@@ -325,8 +355,8 @@ export default function PetaGIS() {
                 <div className="kartu-peta">
                     <MapContainer center={posisiTengah} zoom={14} scrollWheelZoom={true} className="wadah-peta">
                         <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            attribution="Tiles &copy; Esri &mdash; Sumber: Esri, DeLorme, NAVTEQ, USGS"
+                            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
                         />
                         
                         {dataTitik.map((titik) => (
@@ -409,7 +439,11 @@ export default function PetaGIS() {
                                     <option value="BURUAN SAE">BURUAN SAE</option>
                                     <option value="KBS">KBS (Kawasan Bebas Sampah)</option>
                                     <option value="POHON TUMBANG">Titik Pohon Tumbang</option>
+                                    <option value="BANK SAMPAH">BANK SAMPAH (Anorganik)</option>
                                     <option value="PENGOLAHAN SAMPAH ORGANIK">Pengolahan Sampah Organik</option>
+                                    <option value="DRAINASE / KIRMIR">DRAINASE / KIRMIR</option>
+                                    <option value="PERBAIKAN JALAN">PERBAIKAN JALAN</option>
+                                    <option value="SEBARAN UMKM">SEBARAN UMKM</option>
                                     <option value="INFRASTRUKTUR UMUM">Infrastruktur Umum Lainnya</option>
                                 </select>
                             </div>
@@ -433,9 +467,10 @@ export default function PetaGIS() {
                             )}
 
                             <div className="form-group-peta">
-                                <label>Nama Lokasi / Program</label>
+                                <label>{getInfoLabelNamaLokasi(editTitikData.kategori).label}</label>
                                 <input 
                                     type="text" 
+                                    placeholder={getInfoLabelNamaLokasi(editTitikData.kategori).placeholder}
                                     value={editTitikData.namaLokasi} 
                                     onChange={(e) => setEditTitikData({ ...editTitikData, namaLokasi: e.target.value })} 
                                     required 

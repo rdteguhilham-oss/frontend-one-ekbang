@@ -17,6 +17,15 @@ export default function AgendaKegiatan() {
     const [loadingSimpan, setLoadingSimpan] = useState(false);
 
     const [agendaList, setAgendaList] = useState([]);
+    const [sekarang, setSekarang] = useState(() => new Date());
+
+    useEffect(() => {
+        // Pembaruan waktu setiap 10 detik agar status Terjadwal/Berlangsung/Selesai sangat responsif
+        const timer = setInterval(() => {
+            setSekarang(new Date());
+        }, 10000);
+        return () => clearInterval(timer);
+    }, []);
     
     // State Kalender
     const [tanggalPilih, setTanggalPilih] = useState(new Date());
@@ -81,7 +90,7 @@ export default function AgendaKegiatan() {
         try {
             const result = await tambahKegiatanAgenda(formData);
             if (result.status === 'sukses') {
-                Swal.fire(result.pesan);
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: result.pesan || 'Agenda kegiatan berhasil disimpan.', confirmButtonColor: '#3C50E0' });
                 fetchAgenda(); 
                 
                 setJudul(''); setKategori(''); setTanggalWaktu(''); setWaktuSelesai('');
@@ -90,10 +99,10 @@ export default function AgendaKegiatan() {
 
                 setIsModalOpen(false);
             } else {
-                Swal.fire("Gagal: " + result.pesan);
+                Swal.fire({ icon: 'error', title: 'Gagal!', text: result.pesan || 'Gagal menyimpan agenda kegiatan.', confirmButtonColor: '#3C50E0' });
             }
         } catch {
-            Swal.fire("Terjadi kesalahan saat menyimpan agenda (Server mati)!");
+            Swal.fire({ icon: 'error', title: 'Error Koneksi', text: 'Terjadi kesalahan saat menyimpan agenda (Koneksi ke server terputus)!', confirmButtonColor: '#3C50E0' });
         } finally {
             setLoadingSimpan(false);
         }
@@ -250,16 +259,42 @@ export default function AgendaKegiatan() {
         setModeTampilan('kalender'); 
     };
 
-    // ── LOGIKA FILTER AGENDA (OPSI 1: HARI INI & MENDATANG SECARA DEFAULT) ──
-    const startHariIni = new Date();
-    startHariIni.setHours(0, 0, 0, 0);
-
-    const isMendatang = (item) => {
+    // ── STATUS DINAMIS AGENDA (MURNI MENGIKUTI WAKTU JADWAL ACARA) ──────
+    const getStatusAgenda = (item, waktuAcuan = sekarang) => {
+        if (!item || !item.tanggal_waktu) return { label: 'Terjadwal', cls: 'badge-sch' };
         const tglMulai = parseTanggal(item.tanggal_waktu);
-        if (!tglMulai || isNaN(tglMulai.getTime())) return false;
-        const tglSelesai = parseTanggal(item.waktu_selesai);
-        const tglAkhir = tglSelesai && !isNaN(tglSelesai.getTime()) ? tglSelesai : tglMulai;
-        return tglAkhir >= startHariIni;
+        if (!tglMulai || isNaN(tglMulai.getTime())) return { label: 'Terjadwal', cls: 'badge-sch' };
+
+        const now = waktuAcuan.getTime();
+        const start = tglMulai.getTime();
+
+        if (now < start) {
+            return { label: 'Terjadwal', cls: 'badge-sch' };
+        }
+
+        if (item.waktu_selesai) {
+            const tglSelesai = parseTanggal(item.waktu_selesai);
+            if (tglSelesai && !isNaN(tglSelesai.getTime())) {
+                if (now >= tglSelesai.getTime()) {
+                    return { label: 'Selesai', cls: 'badge-done' };
+                }
+                return { label: 'Berlangsung', cls: 'badge-on' };
+            }
+        }
+
+        // Fallback jika waktu selesai tidak diisi: estimasi durasi 2 jam (120 menit)
+        const selisihMenit = (now - start) / (1000 * 60);
+        if (selisihMenit <= 120) {
+            return { label: 'Berlangsung', cls: 'badge-on' };
+        }
+        return { label: 'Selesai', cls: 'badge-done' };
+    };
+
+    // Agenda dianggap selesai masuk riwayat jika jam selesai lewat ATAU foto dokumentasi sudah diunggah
+    const isSudahSelesai = (item) => {
+        if (item.foto_dokumentasi) return true;
+        const status = getStatusAgenda(item, sekarang);
+        return status.label === 'Selesai';
     };
 
     let dataDitampilkan;
@@ -272,11 +307,12 @@ export default function AgendaKegiatan() {
                    tglAgenda.getFullYear() === tanggalPilih.getFullYear();
         }).sort((a, b) => parseTanggal(a.tanggal_waktu) - parseTanggal(b.tanggal_waktu));
     } else if (modeTampilan === 'riwayat') {
-        dataDitampilkan = agendaList.filter(item => !isMendatang(item))
-            .sort((a, b) => parseTanggal(b.tanggal_waktu) - parseTanggal(a.tanggal_waktu)); // Riwayat: urut dari yang paling baru
+        // Riwayat: Agenda yang sudah selesai (waktu lewat atau foto dokumentasi sudah diunggah)
+        dataDitampilkan = agendaList.filter(item => isSudahSelesai(item))
+            .sort((a, b) => parseTanggal(b.tanggal_waktu) - parseTanggal(a.tanggal_waktu));
     } else {
-        // Mode 'mendatang' (default): hanya hari ini dan masa depan
-        dataDitampilkan = agendaList.filter(item => isMendatang(item))
+        // Jadwal Mendatang: Agenda yang belum selesai (terjadwal atau sedang berlangsung)
+        dataDitampilkan = agendaList.filter(item => !isSudahSelesai(item))
             .sort((a, b) => parseTanggal(a.tanggal_waktu) - parseTanggal(b.tanggal_waktu));
     }
 
@@ -346,6 +382,7 @@ export default function AgendaKegiatan() {
                                 <tr>
                                     <th>Waktu</th>
                                     <th>Agenda Kegiatan</th>
+                                    <th>Status</th>
                                     <th>Catatan</th>
                                     <th>Dokumentasi</th>
                                     <th>Aksi</th>
@@ -357,6 +394,7 @@ export default function AgendaKegiatan() {
                                         const tglMulai = parseTanggal(item.tanggal_waktu);
                                         const tglSelesai = item.waktu_selesai ? parseTanggal(item.waktu_selesai) : null;
                                         const bedaHari = tglSelesai && (tglMulai.toDateString() !== tglSelesai.toDateString());
+                                        const status = getStatusAgenda(item, sekarang);
 
                                         let rentangWaktu = `${tglMulai.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})} WIB`;
                                         if (tglSelesai) {
@@ -380,8 +418,15 @@ export default function AgendaKegiatan() {
                                                         <small className="agenda-lokasi">📍 {item.lokasi}</small>
                                                     </div>
                                                 </td>
-                                                <td>{item.catatan_reminder || '-'}</td>
-                                                <td>
+                                                <td style={{ verticalAlign: 'middle' }}>
+                                                    <span className={`badge-status-agenda ${status.cls}`}>
+                                                        {status.label}
+                                                    </span>
+                                                </td>
+                                                <td style={{ verticalAlign: 'middle', wordBreak: 'break-word', whiteSpace: 'normal', lineHeight: '1.45' }}>
+                                                    {item.catatan_reminder || '-'}
+                                                </td>
+                                                <td style={{ verticalAlign: 'middle', textAlign: 'center' }}>
                                                     {item.foto_dokumentasi ? (
                                                         <a href={item.foto_dokumentasi.startsWith('http') ? item.foto_dokumentasi : `${BASE_URL}/uploads/${item.foto_dokumentasi}`} target="_blank" rel="noreferrer" className="link-foto">Lihat Foto</a>
                                                     ) : (
@@ -411,7 +456,7 @@ export default function AgendaKegiatan() {
                                     })
                                 ) : (
                                     <tr>
-                                        <td colSpan="5" style={{textAlign: 'center', padding: '35px 15px', color: 'var(--text-redup)'}}>
+                                        <td colSpan="6" style={{textAlign: 'center', padding: '35px 15px', color: 'var(--text-redup)'}}>
                                             {modeTampilan === 'kalender' 
                                                 ? `Tidak ada jadwal kegiatan pada tanggal ${tanggalPilih.toLocaleDateString('id-ID')}.`
                                                 : modeTampilan === 'riwayat'

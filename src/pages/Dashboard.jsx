@@ -12,7 +12,7 @@ import {
     FaUsers, FaClipboardList, FaLeaf, FaUserShield, FaBell,
     FaCalendarAlt, FaHome, FaTree, FaHandsHelping,
     FaMapMarkedAlt, FaSignOutAlt, FaTools,
-    FaNewspaper, FaDownload, FaRecycle, FaWater
+    FaNewspaper, FaDownload, FaRecycle, FaWater, FaRoad, FaStore, FaFileAlt
 } from 'react-icons/fa';
 import './Dashboard.css';
 
@@ -124,6 +124,10 @@ export default function Dashboard() {
     const jmlMusrenbang = dataLayanan.filter(d => d.jenis_layanan === 'MUSRENBANG').length;
     const jmlDau        = dataLayanan.filter(d => d.jenis_layanan === 'DAU DAN PRAKARSA').length;
     const jmlSarpras    = dataLayanan.filter(d => d.jenis_layanan === 'SARPRAS DLH').length;
+    const jmlKirmir     = dataLayanan.filter(d => d.jenis_layanan === 'KIRMIR / DRAINASE').length;
+    const jmlJalan      = dataLayanan.filter(d => d.jenis_layanan === 'PERBAIKAN JALAN').length;
+    const jmlUmkm       = dataLayanan.filter(d => d.jenis_layanan === 'UMKM').length;
+    const jmlLainnya    = dataLayanan.filter(d => d.jenis_layanan && (d.jenis_layanan.startsWith('LAINNYA') || d.jenis_layanan === 'PENGAJUAN LAINNYA')).length;
 
     // ── NOTIFIKASI ─────────────────────────────────────────────
     const daftarNotifBaru = dataLayanan.filter(i => !i.status || i.status === 'Baru');
@@ -132,10 +136,10 @@ export default function Dashboard() {
     const [sekarang, setSekarang] = useState(() => new Date());
 
     useEffect(() => {
-        // Update waktu setiap 1 menit agar saat berganti hari atau jam, status dan filter langsung terupdate
+        // Update waktu setiap 10 detik agar pergantian status jadwal dan jam sangat responsif
         const timer = setInterval(() => {
             setSekarang(new Date());
-        }, 60000);
+        }, 10000);
         return () => clearInterval(timer);
     }, []);
 
@@ -146,11 +150,8 @@ export default function Dashboard() {
         return new Date(str);
     };
 
-    // ── STATUS DINAMIS AGENDA ──────────────────────────────────
-    const getStatusAgenda = (tanggalWaktuStr, waktuSelesaiStr, fotoDokumentasi) => {
-        if (fotoDokumentasi) {
-            return { label: 'Selesai', cls: 'badge-done' };
-        }
+    // ── STATUS DINAMIS AGENDA (MURNI MENGIKUTI WAKTU JADWAL ACARA) ──────
+    const getStatusAgenda = (tanggalWaktuStr, waktuSelesaiStr) => {
         if (!tanggalWaktuStr) return { label: 'Terjadwal', cls: 'badge-sch' };
         const tglMulai = parseDate(tanggalWaktuStr);
         if (!tglMulai || isNaN(tglMulai.getTime())) return { label: 'Terjadwal', cls: 'badge-sch' };
@@ -165,7 +166,7 @@ export default function Dashboard() {
         if (waktuSelesaiStr) {
             const tglSelesai = parseDate(waktuSelesaiStr);
             if (tglSelesai && !isNaN(tglSelesai.getTime())) {
-                if (now > tglSelesai.getTime()) {
+                if (now >= tglSelesai.getTime()) {
                     return { label: 'Selesai', cls: 'badge-done' };
                 }
                 return { label: 'Berlangsung', cls: 'badge-on' };
@@ -234,7 +235,7 @@ export default function Dashboard() {
                 <div className="db-header-bg" style={{ backgroundImage: 'url(/bg-city.jpg)' }}>
                     <div className="db-header-overlay"></div>
                     {/* Lambang Kota Bandung - tengah */}
-                    <img src="/rb-logo-bdg.png" alt="Lambang Bandung" className="db-emblem" />
+                    <img src={`${import.meta.env.BASE_URL}rb-logo-bdg.png`} alt="Lambang Bandung" className="db-emblem" />
                     {/* Slogan kanan */}
                     <div className="db-slogan">
                         <em>Wilayah Lebih Bersih,</em><br />
@@ -338,7 +339,7 @@ export default function Dashboard() {
                     </div>
                     <div className={`db-box-body db-agenda-list ${agendaDensityClass}`}>
                         {agendaHariIni.length > 0 ? agendaHariIni.map((ag) => {
-                            const status = getStatusAgenda(ag.tanggal_waktu, ag.waktu_selesai, ag.foto_dokumentasi);
+                            const status = getStatusAgenda(ag.tanggal_waktu, ag.waktu_selesai);
                             const tglMulai = parseDate(ag.tanggal_waktu);
                             const tglSelesai = ag.waktu_selesai ? parseDate(ag.waktu_selesai) : null;
                             const jamMulai = tglMulai ? tglMulai.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '';
@@ -380,6 +381,10 @@ export default function Dashboard() {
                             { name:'Musrenbang',     val: jmlMusrenbang, icon: <FaUsers />,        color:'#8B5CF6' },
                             { name:'DAU & Prakarsa', val: jmlDau,        icon: <FaHandsHelping />, color:'#0284C7' },
                             { name:'Sarpras DLH',    val: jmlSarpras,    icon: <FaTools />,        color:'#0891B2' },
+                            { name:'Kirmir/Drainase',val: jmlKirmir,     icon: <FaWater />,        color:'#06B6D4' },
+                            { name:'Perbaikan Jalan',val: jmlJalan,      icon: <FaRoad />,         color:'#475569' },
+                            { name:'UMKM',           val: jmlUmkm,       icon: <FaStore />,        color:'#F59E0B' },
+                            { name:'Lainnya',        val: jmlLainnya,    icon: <FaFileAlt />,      color:'#EC4899' },
                         ].map((t, i) => (
                             <div key={i} className="db-pengajuan-tile">
                                 <div className="db-ptile-icon" style={{ color: t.color }}>{t.icon}</div>
@@ -401,7 +406,10 @@ export default function Dashboard() {
                     <div className="db-box-body db-peta-wrap">
                         <div className="db-map-canvas">
                             <MapContainer center={[-6.891226, 107.601757]} zoom={13} scrollWheelZoom={false} className="db-leaflet">
-                                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                <TileLayer 
+                                    url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+                                    attribution="Tiles &copy; Esri &mdash; Sumber: Esri, DeLorme, NAVTEQ, USGS"
+                                />
                                 {dataPeta.map(titik => (
                                     <Marker key={titik.id} position={[titik.latitude, titik.longitude]}>
                                         <Popup>{titik.nama_lokasi}</Popup>

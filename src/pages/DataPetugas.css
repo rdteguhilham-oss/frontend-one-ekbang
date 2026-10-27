@@ -329,3 +329,67 @@
         flex-direction: column;
     }
 }
+
+/* KONSISTENSI & KERAPIHAN KOLOM TABEL DATA PETUGAS */
+.petugas-table-card .tabel-utama {
+    width: 100%;
+    min-width: 1100px; /* Memberikan ruang ideal untuk seluruh kolom tabel */
+}
+
+.kolom-no-petugas {
+    width: 45px;
+    text-align: center;
+    white-space: nowrap !important;
+}
+
+.kolom-nama-petugas {
+    white-space: nowrap !important;
+    min-width: 140px;
+    font-weight: 500;
+}
+
+.kolom-kategori-petugas {
+    white-space: nowrap !important;
+    min-width: 130px;
+}
+
+.kolom-wilayah-petugas {
+    min-width: 220px;
+    max-width: 320px;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.45;
+}
+
+.kolom-nosk-petugas {
+    white-space: nowrap !important;
+    min-width: 125px;
+    font-weight: 500;
+}
+
+.kolom-filesk-petugas {
+    white-space: nowrap !important;
+    text-align: center;
+    width: 95px;
+}
+
+.kolom-status-petugas {
+    white-space: nowrap !important;
+    text-align: center;
+    width: 95px;
+}
+
+.kolom-aksi-petugas {
+    white-space: nowrap !important;
+    min-width: 255px;
+    width: 255px;
+}
+
+.grup-aksi-petugas {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+

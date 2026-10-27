@@ -55,7 +55,7 @@ export default function DataPetugas () {
     try {
       const result = await tambahPetugas(formData);
       if (result.status === 'sukses') {
-        Swal.fire('Data Petugas berhasil disimpan!');
+        Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Data Petugas berhasil disimpan!', confirmButtonColor: '#3C50E0' });
         fetchPetugas();
         setNamaPetugas('');
         setKategoriPetugas('');
@@ -66,10 +66,10 @@ export default function DataPetugas () {
         
         setIsModalOpen(false);
       } else {
-        Swal.fire('Gagal: ' + result.pesan);
+        Swal.fire({ icon: 'error', title: 'Gagal!', text: result.pesan || 'Gagal menyimpan data petugas.', confirmButtonColor: '#3C50E0' });
       }
     } catch {
-      Swal.fire("Terjadi kesalahan sistem saat menyimpan data.");
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan sistem saat menyimpan data petugas.', confirmButtonColor: '#3C50E0' });
     } finally {
       setLoadingSimpan(false);
     }
@@ -245,38 +245,38 @@ export default function DataPetugas () {
             <table className="tabel-utama">
             <thead>
                 <tr>
-                <th>No</th>
-                <th>Nama Petugas</th>
-                <th>Kategori</th>
-                <th>Wilayah</th>
-                <th>No. SK</th>
-                <th>File SK</th>
-                <th>Status</th>
-                <th>Aksi</th>
+                <th className="kolom-no-petugas">No</th>
+                <th className="kolom-nama-petugas">Nama Petugas</th>
+                <th className="kolom-kategori-petugas">Kategori</th>
+                <th className="kolom-wilayah-petugas">Wilayah</th>
+                <th className="kolom-nosk-petugas">No. SK</th>
+                <th className="kolom-filesk-petugas">File SK</th>
+                <th className="kolom-status-petugas">Status</th>
+                <th className="kolom-aksi-petugas">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 {hasilFilter.length > 0 ? (
                 hasilFilter.map((petugas, index) => (
                     <tr key={petugas.id}>
-                    <td>{index + 1}</td>
-                    <td>{petugas.nama_petugas}</td>
-                    <td>{petugas.kategori_petugas}</td>
-                    <td>{petugas.wilayah}</td>
-                    <td>{petugas.no_sk || '-'}</td>
-                    <td>
+                    <td className="kolom-no-petugas">{index + 1}</td>
+                    <td className="kolom-nama-petugas">{petugas.nama_petugas}</td>
+                    <td className="kolom-kategori-petugas">{petugas.kategori_petugas}</td>
+                    <td className="kolom-wilayah-petugas">{petugas.wilayah}</td>
+                    <td className="kolom-nosk-petugas">{petugas.no_sk || '-'}</td>
+                    <td className="kolom-filesk-petugas">
                         {petugas.file_sk ? (
                           <a href={petugas.file_sk.startsWith('http') ? petugas.file_sk : `${BASE_URL}/uploads/${petugas.file_sk}`} target="_blank" rel="noreferrer" className="btn-lihat">
                             Lihat SK
                           </a>
                         ) : '-'}
                     </td>
-                    <td style={{ verticalAlign: 'middle' }}>
+                    <td className="kolom-status-petugas" style={{ verticalAlign: 'middle' }}>
                       <span className={`badge-petugas-status ${petugas.status === 'Non-Aktif' ? 'badge-nonaktif' : 'badge-aktif'}`}>
                         {petugas.status || 'Aktif'}
                       </span>
                     </td>
-                    <td style={{ verticalAlign: 'middle' }}>
+                    <td className="kolom-aksi-petugas" style={{ verticalAlign: 'middle' }}>
                       <div className="grup-aksi-petugas">
                         <button className="btn-edit-petugas" onClick={() => bukaModalEdit(petugas)} title="Edit Data Petugas">
                           ✏️ Edit

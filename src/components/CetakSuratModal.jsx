@@ -27,7 +27,16 @@ export default function CetakSuratModal({ suratPilih, onClose }) {
             setPrintNomorSurat(`S/LH.04.04/11-Kel. Pstr/${blnRoman}/${new Date().getFullYear()}`);
             setPrintHal(`Permohonan Tindak Lanjut ${suratPilih.jenis_layanan}`);
             setPrintTujuan('1. Kepala Dinas Terkait');
-            setPrintParagraf1(`Dipermaklumkan dengan hormat, sehubungan dengan laporan dan usulan warga di wilayah Kelurahan Pasteur, bersama ini kami sampaikan permohonan tindak lanjut untuk program ${suratPilih.jenis_layanan}. Adapun rincian data pemohon adalah sebagai berikut:`);
+            let rincianTambahan = '';
+            if (suratPilih.alamat_rusak) {
+                rincianTambahan += `\n- Lokasi / Titik Kerusakan : ${suratPilih.alamat_rusak}`;
+            }
+            if (suratPilih.nama_usaha) {
+                rincianTambahan += `\n- Nama Usaha : ${suratPilih.nama_usaha} (${suratPilih.jenis_usaha || 'UMKM'})`;
+                if (suratPilih.no_nib_suket) rincianTambahan += `\n- No. NIB / Suket : ${suratPilih.no_nib_suket}`;
+            }
+
+            setPrintParagraf1(`Dipermaklumkan dengan hormat, sehubungan dengan laporan dan usulan warga di wilayah Kelurahan Pasteur, bersama ini kami sampaikan permohonan tindak lanjut untuk program ${suratPilih.jenis_layanan}. Adapun rincian data pemohon adalah sebagai berikut:\n- Nama Pemohon : ${suratPilih.nama_pemohon}\n- NIK : ${suratPilih.nik_pemohon}\n- No. Kontak : ${suratPilih.no_telepon || '-'}${rincianTambahan}`);
         }
     }, [suratPilih]);
 
@@ -146,7 +155,7 @@ export default function CetakSuratModal({ suratPilih, onClose }) {
                         
                         {/* KOP SURAT */}
                         <div className="kop-surat-resmi">
-                            <img src="/logo-kota-bandung.jpg" alt="Logo" className="kop-logo" />
+                            <img src={`${import.meta.env.BASE_URL}logo-kota-bandung.jpg`} alt="Logo" className="kop-logo" />
                             <div className="kop-teks">
                                 <h4>PEMERINTAH DAERAH KOTA BANDUNG</h4>
                                 <h3>KECAMATAN SUKAJADI</h3>
@@ -204,7 +213,7 @@ export default function CetakSuratModal({ suratPilih, onClose }) {
                                 
                                 {printPakaiTTE ? (
                                     <div className="kotak-tte-bsre">
-                                        <img src="/logo-kota-bandung.jpg" alt="Logo Pemkot" />
+                                        <img src={`${import.meta.env.BASE_URL}logo-kota-bandung.jpg`} alt="Logo Pemkot" />
                                         <div className="kotak-tte-teks">
                                             <div className="tte-head">
                                                 {printTteHeader.split('\n').map((line, i) => <div key={i}>{line}</div>)}

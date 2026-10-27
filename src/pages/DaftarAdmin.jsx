@@ -37,7 +37,7 @@ export default function DaftarAdmin() {
           await tandaiNotifikasiDibaca(id);
           fetchNotifikasi();
       } catch {
-          Swal.fire("Gagal memperbarui status notifikasi.");
+          Swal.fire({ icon: 'error', title: 'Gagal', text: 'Gagal memperbarui status notifikasi.', confirmButtonColor: '#3C50E0' });
       }
   };
 
@@ -60,14 +60,14 @@ export default function DaftarAdmin() {
       try {
           const result = await tambahAdmin(dataBaru);
           if (result.status === 'sukses') {
-              Swal.fire(result.pesan);
+              Swal.fire({ icon: 'success', title: 'Berhasil!', text: result.pesan || 'Akun staf admin berhasil dibuat.', confirmButtonColor: '#3C50E0' });
               fetchAdmin(); 
               setNik(''); setNamaLengkap(''); setUsername(''); setPassword('');
           } else {
-              Swal.fire("Gagal: " + result.pesan);
+              Swal.fire({ icon: 'error', title: 'Gagal!', text: result.pesan || 'Gagal membuat akun staf admin.', confirmButtonColor: '#3C50E0' });
           }
       } catch {
-          Swal.fire("Terjadi kesalahan sistem saat membuat akun.");
+          Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan sistem saat membuat akun staf admin.', confirmButtonColor: '#3C50E0' });
       } finally {
           setLoadingSimpan(false);
       }

@@ -234,3 +234,23 @@
         align-self: flex-end;
     }
 }
+
+/* KONSISTENSI & KERAPIHAN TABEL ADMIN */
+.admin-table-card .tabel-utama {
+    width: 100%;
+    min-width: 720px;
+}
+
+.admin-table-card .tabel-utama th:first-child,
+.admin-table-card .tabel-utama td:first-child {
+    white-space: nowrap !important;
+    text-align: center;
+    width: 45px;
+}
+
+.admin-table-card .tabel-utama th:last-child,
+.admin-table-card .tabel-utama td:last-child {
+    white-space: nowrap !important;
+    width: 100px;
+}
+

@@ -75,7 +75,7 @@ export default function KegiatanHarian() {
     const submitGober = async (e) => {
         e.preventDefault();
         if (!fotoGober) {
-            Swal.fire("Foto kegiatan Gober wajib diunggah!");
+            Swal.fire({ icon: 'warning', title: 'Foto Belum Diunggah', text: 'Foto kegiatan Gober wajib diunggah!', confirmButtonColor: '#3C50E0' });
             return;
         }
 
@@ -100,15 +100,15 @@ export default function KegiatanHarian() {
         try {
             const result = await tambahKegiatanGober(formData);
             if (result.status === 'sukses') {
-                Swal.fire(result.pesan);
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: result.pesan || 'Laporan kegiatan Gober berhasil disimpan.', confirmButtonColor: '#3C50E0' });
                 fetchData(); 
                 setIdPetugasGober(''); setLokasi(''); setPanjangMeter(''); setFotoGober(null);
                 setIsModalOpen(false);
             } else {
-                Swal.fire("Gagal: " + result.pesan);
+                Swal.fire({ icon: 'error', title: 'Gagal!', text: result.pesan || 'Gagal menyimpan data.', confirmButtonColor: '#3C50E0' });
             }
         } catch {
-            Swal.fire("Koneksi gagal saat menyimpan laporan Gober!");
+            Swal.fire({ icon: 'error', title: 'Error Koneksi', text: 'Koneksi gagal saat menyimpan laporan Gober!', confirmButtonColor: '#3C50E0' });
         } finally {
             setLoadingGober(false);
         }
@@ -118,7 +118,7 @@ export default function KegiatanHarian() {
         e.preventDefault();
         
         if (!fotoSampah) {
-            Swal.fire("Foto bukti timbangan wajib diunggah!");
+            Swal.fire({ icon: 'warning', title: 'Foto Belum Diunggah', text: 'Foto bukti timbangan wajib diunggah!', confirmButtonColor: '#3C50E0' });
             return;
         }
 
@@ -133,15 +133,15 @@ export default function KegiatanHarian() {
         try {
             const result = await tambahKegiatanSampah(formData);
             if (result.status === 'sukses') {
-                Swal.fire(result.pesan);
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: result.pesan || 'Laporan timbangan sampah berhasil disimpan.', confirmButtonColor: '#3C50E0' });
                 fetchData();
                 setIdPetugasSampah(''); setDataRw(''); setBeratKiloan(''); setFotoSampah(null);
                 setIsModalOpen(false);
             } else {
-                Swal.fire("Gagal: " + result.pesan);
+                Swal.fire({ icon: 'error', title: 'Gagal!', text: result.pesan || 'Gagal menyimpan data timbangan sampah.', confirmButtonColor: '#3C50E0' });
             }
         } catch {
-            Swal.fire("Koneksi gagal saat menyimpan laporan Sampah!");
+            Swal.fire({ icon: 'error', title: 'Error Koneksi', text: 'Koneksi gagal saat menyimpan laporan Sampah!', confirmButtonColor: '#3C50E0' });
         } finally {
             setLoadingSampah(false);
         }

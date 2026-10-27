@@ -38,10 +38,10 @@ export default function Login() {
                 }
                 navigate("/dashboard"); 
             } else {
-                Swal.fire(respons?.pesan || "Login Gagal!");
+                Swal.fire({ icon: 'error', title: 'Login Gagal', text: respons?.pesan || 'Username atau password salah!', confirmButtonColor: '#3C50E0' });
             }
         } catch {
-            Swal.fire("Koneksi ke server gagal! Pastikan server menyala.");
+            Swal.fire({ icon: 'error', title: 'Koneksi Terputus', text: 'Koneksi ke server gagal! Pastikan server menyala.', confirmButtonColor: '#3C50E0' });
         } finally {
             setLoading(false);
         }
@@ -54,14 +54,14 @@ export default function Login() {
         try {
             const result = await kirimLupaPassword(resetUsername);
             if (result.status === 'sukses') {
-                Swal.fire(result.pesan);
+                Swal.fire({ icon: 'success', title: 'Berhasil', text: result.pesan || 'Permintaan reset berhasil dikirimkan.', confirmButtonColor: '#3C50E0' });
                 setIsModalOpen(false); 
                 setResetUsername(""); 
             } else {
-                Swal.fire("Gagal: " + result.pesan);
+                Swal.fire({ icon: 'error', title: 'Gagal', text: result.pesan || 'Gagal memproses permintaan reset password.', confirmButtonColor: '#3C50E0' });
             }
         } catch {
-            Swal.fire("Koneksi ke server gagal saat mengirim permintaan.");
+            Swal.fire({ icon: 'error', title: 'Error Koneksi', text: 'Koneksi ke server gagal saat mengirim permintaan.', confirmButtonColor: '#3C50E0' });
         } finally {
             setLoading(false);
         }
@@ -75,7 +75,7 @@ export default function Login() {
             <div className="login-card-container">
                 <div className="login-card-header">
                     <div className="login-card-logo-wrap">
-                        <img src="/rb-logo-oneEkbang.png" alt="Logo One Ekbang" className="login-card-logo-img" />
+                        <img src={`${import.meta.env.BASE_URL}rb-logo-oneEkbang.png`} alt="Logo One Ekbang" className="login-card-logo-img" />
                     </div>
                     <p className="login-subtitle-utama">Akses sistem untuk seluruh pegawai Kelurahan Pasteur</p>
                 </div>

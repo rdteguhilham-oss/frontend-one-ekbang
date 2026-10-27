@@ -265,7 +265,7 @@
     width: 100%;
     table-layout: fixed;
     margin-top: 10px;
-    min-width: 620px;
+    min-width: 780px;
 }
 
 .agenda-card .tabel-utama th {
@@ -277,40 +277,54 @@
     padding: 10px 8px;
     font-size: 12px;
     vertical-align: middle;
-    word-break: break-word;
 }
 
-/* Kolom 1 - Waktu: 16% */
+/* Kolom 1 - Waktu: 15% */
 .agenda-card .tabel-utama th:nth-child(1),
 .agenda-card .tabel-utama td:nth-child(1) {
-    width: 16%;
+    width: 15%;
+    min-width: 110px;
     white-space: nowrap;
 }
 
-/* Kolom 2 - Agenda Kegiatan: 26% */
+/* Kolom 2 - Agenda Kegiatan: 24% */
 .agenda-card .tabel-utama th:nth-child(2),
 .agenda-card .tabel-utama td:nth-child(2) {
-    width: 26%;
+    width: 24%;
+    min-width: 160px;
 }
 
-/* Kolom 3 - Catatan: 19% */
+/* Kolom 3 - Status: 12% */
 .agenda-card .tabel-utama th:nth-child(3),
 .agenda-card .tabel-utama td:nth-child(3) {
-    width: 19%;
+    width: 12%;
+    min-width: 95px;
+    text-align: center !important;
 }
 
-/* Kolom 4 - Dokumentasi: 16% */
+/* Kolom 4 - Catatan: 22% (Teks membungkus rapi, tidak terpotong atau tertimpa) */
 .agenda-card .tabel-utama th:nth-child(4),
 .agenda-card .tabel-utama td:nth-child(4) {
-    width: 16%;
+    width: 22%;
+    min-width: 160px;
+    white-space: normal !important;
+    word-break: break-word;
+    line-height: 1.45;
+}
+
+/* Kolom 5 - Dokumentasi: 13% */
+.agenda-card .tabel-utama th:nth-child(5),
+.agenda-card .tabel-utama td:nth-child(5) {
+    width: 13%;
+    min-width: 115px;
     white-space: nowrap;
     text-align: center !important;
 }
 
-/* Kolom 5 - Aksi: 23% (Ruang lega untuk Edit & Hapus berdampingan) */
-.agenda-card .tabel-utama th:nth-child(5),
-.agenda-card .tabel-utama td:nth-child(5) {
-    width: 23%;
+/* Kolom 6 - Aksi: 14% (Ruang lega untuk Edit & Hapus berdampingan) */
+.agenda-card .tabel-utama th:nth-child(6),
+.agenda-card .tabel-utama td:nth-child(6) {
+    width: 14%;
     min-width: 135px;
     white-space: nowrap;
     text-align: center !important;
@@ -336,6 +350,53 @@
     font-size: 11px;
     color: var(--text-redup);
     line-height: 1.2;
+}
+
+/* Badge Status Dinamis Agenda (Seragam dengan Dashboard) */
+.badge-status-agenda {
+    display: inline-block;
+    padding: 3.5px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+}
+
+.badge-status-agenda.badge-on {
+    background-color: #DCFCE7;
+    color: #166534;
+    border: 1px solid #86EFAC;
+}
+
+.badge-status-agenda.badge-sch {
+    background-color: #E0F2FE;
+    color: #0369A1;
+    border: 1px solid #BAE6FD;
+}
+
+.badge-status-agenda.badge-done {
+    background-color: #F1F5F9;
+    color: #64748B;
+    border: 1px solid #CBD5E1;
+}
+
+body.dark-mode .badge-status-agenda.badge-on {
+    background-color: rgba(22, 101, 52, 0.3);
+    color: #4ADE80;
+    border-color: rgba(74, 222, 128, 0.3);
+}
+
+body.dark-mode .badge-status-agenda.badge-sch {
+    background-color: rgba(3, 105, 161, 0.3);
+    color: #38BDF8;
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+body.dark-mode .badge-status-agenda.badge-done {
+    background-color: #334155;
+    color: #94A3B8;
+    border-color: #475569;
 }
 
 .badge-kategori {

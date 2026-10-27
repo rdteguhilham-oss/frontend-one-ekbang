@@ -30,7 +30,7 @@ const tanganiRespons = async (respons) => {
             });
 
             // 4. Baris ini baru akan berjalan SETELAH kamu menekan tombol OK
-            window.location.href = '/login'; 
+            window.location.href = `${import.meta.env.BASE_URL}login`; 
         }
         
         return Promise.reject("Sesi Habis"); 
@@ -139,7 +139,7 @@ export const tambahLayanan = async (dataPaket) => {
 
 export const updateStatusLayanan = async (id, status) => {
     try {
-        const response = await fetch(`${BASE_URL}/layanan/${id}`, {
+        let response = await fetch(`${BASE_URL}/layanan/${id}/status`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
@@ -147,10 +147,23 @@ export const updateStatusLayanan = async (id, status) => {
             },
             body: JSON.stringify({ status: status })
         });
+
+        // Fallback jika backend lawas belum memiliki sub-rute /status
+        if (response.status === 404) {
+            response = await fetch(`${BASE_URL}/layanan/${id}`, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    ...getAuthHeader()
+                },
+                body: JSON.stringify({ status: status })
+            });
+        }
+
         return await tanganiRespons(response);
     } catch (error) {
         console.error("Gagal update status:", error);
-        throw error; 
+        throw error;
     }
 };
 
@@ -170,6 +183,19 @@ export const updateDataLayanan = async (id, dataEdit) => {
     } catch (error) {
         console.error("Gagal memperbarui data layanan:", error);
         throw error; 
+    }
+};
+
+export const hapusLayanan = async (id) => {
+    try {
+        const response = await fetch(`${BASE_URL}/layanan/${id}`, {
+            method: 'DELETE',
+            headers: { ...getAuthHeader() }
+        });
+        return await tanganiRespons(response);
+    } catch (error) {
+        console.error("Gagal menghapus data layanan:", error);
+        throw error;
     }
 };
 

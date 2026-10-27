@@ -126,7 +126,7 @@ export default function App() {
                       </button>
                   </div>
                   <div className="sidebar-logo-card">
-                      <img src="/rb-logo-oneEkbang.png" alt="Logo ONE EKBANG" className="sidebar-logo-img" />
+                      <img src={`${import.meta.env.BASE_URL}rb-logo-oneEkbang.png`} alt="Logo ONE EKBANG" className="sidebar-logo-img" />
                   </div>
               </div>
 
@@ -173,7 +173,7 @@ export default function App() {
                       </svg>
                   </div>
                   <div className="sidebar-footer-brand">
-                      <img src="/rb-logo-bdg.png" alt="Logo Pemkot Bandung" className="sidebar-footer-logo" />
+                      <img src={`${import.meta.env.BASE_URL}rb-logo-bdg.png`} alt="Logo Pemkot Bandung" className="sidebar-footer-logo" />
                       <div className="sidebar-footer-text">
                           <strong>Kelurahan Pasteur</strong>
                           <span>Kota Bandung</span>

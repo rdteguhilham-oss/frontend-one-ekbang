@@ -2,7 +2,7 @@ import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
-import { getDataLayanan, updateStatusLayanan, updateDataLayanan, BASE_URL } from "../services/api"; 
+import { getDataLayanan, updateStatusLayanan, updateDataLayanan, hapusLayanan, BASE_URL } from "../services/api"; 
 import { Link } from "react-router-dom";
 import './PengajuanLayanan.css';
 import CetakSuratModal from '../components/CetakSuratModal';
@@ -43,6 +43,23 @@ const MAP_DOKUMEN_LAYANAN = {
         { field: 'foto_kk', label: 'Kartu Keluarga (KK)' },
         { field: 'proposal_sarpras', label: 'Proposal Permohonan Sarpras' },
         { field: 'foto_sarpras', label: 'Foto Lokasi / Sasaran' }
+    ],
+    'KIRMIR / DRAINASE': [
+        { field: 'foto_ktp', label: 'Foto KTP' },
+        { field: 'foto_bukti', label: 'Foto Bukti Kerusakan' }
+    ],
+    'PERBAIKAN JALAN': [
+        { field: 'foto_ktp', label: 'Foto KTP' },
+        { field: 'foto_bukti', label: 'Foto Bukti Kerusakan' }
+    ],
+    'UMKM': [
+        { field: 'foto_ktp', label: 'Foto KTP' },
+        { field: 'dokumen_pendukung', label: 'Dokumen Pendukung / NIB / Suket' }
+    ],
+    'PENGAJUAN LAINNYA': [
+        { field: 'foto_ktp', label: 'Foto KTP' },
+        { field: 'foto_kk', label: 'Kartu Keluarga (KK)' },
+        { field: 'dokumen_pendukung', label: 'Dokumen Pendukung' }
     ]
 };
 
@@ -85,6 +102,35 @@ export default function PengajuanLayanan() {
         muatData();
     }, []);
     
+    const handleHapusLayanan = async (id, nama) => {
+        const konfirmasi = await Swal.fire({
+            title: 'Hapus Pengajuan?',
+            text: `Apakah Anda yakin ingin menghapus data pengajuan atas nama "${nama}" beserta seluruh berkas fotonya? Data akan dihapus permanen dari server.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Ya, Hapus Permanen',
+            cancelButtonText: 'Batal'
+        });
+
+        if (konfirmasi.isConfirmed) {
+            try {
+                await hapusLayanan(id);
+                Swal.fire({
+                    title: 'Terhapus!',
+                    text: 'Data pengajuan dan seluruh berkas berhasil dibersihkan dari server.',
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                muatData();
+            } catch (error) {
+                Swal.fire({ title: 'Gagal!', text: error.pesan || 'Gagal menghapus data pengajuan.', icon: 'error', confirmButtonColor: '#3C50E0' });
+            }
+        }
+    };
+
     const handleUbahStatus = async (id, statusBaru) => {
         Swal.fire({
             title: 'Perbarui Status?',
@@ -100,13 +146,18 @@ export default function PengajuanLayanan() {
                 try {
                     const respons = await updateStatusLayanan(id, statusBaru);
                     if (respons && respons.status === 'sukses') {
-                        Swal.fire({ title: 'Berhasil!', text: respons.pesan, icon: 'success', confirmButtonColor: '#3C50E0' });
+                        Swal.fire({ title: 'Berhasil!', text: respons.pesan || 'Status pengajuan berhasil diperbarui!', icon: 'success', confirmButtonColor: '#3C50E0' });
                         muatData(); 
                     } else {
-                        Swal.fire({ title: 'Gagal!', text: 'Gagal mengubah status.', icon: 'error' });
+                        Swal.fire({ title: 'Gagal!', text: respons?.pesan || 'Gagal mengubah status.', icon: 'error' });
                     }
-                } catch {
-                    Swal.fire({ title: 'Error', text: "Gagal terhubung ke server! Cek koneksi Anda.", icon: 'error' });
+                } catch (error) {
+                    if (error === "Sesi Habis") return; // Sesi login habis sudah ditangani oleh tanganiRespons
+                    Swal.fire({ 
+                        title: 'Error', 
+                        text: error?.message || (typeof error === 'string' ? error : "Gagal terhubung ke server! Cek koneksi Anda."), 
+                        icon: 'error' 
+                    });
                 }
             }
         });
@@ -128,7 +179,11 @@ export default function PengajuanLayanan() {
             nama_pemohon: data.nama_pemohon || '',
             no_telepon: data.no_telepon || '',
             jenis_layanan: data.jenis_layanan || 'RUTILAHU',
-            status: data.status || 'Baru'
+            status: data.status || 'Baru',
+            alamat_rusak: data.alamat_rusak || '',
+            nama_usaha: data.nama_usaha || '',
+            jenis_usaha: data.jenis_usaha || '',
+            no_nib_suket: data.no_nib_suket || ''
         });
         setEditDataOriginal(data);
         setEditFiles({});
@@ -170,6 +225,10 @@ export default function PengajuanLayanan() {
             formData.append('nama_pemohon', editData.nama_pemohon);
             formData.append('no_telepon', editData.no_telepon);
             formData.append('status', editData.status);
+            if (editData.alamat_rusak !== undefined) formData.append('alamat_rusak', editData.alamat_rusak);
+            if (editData.nama_usaha !== undefined) formData.append('nama_usaha', editData.nama_usaha);
+            if (editData.jenis_usaha !== undefined) formData.append('jenis_usaha', editData.jenis_usaha);
+            if (editData.no_nib_suket !== undefined) formData.append('no_nib_suket', editData.no_nib_suket);
 
             let adaFileBaru = false;
             Object.entries(editFiles).forEach(([field, file]) => {
@@ -225,12 +284,17 @@ export default function PengajuanLayanan() {
 };
 
     const hasilFilter = dataLayanan.filter((item) => {
-        const cocokKategori = filterKategori === "Semua" || item.jenis_layanan === filterKategori;
+        const cocokKategori = filterKategori === "Semua" || 
+            item.jenis_layanan === filterKategori || 
+            (filterKategori === "PENGAJUAN LAINNYA" && item.jenis_layanan?.startsWith("LAINNYA:"));
         const teksCari = kataKunci.toLowerCase().trim();
         const cocokCari = !teksCari || (
             (item.nama_pemohon && item.nama_pemohon.toLowerCase().includes(teksCari)) ||
             (item.nik_pemohon && String(item.nik_pemohon).toLowerCase().includes(teksCari)) ||
-            (item.no_telepon && String(item.no_telepon).toLowerCase().includes(teksCari))
+            (item.no_telepon && String(item.no_telepon).toLowerCase().includes(teksCari)) ||
+            (item.alamat_rusak && item.alamat_rusak.toLowerCase().includes(teksCari)) ||
+            (item.nama_usaha && item.nama_usaha.toLowerCase().includes(teksCari)) ||
+            (item.jenis_layanan && item.jenis_layanan.toLowerCase().includes(teksCari))
         );
         
         let cocokTanggal = true;
@@ -258,6 +322,7 @@ export default function PengajuanLayanan() {
             { header: 'Nama Pemohon', key: 'nama', width: 30 },
             { header: 'No. Telepon / WA', key: 'telepon', width: 20 },
             { header: 'Jenis Layanan', key: 'jenis', width: 25 },
+            { header: 'Rincian / Lokasi / Keterangan', key: 'keterangan', width: 35 },
             { header: 'Status Saat Ini', key: 'status', width: 20 }
         ];
 
@@ -265,6 +330,13 @@ export default function PengajuanLayanan() {
         worksheet.getRow(1).alignment = { horizontal: 'center' };
 
         hasilFilter.forEach((item, index) => {
+            let rincian = '-';
+            if (item.alamat_rusak) {
+                rincian = `Lokasi: ${item.alamat_rusak}`;
+            } else if (item.nama_usaha) {
+                rincian = `Usaha: ${item.nama_usaha} (${item.jenis_usaha || 'UMKM'}) NIB: ${item.no_nib_suket || '-'}`;
+            }
+
             worksheet.addRow({
                 no: index + 1,
                 tanggal: item.tanggal_pengajuan ? new Date(item.tanggal_pengajuan).toLocaleDateString('id-ID') : '-',
@@ -272,6 +344,7 @@ export default function PengajuanLayanan() {
                 nama: item.nama_pemohon,
                 telepon: item.no_telepon || '-',
                 jenis: item.jenis_layanan,
+                keterangan: rincian,
                 status: item.status || 'Baru'
             });
         });
@@ -311,6 +384,10 @@ export default function PengajuanLayanan() {
                         <option value="MUSRENBANG">MUSRENBANG</option>
                         <option value="DAU DAN PRAKARSA">DAU & PRAKARSA</option>
                         <option value="SARPRAS DLH">SARPRAS DLH</option>
+                        <option value="KIRMIR / DRAINASE">KIRMIR / DRAINASE</option>
+                        <option value="PERBAIKAN JALAN">PERBAIKAN JALAN</option>
+                        <option value="UMKM">UMKM</option>
+                        <option value="PENGAJUAN LAINNYA">PENGAJUAN LAINNYA</option>
                     </select>
                 </div>
 
@@ -334,6 +411,7 @@ export default function PengajuanLayanan() {
                                 <th>Tanggal</th>
                                 <th>Jenis Layanan</th>
                                 <th>Nama Pemohon</th>
+                                <th>NIK Pemohon</th>
                                 <th>No. Telepon</th>
                                 <th>Status</th>
                                 <th>Dokumen</th> 
@@ -343,16 +421,46 @@ export default function PengajuanLayanan() {
                         <tbody>
                             {hasilFilter.length === 0 ? (
                                 <tr>
-                                    <td colSpan="8" style={{textAlign: 'center'}}>Belum ada data pengajuan.</td>
+                                    <td colSpan="9" style={{textAlign: 'center'}}>Belum ada data pengajuan.</td>
                                 </tr>
                             ) : (
                                 hasilFilter.map((data, index) => (
                                     <tr key={data.id}>
                                         <td>{index +1}</td>
                                         <td>{data.tanggal_pengajuan ? new Date(data.tanggal_pengajuan).toLocaleDateString('id-ID') : '-'}</td>
-                                        <td>{data.jenis_layanan}</td>
-                                        <td>{data.nama_pemohon}</td>
-                                        <td>{data.no_telepon || '-'}</td>
+                                        <td>
+                                            {data.jenis_layanan?.startsWith('LAINNYA:') ? (
+                                                <div style={{ maxWidth: '240px' }}>
+                                                    <span className="badge-layanan-lainnya">
+                                                        LAINNYA
+                                                    </span>
+                                                    <div className="teks-layanan-lainnya">
+                                                        {data.jenis_layanan.replace(/^LAINNYA:\s*/i, '')}
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <span className="teks-layanan-lainnya">{data.jenis_layanan}</span>
+                                            )}
+                                        </td>
+                                        <td>
+                                            <span style={{ fontSize: '13px', fontWeight: 'normal' }}>{data.nama_pemohon}</span>
+                                            {data.alamat_rusak && (
+                                                <small style={{ display: 'block', color: 'var(--text-redup)', fontSize: '0.8rem', marginTop: '3px' }}>
+                                                    📍 {data.alamat_rusak}
+                                                </small>
+                                            )}
+                                            {data.nama_usaha && (
+                                                <small style={{ display: 'block', color: 'var(--text-redup)', fontSize: '0.8rem', marginTop: '3px' }}>
+                                                    🏪 {data.nama_usaha} ({data.jenis_usaha || 'UMKM'}) {data.no_nib_suket ? `• NIB: ${data.no_nib_suket}` : ''}
+                                                </small>
+                                            )}
+                                        </td>
+                                        <td className="kolom-nik-tabel">
+                                            {data.nik_pemohon || '-'}
+                                        </td>
+                                        <td className="kolom-telepon-tabel">
+                                            {data.no_telepon || '-'}
+                                        </td>
                                         <td>
                                             <span className={`badge-status badge-status-${(data.status || 'Baru').toLowerCase()}`}>
                                                 {data.status || 'Baru'}
@@ -382,6 +490,9 @@ export default function PengajuanLayanan() {
                                                 </button>
                                                 <button className="btn-selesai" onClick={() => handleUbahStatus(data.id, 'Selesai')}>
                                                     Selesai
+                                                </button>
+                                                <button className="btn-hapus-layanan" onClick={() => handleHapusLayanan(data.id, data.nama_pemohon)} title="Hapus Pengajuan">
+                                                    🗑️ Hapus
                                                 </button>
                                             </div>
                                         </td>
@@ -420,6 +531,8 @@ export default function PengajuanLayanan() {
                             {renderLink(dataPilih.foto_halaman, "Foto Halaman")}
                             {renderLink(dataPilih.proposal_sarpras, "Proposal Sarpras")}
                             {renderLink(dataPilih.foto_sarpras, "Foto Sasaran")}
+                            {renderLink(dataPilih.foto_bukti, "Foto Bukti Kerusakan")}
+                            {renderLink(dataPilih.dokumen_pendukung, "Dokumen Pendukung")}
                         </div>
                     </div>
                 </div>
@@ -493,6 +606,53 @@ export default function PengajuanLayanan() {
                                 </span>
                             </div>
 
+                            {/* KHUSUS KIRMIR / DRAINASE & PERBAIKAN JALAN */}
+                            {(editData.jenis_layanan === 'KIRMIR / DRAINASE' || editData.jenis_layanan === 'PERBAIKAN JALAN') && (
+                                <div className="form-group-edit">
+                                    <label>Alamat / Titik Lokasi Kerusakan</label>
+                                    <textarea 
+                                        rows="2"
+                                        placeholder="Contoh: Jl. Sukagalih No. 12 RT 03/05..."
+                                        value={editData.alamat_rusak}
+                                        onChange={(e) => setEditData({ ...editData, alamat_rusak: e.target.value })}
+                                        style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1.5px solid var(--border-halus)', background: 'var(--bg-card)', color: 'var(--text-utama)', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }}
+                                    />
+                                </div>
+                            )}
+
+                            {/* KHUSUS UMKM */}
+                            {editData.jenis_layanan === 'UMKM' && (
+                                <>
+                                    <div className="form-group-edit">
+                                        <label>Nama Usaha / Toko</label>
+                                        <input 
+                                            type="text"
+                                            placeholder="Contoh: Warung Seblak Juara"
+                                            value={editData.nama_usaha}
+                                            onChange={(e) => setEditData({ ...editData, nama_usaha: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="form-group-edit">
+                                        <label>Jenis Usaha</label>
+                                        <input 
+                                            type="text"
+                                            placeholder="Contoh: Kuliner / Jasa / Fashion / Perdagangan"
+                                            value={editData.jenis_usaha}
+                                            onChange={(e) => setEditData({ ...editData, jenis_usaha: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="form-group-edit">
+                                        <label>Nomor NIB / Surat Keterangan Usaha</label>
+                                        <input 
+                                            type="text"
+                                            placeholder="Contoh: 9120001234567"
+                                            value={editData.no_nib_suket}
+                                            onChange={(e) => setEditData({ ...editData, no_nib_suket: e.target.value })}
+                                        />
+                                    </div>
+                                </>
+                            )}
+
                             <div className="form-group-edit">
                                 <label>Status Pengajuan</label>
                                 <select 
@@ -517,7 +677,10 @@ export default function PengajuanLayanan() {
                                 </div>
 
                                 <div className="list-edit-berkas">
-                                    {(MAP_DOKUMEN_LAYANAN[editData.jenis_layanan] || []).map((dok) => {
+                                    {(
+                                        MAP_DOKUMEN_LAYANAN[editData.jenis_layanan] || 
+                                        (editData.jenis_layanan?.startsWith('LAINNYA:') ? MAP_DOKUMEN_LAYANAN['PENGAJUAN LAINNYA'] : [])
+                                    ).map((dok) => {
                                         const fileLama = editDataOriginal ? editDataOriginal[dok.field] : null;
                                         const fileDipilih = editFiles[dok.field];
                                         const linkFileLama = fileLama ? (fileLama.startsWith('http') ? fileLama : `${BASE_URL}/uploads/${fileLama}`) : null;

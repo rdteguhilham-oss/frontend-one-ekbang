@@ -59,7 +59,7 @@
     max-width: 300px;
 }
 
-/* Kartu Pembungkus Tabel */
+/* Kartu Pembungkus Tabel & Responsif */
 .layanan-table-card {
     background-color: var(--bg-card);
     padding: 20px;
@@ -67,17 +67,43 @@
     border: 1px solid var(--border-halus);
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, border-color 0.3s ease;
+    overflow-x: auto;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.layanan-table-card .tabel-utama {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
 }
 
 .layanan-table-card .tabel-utama th:first-child,
 .layanan-table-card .tabel-utama td:first-child {
     text-align: center;
     width: 40px;
+    white-space: nowrap;
 }
 
 .layanan-table-card .tabel-utama th:nth-child(2),
 .layanan-table-card .tabel-utama td:nth-child(2) {
     white-space: nowrap;
+}
+
+.kolom-nik-tabel {
+    white-space: nowrap;
+    font-family: monospace;
+    font-size: 13px;
+    color: var(--text-utama);
+}
+
+.kolom-telepon-tabel {
+    white-space: nowrap;
+    font-size: 13px;
 }
 
 /* Tombol Aksi Verifikasi */
@@ -111,6 +137,24 @@
 }
 
 .btn-selesai:hover { background-color: #059669; }
+
+.btn-hapus-layanan {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-hapus-layanan:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+}
 
 /* Status Badges */
 .badge-status {
@@ -693,4 +737,33 @@ body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
 .btn-simpan-modal:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* BADGE & TEKS LAYANAN LAINNYA (Mendukung Dark Mode) */
+.badge-layanan-lainnya {
+    display: inline-block;
+    background: #EEF2FF;
+    color: #4F46E5;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+    border: 1px solid #C7D2FE;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode .badge-layanan-lainnya {
+    background: rgba(99, 102, 241, 0.25);
+    color: #C7D2FE;
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+.teks-layanan-lainnya {
+    font-weight: normal;
+    color: var(--text-utama);
+    font-size: 13px;
+    line-height: 1.35;
+    word-break: break-word;
 }
