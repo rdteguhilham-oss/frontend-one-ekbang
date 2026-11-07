@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { getTitikPeta, hapusTitikPeta, tambahTitikPeta, updateTitikPeta, updateStatusPeta, BASE_URL } from '../services/api'; 
 import Swal from 'sweetalert2';
 import 'leaflet/dist/leaflet.css'; 
+import '../utils/leafletFix';
 import './PetaGis.css'; 
 
 export default function PetaGIS() {

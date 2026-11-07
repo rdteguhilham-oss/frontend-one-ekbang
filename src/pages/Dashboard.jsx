@@ -7,6 +7,7 @@ import {
 } from 'recharts';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import '../utils/leafletFix';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
     FaUsers, FaClipboardList, FaLeaf, FaUserShield, FaBell,
