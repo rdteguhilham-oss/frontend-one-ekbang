@@ -169,6 +169,17 @@ export default function TambahLayanan() {
                     <div className="tagline-line"></div>
                 </div>
 
+                {/* 3 Logo Kolaborasi Mitra */}
+                <div className="top-banner-tengah">
+                    <div className="collab-logos-wrap">
+                        <img src={`${import.meta.env.BASE_URL}rb-logo-bdg.png`} alt="Pemkot Bandung" className="collab-logo-item" title="Pemerintah Kota Bandung" />
+                        <img src={`${import.meta.env.BASE_URL}logo-pasteur.png`} alt="Kelurahan Pasteur" className="collab-logo-item" title="Kelurahan Pasteur" />
+                        <span className="collab-logo-divider"></span>
+                        <img src={`${import.meta.env.BASE_URL}logo-cakra.jpeg`} alt="Radio Cakra" className="collab-logo-item collab-logo-cakra" title="Radio Cakra Bandung" />
+                        <img src={`${import.meta.env.BASE_URL}logo-pasim.png`} alt="Universitas Nasional Pasim" className="collab-logo-item" title="Universitas Nasional Pasim" />
+                    </div>
+                </div>
+
                 <div className="top-banner-kanan">
                     <div className="berakhlak-badge">
                         <div className="berakhlak-title">

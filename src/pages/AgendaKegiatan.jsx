@@ -428,10 +428,9 @@ export default function AgendaKegiatan() {
                                                 </td>
                                                 <td style={{ verticalAlign: 'middle', textAlign: 'center' }}>
                                                     {item.foto_dokumentasi ? (
-                                                        <a href={item.foto_dokumentasi.startsWith('http') ? item.foto_dokumentasi : `${BASE_URL}/uploads/${item.foto_dokumentasi}`} target="_blank" rel="noreferrer" className="link-foto">Lihat Foto</a>
+                                                        <a href={item.foto_dokumentasi.startsWith('http') ? item.foto_dokumentasi : `${BASE_URL}/uploads/${item.foto_dokumentasi}`} target="_blank" rel="noreferrer" className="btn-icon link-foto" title="Lihat Foto Dokumentasi">📷</a>
                                                     ) : (
-                                                        <label className="btn-upload-susulan">
-                                                            📷 Upload Bukti
+                                                        <label className="btn-icon btn-upload-susulan" title="Upload Bukti Dokumentasi">📷
                                                             <input 
                                                                 type="file" 
                                                                 accept="image/*" 
@@ -443,12 +442,8 @@ export default function AgendaKegiatan() {
                                                 </td>
                                                 <td style={{ verticalAlign: 'middle' }}>
                                                     <div className="grup-aksi-agenda">
-                                                        <button className="btn-edit-agenda" onClick={() => bukaModalEdit(item)} title="Edit Agenda">
-                                                            ✏️ Edit
-                                                        </button>
-                                                        <button className="btn-hapus-agenda" onClick={() => hapusAgenda(item.id)} title="Hapus Agenda">
-                                                            🗑️ Hapus
-                                                        </button>
+                                                        <button className="btn-icon btn-edit-agenda" onClick={() => bukaModalEdit(item)} title="Edit Agenda">✏️</button>
+                                                        <button className="btn-icon btn-hapus-agenda" onClick={() => hapusAgenda(item.id)} title="Hapus Agenda">🗑️</button>
                                                     </div>
                                                 </td>
                                             </tr>

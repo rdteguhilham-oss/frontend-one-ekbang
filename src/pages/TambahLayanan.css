@@ -487,3 +487,59 @@
         justify-content: center;
     }
 }
+
+
+/* LOGO KOLABORASI 3 MITRA (PEMKOT BDG, RADIO CAKRA, UNIV PASIM) */
+.top-banner-tengah {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    margin: 0 16px;
+}
+
+.collab-logos-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: transparent;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+}
+
+.collab-logo-item {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+    transition: transform 0.2s ease;
+}
+
+.collab-logo-item:hover {
+    transform: scale(1.1);
+}
+
+.collab-logo-cakra {
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .top-banner-bar {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    .top-banner-tengah {
+        margin: 6px 0;
+    }
+}
+
+.collab-logo-divider {
+    width: 1.5px;
+    height: 22px;
+    background: rgba(30, 41, 59, 0.25);
+    border-radius: 2px;
+    margin: 0 4px;
+}

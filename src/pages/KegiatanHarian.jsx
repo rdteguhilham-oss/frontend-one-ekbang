@@ -474,17 +474,13 @@ export default function KegiatanHarian() {
                                             <td>{item.panjang_meter} m</td>
                                             <td>
                                                 {item.foto ? (
-                                                    <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Foto</a>
+                                                    <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-icon btn-lihat" title="Lihat Foto Bukti Lapangan">📷</a>
                                                 ) : '-'}
                                             </td>
                                             <td style={{ verticalAlign: 'middle' }}>
                                                 <div className="grup-aksi-kegiatan">
-                                                    <button className="btn-edit-kegiatan" onClick={() => bukaModalEditGober(item)} title="Edit Laporan Gober">
-                                                        ✏️ Edit
-                                                    </button>
-                                                    <button className="btn-hapus-kegiatan" onClick={() => handleHapusGober(item.id, item.nama_petugas, item.lokasi)} title="Hapus Laporan Gober">
-                                                        🗑️ Hapus
-                                                    </button>
+                                                    <button className="btn-icon btn-edit-kegiatan" onClick={() => bukaModalEditGober(item)} title="Edit Laporan Gober">✏️</button>
+                                                    <button className="btn-icon btn-hapus-kegiatan" onClick={() => handleHapusGober(item.id, item.nama_petugas, item.lokasi)} title="Hapus Laporan Gober">🗑️</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -539,17 +535,13 @@ export default function KegiatanHarian() {
                                             <td>{item.berat_kiloan} Kg</td>
                                             <td>
                                                 {item.foto ? (
-                                                    <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-lihat">Lihat Bukti</a>
+                                                    <a href={item.foto.startsWith('http') ? item.foto : `${BASE_URL}/uploads/${item.foto}`} target="_blank" rel="noreferrer" className="btn-icon btn-lihat" title="Lihat Foto Bukti Timbangan">📷</a>
                                                 ) : '-'}
                                             </td>
                                             <td style={{ verticalAlign: 'middle' }}>
                                                 <div className="grup-aksi-kegiatan">
-                                                    <button className="btn-edit-kegiatan" onClick={() => bukaModalEditSampah(item)} title="Edit Laporan Sampah">
-                                                        ✏️ Edit
-                                                    </button>
-                                                    <button className="btn-hapus-kegiatan" onClick={() => handleHapusSampah(item.id, item.nama_petugas, item.kategori_tugas, item.data_rw)} title="Hapus Laporan Sampah">
-                                                        🗑️ Hapus
-                                                    </button>
+                                                    <button className="btn-icon btn-edit-kegiatan" onClick={() => bukaModalEditSampah(item)} title="Edit Laporan Sampah">✏️</button>
+                                                    <button className="btn-icon btn-hapus-kegiatan" onClick={() => handleHapusSampah(item.id, item.nama_petugas, item.kategori_tugas, item.data_rw)} title="Hapus Laporan Sampah">🗑️</button>
                                                 </div>
                                             </td>
                                         </tr>

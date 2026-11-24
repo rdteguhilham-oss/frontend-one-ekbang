@@ -185,9 +185,7 @@ export default function DaftarAdmin() {
                     <td>{data.username}</td>
                     <td><span className="teks-aktif">Aktif</span></td>
                     <td>
-                        <button className="btn-hapus-admin" onClick={() => handleHapus(data.id)} title="Hapus Akses Admin">
-                            🗑️ Hapus
-                        </button>
+                        <button className="btn-icon btn-hapus-admin" onClick={() => handleHapus(data.id)} title="Hapus Akses Admin">🗑️</button>
                     </td>
                 </tr>
                 ))}

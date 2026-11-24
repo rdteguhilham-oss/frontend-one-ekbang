@@ -137,27 +137,23 @@ export const tambahLayanan = async (dataPaket) => {
     }
 };
 
-export const updateStatusLayanan = async (id, status) => {
+export const updateStatusLayanan = async (id, statusOrFormData) => {
     try {
-        let response = await fetch(`${BASE_URL}/layanan/${id}/status`, {
+        const isFormData = statusOrFormData instanceof FormData;
+        const config = {
             method: 'PUT',
-            headers: { 
-                'Content-Type': 'application/json',
-                ...getAuthHeader()
-            },
-            body: JSON.stringify({ status: status })
-        });
+            headers: { ...getAuthHeader() },
+            body: isFormData ? statusOrFormData : JSON.stringify({ status: statusOrFormData })
+        };
+        if (!isFormData) {
+            config.headers['Content-Type'] = 'application/json';
+        }
+
+        let response = await fetch(`${BASE_URL}/layanan/${id}/status`, config);
 
         // Fallback jika backend lawas belum memiliki sub-rute /status
         if (response.status === 404) {
-            response = await fetch(`${BASE_URL}/layanan/${id}`, {
-                method: 'PUT',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    ...getAuthHeader()
-                },
-                body: JSON.stringify({ status: status })
-            });
+            response = await fetch(`${BASE_URL}/layanan/${id}`, config);
         }
 
         return await tanganiRespons(response);

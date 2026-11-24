@@ -266,9 +266,7 @@ export default function DataPetugas () {
                     <td className="kolom-nosk-petugas">{petugas.no_sk || '-'}</td>
                     <td className="kolom-filesk-petugas">
                         {petugas.file_sk ? (
-                          <a href={petugas.file_sk.startsWith('http') ? petugas.file_sk : `${BASE_URL}/uploads/${petugas.file_sk}`} target="_blank" rel="noreferrer" className="btn-lihat">
-                            Lihat SK
-                          </a>
+                          <a href={petugas.file_sk.startsWith('http') ? petugas.file_sk : `${BASE_URL}/uploads/${petugas.file_sk}`} target="_blank" rel="noreferrer" className="btn-icon btn-lihat" title="Lihat Berkas SK Petugas">📄</a>
                         ) : '-'}
                     </td>
                     <td className="kolom-status-petugas" style={{ verticalAlign: 'middle' }}>
@@ -278,29 +276,13 @@ export default function DataPetugas () {
                     </td>
                     <td className="kolom-aksi-petugas" style={{ verticalAlign: 'middle' }}>
                       <div className="grup-aksi-petugas">
-                        <button className="btn-edit-petugas" onClick={() => bukaModalEdit(petugas)} title="Edit Data Petugas">
-                          ✏️ Edit
-                        </button>
+                        <button className="btn-icon btn-edit-petugas" onClick={() => bukaModalEdit(petugas)} title="Edit Data Petugas">✏️</button>
                         {petugas.status === 'Non-Aktif' ? (
-                          <button 
-                            className="btn-status-toggle btn-aktifkan" 
-                            onClick={() => handleToggleStatus(petugas.id, 'Aktif', petugas.nama_petugas)}
-                            title="Aktifkan Kembali Petugas"
-                          >
-                            ✅ Aktifkan
-                          </button>
+                          <button className="btn-icon btn-status-toggle btn-aktifkan" onClick={() => handleToggleStatus(petugas.id, 'Aktif', petugas.nama_petugas)} title="Aktifkan Kembali Petugas">✅</button>
                         ) : (
-                          <button 
-                            className="btn-status-toggle btn-nonaktifkan" 
-                            onClick={() => handleToggleStatus(petugas.id, 'Non-Aktif', petugas.nama_petugas)}
-                            title="Nonaktifkan Petugas (Purna Tugas)"
-                          >
-                            ⛔ Nonaktifkan
-                          </button>
+                          <button className="btn-icon btn-status-toggle btn-nonaktifkan" onClick={() => handleToggleStatus(petugas.id, 'Non-Aktif', petugas.nama_petugas)} title="Nonaktifkan Petugas (Purna Tugas)">⛔</button>
                         )}
-                        <button className="btn-hapus-petugas" onClick={() => handleHapusPetugas(petugas.id, petugas.nama_petugas)} title="Hapus Petugas">
-                          🗑️ Hapus
-                        </button>
+                        <button className="btn-icon btn-hapus-petugas" onClick={() => handleHapusPetugas(petugas.id, petugas.nama_petugas)} title="Hapus Petugas">🗑️</button>
                       </div>
                     </td>
                     </tr>

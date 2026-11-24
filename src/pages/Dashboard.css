@@ -62,27 +62,56 @@ body.dark-mode .db-header-overlay {
     );
 }
 
-/* Lambang Kota Bandung – tengah atas */
-.db-emblem {
+/* ── 4 LOGO KOLABORASI MITRA & SLOGAN ──────────────── */
+.db-logos-group {
     position: absolute;
-    left: 50%;
-    top: 6px;
-    transform: translateX(-50%);
-    height: 58px;
-    width: auto;
-    object-fit: contain;
-    z-index: 3;
-    pointer-events: none;
-    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.22));
+    left: 44.5%;
+    top: 48%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 5;
 }
 
-/* Slogan – tepat di tengah-tengah antara logo dan notifikasi */
+.db-logo-item {
+    height: 30px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.2));
+    transition: transform 0.2s ease;
+}
+
+.db-logo-item:hover {
+    transform: scale(1.12);
+}
+
+.db-logo-cakra {
+    border-radius: 4px;
+    background: #ffffff;
+    padding: 1px;
+}
+
+.db-logo-divider {
+    width: 1.5px;
+    height: 20px;
+    background: rgba(30, 41, 59, 0.22);
+    border-radius: 2px;
+    margin: 0 2px;
+}
+
+body.dark-mode .db-logo-divider {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* Slogan – tepat di kanan logo sebelum notifikasi */
 .db-slogan {
     position: absolute;
-    left: 63%;
+    left: 64%;
     top: 12px;
     transform: translateX(-50%);
-    z-index: 3;
+    z-index: 5;
     pointer-events: none;
     display: flex;
     flex-direction: column;

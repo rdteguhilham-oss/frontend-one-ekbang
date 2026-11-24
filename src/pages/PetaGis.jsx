@@ -400,17 +400,11 @@ export default function PetaGIS() {
                                     </div>
 
                                     {titik.foto_url && (
-                                        <a href={titik.foto_url.startsWith('http') ? titik.foto_url : `${BASE_URL}/uploads/${titik.foto_url}`} target="_blank" rel="noreferrer" className="link-foto-peta">
-                                            Lihat Foto Lokasi
-                                        </a>
+                                        <a href={titik.foto_url.startsWith('http') ? titik.foto_url : `${BASE_URL}/uploads/${titik.foto_url}`} target="_blank" rel="noreferrer" className="btn-icon link-foto-peta" title="Lihat Foto Lokasi">📷</a>
                                     )}
                                     <div className="aksi-popup-peta">
-                                        <button className="btn-edit-peta" onClick={() => bukaModalEdit(titik)}>
-                                            ✏️ Edit
-                                        </button>
-                                        <button className="btn-hapus-peta" onClick={() => handleHapusId(titik.id)} title="Hapus Titik Lokasi">
-                                            🗑️ Hapus
-                                        </button>
+                                        <button className="btn-icon btn-edit-peta" onClick={() => bukaModalEdit(titik)} title="Edit Titik Lokasi">✏️</button>
+                                        <button className="btn-icon btn-hapus-peta" onClick={() => handleHapusId(titik.id)} title="Hapus Titik Lokasi">🗑️</button>
                                     </div>
                                 </Popup>
                             </Marker>

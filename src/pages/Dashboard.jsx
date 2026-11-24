@@ -235,8 +235,14 @@ export default function Dashboard() {
                 {/* Latar kota */}
                 <div className="db-header-bg" style={{ backgroundImage: 'url(/bg-city.jpg)' }}>
                     <div className="db-header-overlay"></div>
-                    {/* Lambang Kota Bandung - tengah */}
-                    <img src={`${import.meta.env.BASE_URL}rb-logo-bdg.png`} alt="Lambang Bandung" className="db-emblem" />
+                    {/* 3 Logo Kolaborasi Mitra: Pemkot Bandung, Radio Cakra, Universitas Pasim */}
+                    <div className="db-logos-group">
+                        <img src={`${import.meta.env.BASE_URL}rb-logo-bdg.png`} alt="Pemkot Bandung" className="db-logo-item" title="Pemerintah Kota Bandung" />
+                        <img src={`${import.meta.env.BASE_URL}logo-pasteur.png`} alt="Kelurahan Pasteur" className="db-logo-item" title="Kelurahan Pasteur" />
+                        <span className="db-logo-divider"></span>
+                        <img src={`${import.meta.env.BASE_URL}logo-cakra.jpeg`} alt="Radio Cakra" className="db-logo-item db-logo-cakra" title="Radio Cakra Bandung" />
+                        <img src={`${import.meta.env.BASE_URL}logo-pasim.png`} alt="Universitas Nasional Pasim" className="db-logo-item" title="Universitas Nasional Pasim" />
+                    </div>
                     {/* Slogan kanan */}
                     <div className="db-slogan">
                         <em>Wilayah Lebih Bersih,</em><br />

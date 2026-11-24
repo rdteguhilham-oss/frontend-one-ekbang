@@ -288,3 +288,36 @@ body.dark-mode .leaflet-popup-tip {
         height: 400px; /* Peta sedikit dipendekkan di HP */
     }
 }
+
+/* STANDAR TOMBOL IKON PETA GIS */
+.btn-icon {
+    width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    border: none !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12) !important;
+    transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease !important;
+}
+
+.btn-icon:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2) !important;
+    filter: brightness(1.08) !important;
+}
+
+.aksi-popup-peta {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+}

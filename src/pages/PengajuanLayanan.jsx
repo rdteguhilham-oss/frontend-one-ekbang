@@ -131,6 +131,89 @@ export default function PengajuanLayanan() {
         }
     };
 
+    const handleSelesaiDenganBukti = async (data) => {
+        const { value: file } = await Swal.fire({
+            title: 'Selesaikan Layanan (100%)',
+            html: `<div style="text-align: left; font-size: 13px; color: #475569; margin-bottom: 12px;">
+                <p style="margin: 0 0 4px;">Pemohon: <strong>${data.nama_pemohon}</strong></p>
+                <p style="margin: 0 0 4px;">Layanan: <strong>${data.jenis_layanan}</strong></p>
+                <p style="margin: 0; color: #059669; font-weight: 600;">Harap unggah foto bukti hasil pekerjaan lapangan sebelum menandai selesai.</p>
+            </div>`,
+            input: 'file',
+            inputAttributes: {
+                'accept': 'image/*',
+                'aria-label': 'Pilih foto bukti penanganan di lapangan'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Simpan & Selesai (100%)',
+            cancelButtonText: 'Batal',
+            confirmButtonColor: '#10B981',
+            cancelButtonColor: '#64748b',
+            inputValidator: (val) => {
+                if (!val && !data.foto_bukti_selesai) {
+                    return 'Foto bukti penyelesaian di lapangan wajib dilampirkan!';
+                }
+            }
+        });
+
+        if (file !== undefined) {
+            try {
+                const formData = new FormData();
+                formData.append('status', 'Selesai');
+                if (file) {
+                    formData.append('foto_bukti_selesai', file);
+                }
+                const respons = await updateStatusLayanan(data.id, formData);
+                if (respons && respons.status === 'sukses') {
+                    Swal.fire({
+                        title: 'Layanan Selesai! 🎉',
+                        text: respons.pesan || 'Status berhasil diubah menjadi 100% Selesai dan foto bukti lapangan tersimpan.',
+                        icon: 'success',
+                        confirmButtonColor: '#10B981'
+                    });
+                    muatData();
+                } else {
+                    Swal.fire({ title: 'Gagal', text: respons?.pesan || 'Gagal mengubah status.', icon: 'error' });
+                }
+            } catch (err) {
+                if (err === 'Sesi Habis') return;
+                Swal.fire({ title: 'Error', text: err?.message || 'Gagal mengirim berkas ke server.', icon: 'error' });
+            }
+        }
+    };
+
+    const bukaModalBukti = (data) => {
+        if (!data.foto_bukti_selesai) return;
+        const imgUrl = data.foto_bukti_selesai.startsWith('http') 
+            ? data.foto_bukti_selesai 
+            : `${BASE_URL}/uploads/${data.foto_bukti_selesai}`;
+        Swal.fire({
+            title: 'Bukti Penanganan Lapangan',
+            html: `
+                <div style="text-align: left; margin-bottom: 12px; font-size: 13px; color: #475569;">
+                    <p style="margin: 0 0 3px;">Pemohon: <strong>${data.nama_pemohon}</strong></p>
+                    <p style="margin: 0 0 3px;">Layanan: <strong>${data.jenis_layanan}</strong></p>
+                    <p style="margin: 0 0 8px;">Status: <span style="color:#059669; font-weight:700;">100% Selesai Ditangani</span></p>
+                </div>
+                <img src="${imgUrl}" alt="Bukti Selesai" style="width: 100%; max-height: 380px; object-fit: contain; border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.12);" />
+            `,
+            confirmButtonText: 'Tutup',
+            confirmButtonColor: '#3C50E0',
+            showCloseButton: true
+        });
+    };
+
+    const getProgresLayanan = (status) => {
+        const st = (status || 'Baru').toLowerCase();
+        if (st === 'selesai') {
+            return { persen: 100, label: '100% Selesai', clsBadge: 'badge-progres-100', clsBar: 'progres-bar-fill-100' };
+        }
+        if (st === 'diproses' || st === 'proses') {
+            return { persen: 50, label: '50% Diproses', clsBadge: 'badge-progres-50', clsBar: 'progres-bar-fill-50' };
+        }
+        return { persen: 0, label: '0% Pengaduan', clsBadge: 'badge-progres-0', clsBar: 'progres-bar-fill-0' };
+    };
+
     const handleUbahStatus = async (id, statusBaru) => {
         Swal.fire({
             title: 'Perbarui Status?',
@@ -462,37 +545,52 @@ export default function PengajuanLayanan() {
                                             {data.no_telepon || '-'}
                                         </td>
                                         <td>
-                                            <span className={`badge-status badge-status-${(data.status || 'Baru').toLowerCase()}`}>
-                                                {data.status || 'Baru'}
-                                            </span>
+                                            {(() => {
+                                                const prog = getProgresLayanan(data.status);
+                                                return (
+                                                    <div className="progres-status-wrap">
+                                                        <span className={`badge-status-progres ${prog.clsBadge}`}>
+                                                            {prog.label}
+                                                        </span>
+                                                        <div className="progres-bar-mini">
+                                                            <div className={`progres-bar-fill ${prog.clsBar}`}></div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })()}
                                         </td>
                                         
-                                        {/* KOLOM AKSI CEPAT */}
+                                        {/* KOLOM AKSI CEPAT (IKON SAJA) */}
                                         <td style={{ verticalAlign: 'middle' }}>
                                             <div className="grup-aksi-sejajar">
-                                                <button className="btn-buka-berkas" onClick={() => bukaModalDokumen(data)}>
-                                                    📂 Berkas
+                                                <button className="btn-icon btn-buka-berkas" onClick={() => bukaModalDokumen(data)} title="Lihat Berkas Lampiran">
+                                                    📂
                                                 </button>
-                                                <button className="btn-cetak-surat" onClick={() => bukaModalSurat(data)}>
-                                                    🖨️ Surat
+                                                <button className="btn-icon btn-cetak-surat" onClick={() => bukaModalSurat(data)} title="Cetak Surat Resi / Pengantar">
+                                                    🖨️
                                                 </button>
                                             </div>
                                         </td>
                                         
-                                        {/* KOLOM VERIFIKASI STATUS */}
+                                        {/* KOLOM VERIFIKASI STATUS (IKON SAJA) */}
                                         <td style={{ verticalAlign: 'middle' }}>
                                             <div className="grup-aksi-sejajar">
-                                                <button className="btn-edit-layanan" onClick={() => bukaModalEdit(data)} title="Edit Data Pemohon">
-                                                    ✏️ Edit
+                                                <button className="btn-icon btn-edit-layanan" onClick={() => bukaModalEdit(data)} title="Edit Data Pemohon">
+                                                    ✏️
                                                 </button>
-                                                <button className="btn-proses" onClick={() => handleUbahStatus(data.id, 'Diproses')}>
-                                                    Proses
+                                                <button className="btn-icon btn-proses" onClick={() => handleUbahStatus(data.id, 'Diproses')} title="Proses Pengajuan (50%)">
+                                                    ⚙️
                                                 </button>
-                                                <button className="btn-selesai" onClick={() => handleUbahStatus(data.id, 'Selesai')}>
-                                                    Selesai
+                                                <button className="btn-icon btn-selesai" onClick={() => handleSelesaiDenganBukti(data)} title="Selesaikan Layanan & Unggah Bukti Lapangan (100%)">
+                                                    ✅
                                                 </button>
-                                                <button className="btn-hapus-layanan" onClick={() => handleHapusLayanan(data.id, data.nama_pemohon)} title="Hapus Pengajuan">
-                                                    🗑️ Hapus
+                                                {data.foto_bukti_selesai && (
+                                                    <button className="btn-icon btn-bukti-selesai" onClick={() => bukaModalBukti(data)} title="Lihat Foto Bukti Penyelesaian Lapangan (100%)">
+                                                        📷
+                                                    </button>
+                                                )}
+                                                <button className="btn-icon btn-hapus-layanan" onClick={() => handleHapusLayanan(data.id, data.nama_pemohon)} title="Hapus Pengajuan">
+                                                    🗑️
                                                 </button>
                                             </div>
                                         </td>
