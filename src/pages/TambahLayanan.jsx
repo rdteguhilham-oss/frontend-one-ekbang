@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { tambahLayanan } from "../services/api"; 
@@ -39,11 +39,50 @@ export default function TambahLayanan() {
 
     // ANTI DOUBLE SUBMIT / IDEMPOTENCY GUARD
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // KEAMANAN & LEGALITAS (UU PDP No. 27/2022 & CAPTCHA 4 ANGKA)
+    const [setujuPdp, setSetujuPdp] = useState(false);
+    const [captchaCode, setCaptchaCode] = useState(() => Math.floor(1000 + Math.random() * 9000).toString());
+    const [inputCaptcha, setInputCaptcha] = useState('');
+    const [captchaError, setCaptchaError] = useState('');
+
+    const generateCaptcha = () => {
+        const randomCode = Math.floor(1000 + Math.random() * 9000).toString();
+        setCaptchaCode(randomCode);
+        setCaptchaError('');
+    };
+
+    useEffect(() => {
+        generateCaptcha();
+    }, []);
     
     const simpanData = async (e) => {
         e.preventDefault(); 
 
         if (isSubmitting) return;
+
+        if (!setujuPdp) {
+            Swal.fire({ 
+                icon: 'warning', 
+                title: 'Persetujuan Diperlukan', 
+                text: 'Silakan centang Surat Pernyataan & Persetujuan Pemrosesan Data Pribadi (UU PDP) terlebih dahulu.', 
+                confirmButtonColor: '#3C50E0' 
+            });
+            return;
+        }
+
+        if (inputCaptcha.trim() !== captchaCode) {
+            setCaptchaError('Kode keamanan (Captcha) salah! Silakan periksa kembali 4 angka di atas.');
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Verifikasi Gagal', 
+                text: 'Kode keamanan (Captcha) yang Anda masukkan salah. Silakan coba lagi.', 
+                confirmButtonColor: '#ef4444' 
+            });
+            generateCaptcha();
+            setInputCaptcha('');
+            return;
+        }
 
         if (!jenisLayanan) {
             Swal.fire({ icon: 'warning', title: 'Perhatian', text: 'Silakan pilih jenis layanan terlebih dahulu.', confirmButtonColor: '#3C50E0' });
@@ -567,6 +606,69 @@ export default function TambahLayanan() {
 
                                 </div>
 
+                                {/* SURAT PERNYATAAN KONSEN UU PDP No. 27/2022 */}
+                                <div className="pdp-consent-container">
+                                    <div className="pdp-consent-header">
+                                        <span className="pdp-badge-icon">🛡️</span>
+                                        <div>
+                                            <strong>Surat Pernyataan & Kepatuhan UU PDP No. 27/2022</strong>
+                                            <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#64748b' }}>
+                                                Perlindungan Data Pribadi (KTP, KK, & NIK) Terjamin & Terenkripsi
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <label className="pdp-checkbox-label">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={setujuPdp} 
+                                            onChange={(e) => setSetujuPdp(e.target.checked)}
+                                            required
+                                        />
+                                        <span>
+                                            Saya menyatakan dengan sadar dan sesungguhnya bahwa data (NIK) dan dokumen (KTP/KK) yang saya unggah adalah <strong>sah dan benar milik saya</strong>. Saya memberikan persetujuan kepada Seksi Ekbang Kelurahan Pasteur untuk menggunakan dan memproses data ini demi keperluan verifikasi pelayanan administrasi sesuai ketentuan <strong>UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi (UU PDP)</strong>.
+                                        </span>
+                                    </label>
+                                </div>
+
+                                {/* CAPTCHA KEAMANAN 4 ANGKA ACAK */}
+                                <div className="captcha-container-box">
+                                    <div className="captcha-kiri">
+                                        <label className="captcha-label">Kode Keamanan (Verifikasi Manusia):</label>
+                                        <div className="captcha-visual-wrap">
+                                            <div className="captcha-badge-display" title="Kode Keamanan Acak">
+                                                {captchaCode.split('').map((digit, idx) => (
+                                                    <span key={idx} className="captcha-digit">{digit}</span>
+                                                ))}
+                                            </div>
+                                            <button 
+                                                type="button" 
+                                                className="btn-refresh-captcha" 
+                                                onClick={generateCaptcha}
+                                                title="Klik untuk ganti angka baru"
+                                            >
+                                                🔄 Ganti Kode
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="captcha-kanan">
+                                        <label className="captcha-label">Ketik 4 angka di samping/atas:</label>
+                                        <input 
+                                            type="text" 
+                                            maxLength={4}
+                                            placeholder="Ketik 4 angka..."
+                                            value={inputCaptcha}
+                                            onChange={(e) => {
+                                                const val = e.target.value.replace(/[^0-9]/g, '');
+                                                setInputCaptcha(val);
+                                                if (captchaError) setCaptchaError('');
+                                            }}
+                                            className={`input-captcha-box ${captchaError ? 'captcha-error-border' : ''}`}
+                                            required
+                                        />
+                                        {captchaError && <span className="captcha-error-msg">{captchaError}</span>}
+                                    </div>
+                                </div>
+
                                 {/* FOOTER KONFIRMASI & TOMBOL KIRIM */}
                                 <div className="form-publik-footer-box" style={{ marginTop: '22px' }}>
                                     <div className="footer-box-kiri">
@@ -583,8 +685,8 @@ export default function TambahLayanan() {
                                     <button 
                                         type="submit" 
                                         className="btn-kirim-pengajuan" 
-                                        disabled={isSubmitting} 
-                                        style={isSubmitting ? { opacity: 0.7, cursor: 'not-allowed' } : {}}
+                                        disabled={isSubmitting || !setujuPdp || inputCaptcha.length !== 4} 
+                                        style={(isSubmitting || !setujuPdp || inputCaptcha.length !== 4) ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
                                     >
                                         {isSubmitting ? '⏳ Mengirim Data...' : 'Kirim Pengajuan ➔'}
                                     </button>

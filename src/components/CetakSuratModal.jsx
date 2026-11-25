@@ -11,6 +11,71 @@ export default function CetakSuratModal({ suratPilih, onClose }) {
     const [printParagraf1, setPrintParagraf1] = useState('');
     const [printParagraf2, setPrintParagraf2] = useState('Demikian permohonan ini disampaikan, atas perhatiannya kami ucapkan terima kasih.');
     
+    // Alert feedback salin PESONA
+    const [copiedAlert, setCopiedAlert] = useState('');
+
+    // Fungsi Salin Pengantar (Halaman 1 PESONA)
+    const handleSalinPengantar = () => {
+        let teksPengantar = `Dipermaklumkan dengan hormat, sehubungan dengan permohonan dan usulan warga masyarakat di wilayah Kelurahan Pasteur, bersama ini kami sampaikan usulan permohonan bantuan/tindak lanjut untuk program ${suratPilih.jenis_layanan} sebagaimana daftar terlampir.\n\nDemikian permohonan ini disampaikan, atas perhatian dan kerja samanya kami ucapkan terima kasih.`;
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(teksPengantar).then(() => {
+                setCopiedAlert('✅ Pengantar Surat (Halaman 1) berhasil disalin!');
+                setTimeout(() => setCopiedAlert(''), 3500);
+            }).catch(() => {
+                fallbackCopyText(teksPengantar, '✅ Pengantar Surat (Halaman 1) berhasil disalin!');
+            });
+        } else {
+            fallbackCopyText(teksPengantar, '✅ Pengantar Surat (Halaman 1) berhasil disalin!');
+        }
+    };
+
+    // Fungsi Salin Lampiran Data Warga (Halaman 2 PESONA)
+    const handleSalinLampiran = () => {
+        let rincianTambahan = '';
+        if (suratPilih.alamat_rusak) {
+            rincianTambahan += `\n- Titik / Lokasi Kerusakan : ${suratPilih.alamat_rusak}`;
+        }
+        if (suratPilih.nama_usaha) {
+            rincianTambahan += `\n- Nama Usaha : ${suratPilih.nama_usaha} (${suratPilih.jenis_usaha || 'UMKM'})`;
+            if (suratPilih.no_nib_suket) rincianTambahan += `\n- No. NIB / Suket : ${suratPilih.no_nib_suket}`;
+        }
+        if (suratPilih.jenis_layanan === 'RUTILAHU') {
+            rincianTambahan += `\n- Program Usulan : Bantuan Rehabilitasi Rumah Tidak Layak Huni (Rutilahu)`;
+        }
+
+        let teksLampiran = `DAFTAR USULAN PROGRAM ${suratPilih.jenis_layanan?.toUpperCase()} KELURAHAN PASTEUR\n\n1. Rincian Pemohon:\n- Nama Pemohon : ${suratPilih.nama_pemohon}\n- NIK : ${suratPilih.nik_pemohon}\n- No. Telepon : ${suratPilih.no_telepon || '-'}${rincianTambahan}\n- Tanggal Pengajuan : ${new Date(suratPilih.tanggal_pengajuan || new Date()).toLocaleDateString('id-ID', {day: 'numeric', month: 'long', year: 'numeric'})}`;
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(teksLampiran).then(() => {
+                setCopiedAlert('✅ Lampiran Data Warga (Halaman 2) berhasil disalin!');
+                setTimeout(() => setCopiedAlert(''), 3500);
+            }).catch(() => {
+                fallbackCopyText(teksLampiran, '✅ Lampiran Data Warga (Halaman 2) berhasil disalin!');
+            });
+        } else {
+            fallbackCopyText(teksLampiran, '✅ Lampiran Data Warga (Halaman 2) berhasil disalin!');
+        }
+    };
+
+    const fallbackCopyText = (text, successMsg) => {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            setCopiedAlert(successMsg);
+            setTimeout(() => setCopiedAlert(''), 3500);
+        } catch (err) {
+            console.error('Fallback copy error:', err);
+        }
+        document.body.removeChild(textArea);
+    };
+    
     // TTE & Penandatangan
     const [printPakaiTTE, setPrintPakaiTTE] = useState(true);
     const [printTteHeader, setPrintTteHeader] = useState('Ditandatangani secara elektronik oleh:\nLurah Pasteur');
@@ -136,6 +201,42 @@ export default function CetakSuratModal({ suratPilih, onClose }) {
                     <div className="form-grup-cetak">
                         <label>Tembusan</label>
                         <textarea value={printTembusan} onChange={e => setPrintTembusan(e.target.value)} style={{minHeight:'50px'}} />
+                    </div>
+
+                    {/* FITUR INTEGRASI FORMAT PESONA KOTA BANDUNG */}
+                    <div className="pesona-box-container">
+                        <div className="pesona-box-header">
+                            <span className="pesona-badge">PESONA 3.1.4</span>
+                            <strong>Format Naskah Diskominfo</strong>
+                        </div>
+                        <p className="pesona-box-desc">
+                            Salin teks di bawah ini untuk ditempel (paste) pada template Word PESONA sebelum di-upload ke sistem:
+                        </p>
+
+                        {copiedAlert && (
+                            <div className="pesona-alert-copied">
+                                {copiedAlert}
+                            </div>
+                        )}
+
+                        <div className="pesona-btn-group">
+                            <button 
+                                type="button" 
+                                className="btn-pesona-salin btn-pesona-pengantar"
+                                onClick={handleSalinPengantar}
+                                title="Salin teks pengantar permohonan untuk titik-titik Halaman 1 Word PESONA"
+                            >
+                                📋 Salin Pengantar (Hal 1)
+                            </button>
+                            <button 
+                                type="button" 
+                                className="btn-pesona-salin btn-pesona-lampiran"
+                                onClick={handleSalinLampiran}
+                                title="Salin daftar data pemohon untuk lampiran Halaman 2 Word PESONA"
+                            >
+                                📋 Salin Lampiran Warga (Hal 2)
+                            </button>
+                        </div>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px', paddingBottom: '30px' }}>
